@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_new_game"
+            android:icon="@android:drawable/ic_media_play"
+            android:title="@string/nav_new_game" />
+        <item
+            android:id="@+id/nav_scores"
+            android:icon="@android:drawable/btn_star"
+            android:title="@string/nav_high_scores" />
+        <item
+            android:id="@+id/nav_quit"
+            android:icon="@android:drawable/ic_delete"
+            android:title="@string/nav_quit" />
+    </group>
+</menu>
