@@ -14,11 +14,9 @@ import me.cooper.rick.elementary.datastructures.CircularLinkedList;
 
 public class MovementManager {
 
-    private SensorManager sensorManager;
     private View view;
+    private SensorManager sensorManager;
     private Sensor motionSensor;
-    private MotionSensorListener motionSensorListener;
-    private OnTouchListener onTouchListener;
 
     private MoveStrategy activeMoveStrategy;
     private CircularLinkedList<MoveStrategy> moveStrategies = new CircularLinkedList<>();
@@ -31,9 +29,6 @@ public class MovementManager {
             motionSensor = sensorManager.getDefaultSensor(MotionSensorListener.SENSOR_TYPE);
             moveStrategies.add(new SensorMoveStrategy(view, sensorManager));
         }
-
-        onTouchListener = new OnTouchListener();
-        motionSensorListener = new MotionSensorListener();
         TouchMoveStrategy touchMoveStrategy = new TouchMoveStrategy(view);
         moveStrategies.add(touchMoveStrategy);
         activeMoveStrategy = moveStrategies.cycleNext();
@@ -49,7 +44,7 @@ public class MovementManager {
         return nextStrategy == null ? null : nextStrategy.getDescription();
     }
 
-    private void activateNextMoveStrategy() {
+    public void activateNextMoveStrategy() {
         activeMoveStrategy.unregisterListener();
         activeMoveStrategy = moveStrategies.cycleNext();
         activeMoveStrategy.registerListener();

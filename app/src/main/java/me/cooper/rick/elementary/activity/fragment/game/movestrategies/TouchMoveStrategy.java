@@ -9,7 +9,7 @@ public class TouchMoveStrategy implements MoveStrategy {
     private static final String DESCRIPTION = "Touch";
 
     private View view;
-    private final OnTouchListener onTouchListener = new OnTouchListener();
+    private final OnTouchListener ON_TOUCH_LISTENER = new OnTouchListener();
     private final OnTouchListener DUMMY_LISTENER = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -34,7 +34,7 @@ public class TouchMoveStrategy implements MoveStrategy {
 
     @Override
     public void registerListener() {
-        view.setOnTouchListener(onTouchListener);
+        view.setOnTouchListener(ON_TOUCH_LISTENER);
     }
 
     @Override

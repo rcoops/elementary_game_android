@@ -4,7 +4,7 @@ public enum BondingType {
 
     ATOMIC          ("Atomic"),
     DIATOMIC        ("Diatomic"),
-    COVALENT_NETWORK("Covalent Network"),
+    COVALENT_NETWORK("Covalent\nNetwork"),
     METALLIC        ("Metallic");
 
     public final String label;

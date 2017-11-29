@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
         newPlayerFragment = new NewPlayerFragment();
         scoreFragment = new ScoreFragment();
         gameFragment = new GameFragment();
+        gameFragment.setHasOptionsMenu(true);
     }
 
     @Override
@@ -74,10 +75,10 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_new_game:
-                startFragment(newPlayerFragment);
+                startFragment(R.id.dialog_layout, newPlayerFragment);
                 break;
             case R.id.nav_scores:
-                startFragment(scoreFragment);
+                startFragment(R.id.content_main, scoreFragment);
                 break;
             case R.id.nav_quit:
                 exitApplication();
@@ -91,10 +92,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void startFragment(Fragment fragment) {
+    private void startFragment(int contentId, Fragment fragment) {
         if (fragment != null) {
             fragmentManager.beginTransaction()
-                    .replace(R.id.content_main, fragment)
+                    .replace(contentId, fragment)
                     .commit();
         }
     }
@@ -103,8 +104,8 @@ public class MainActivity extends AppCompatActivity
     public void onPlayerCreated(Player player) {
         gameFragment.setPlayer(player);
         this.player = player;
-        displayToastMessage("Player: " + player.getPlayerName());
-        startFragment(gameFragment);
+        displayToastMessage("Welcome: " + player.getPlayerName() + "!");
+        startFragment(R.id.content_main, gameFragment);
     }
 
     @Override

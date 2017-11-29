@@ -129,6 +129,8 @@ public enum Element {
     public final BondingType bondingType;
     public final ElementGroup group;
 
+    private static final Random RAND = new Random();
+
     Element(String chemicalSymbol, String fullName, int atomicNumber, int atomicMass, String hexColourCode,
             ElementState naturalState, BondingType bondingType, ElementGroup group) {
         this.chemicalSymbol = chemicalSymbol;
@@ -139,6 +141,13 @@ public enum Element {
         this.naturalState = naturalState;
         this.bondingType = bondingType;
         this.group = group;
+    }
+
+    public static Element getRandom() {
+        Element[] elements = Element.values();
+        int index = RAND.nextInt(elements.length);
+
+        return elements[index];
     }
 
     public String getProperty(Property property) {
@@ -165,12 +174,12 @@ public enum Element {
     public enum Property {
 
         SYMBOL("Symbol"),
-        FULL_NAME("Full Name"),
-        ATOMIC_NUMBER("Atomic Number"),
-        ATOMIC_MASS("Atomic Mass"),
-        NATURAL_STATE("Natural State"),
-        BONDING_TYPE("Bonding Type"),
-        GROUP("Element Group");
+        FULL_NAME("Full\nName"),
+        ATOMIC_NUMBER("Atomic\nNumber"),
+        ATOMIC_MASS("Atomic\nMass"),
+        NATURAL_STATE("Natural\nState"),
+        BONDING_TYPE("Bonding\nType"),
+        GROUP("Element\nGroup");
 
         private static final Random rand = new Random();
         private static Property[] allProperties = Property.values();

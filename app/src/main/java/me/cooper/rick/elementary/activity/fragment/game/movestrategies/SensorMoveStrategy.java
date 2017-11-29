@@ -6,7 +6,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.View;
 
-public class SensorMoveStrategy implements MoveStrategy {
+import me.cooper.rick.elementary.listeners.AcceleroListener;
+
+public class SensorMoveStrategy extends AcceleroListener implements MoveStrategy {
 
     private static final float X_SENSITIVITY = 4;
     private static final float Y_SENSITIVITY = 5;
@@ -47,13 +49,14 @@ public class SensorMoveStrategy implements MoveStrategy {
         sensorManager.unregisterListener(motionSensorListener);
     }
 
-    private class MotionSensorListener implements SensorEventListener {
+    private final class MotionSensorListener extends AcceleroListener implements SensorEventListener {
 
         static final int SENSOR_TYPE = Sensor.TYPE_ACCELEROMETER;
 
         @Override
         public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() == SENSOR_TYPE) {
+            super.onSensorChanged(event);
+            if (event.sensor.getType() == SENSOR_TYPE && !isShake()) {
                 move(event.values[0], event.values[1]);
             }
             view.invalidate();

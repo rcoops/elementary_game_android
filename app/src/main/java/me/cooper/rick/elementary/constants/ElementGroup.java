@@ -2,15 +2,15 @@ package me.cooper.rick.elementary.constants;
 
 public enum ElementGroup {
 
-    ALKALI_METAL         ("Alkali Metal"),
-    ALKALINE_EARTH_METAL ("Alkaline Earth Metal"),
+    ALKALI_METAL         ("Alkali\nMetal"),
+    ALKALINE_EARTH_METAL ("Alkaline\nEarth\nMetal"),
     LANTHANOID           ("Lanthanoid"),
     ACTINOID             ("Actinoid"),
-    TRANSITION_METAL     ("Transition Metal"),
-    POST_TRANSITION_METAL("Post-Transition Metal"),
+    TRANSITION_METAL     ("Transition\nMetal"),
+    POST_TRANSITION_METAL("Post-\nTransition\nMetal"),
     METALLOID            ("Metalloid"),
-    NON_METAL            ("Non-Metal"),
-    NOBLE_GAS            ("Noble Gas");
+    NON_METAL            ("Non-\nMetal"),
+    NOBLE_GAS            ("Noble\nGas");
 
     public final String label;
 

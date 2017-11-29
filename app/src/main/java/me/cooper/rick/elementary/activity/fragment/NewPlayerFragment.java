@@ -3,15 +3,20 @@ package me.cooper.rick.elementary.activity.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -70,7 +75,6 @@ public class NewPlayerFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_player, container, false);
-
         final EditText edtEnterName = (EditText) view.findViewById(R.id.edt_enter_name);
         edtEnterName.addTextChangedListener(new EditNameTextWatcher());
 

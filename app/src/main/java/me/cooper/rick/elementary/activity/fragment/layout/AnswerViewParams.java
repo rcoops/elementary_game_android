@@ -6,7 +6,9 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM;
 import static android.widget.RelativeLayout.ALIGN_PARENT_END;
 import static android.widget.RelativeLayout.ALIGN_PARENT_LEFT;
 import static android.widget.RelativeLayout.ALIGN_PARENT_RIGHT;
@@ -20,16 +22,14 @@ import static me.cooper.rick.elementary.activity.fragment.layout.AnswerViewParam
 public class AnswerViewParams {
 
     private RelativeLayout.LayoutParams layoutParams;
-    private int rotation;
     private Pair<String, String> answer;
 
-    private AnswerViewParams(LayoutParams layoutParams, int rotation) {
+    private AnswerViewParams(LayoutParams layoutParams) {
         this.layoutParams = layoutParams;
-        this.rotation = rotation;
     }
 
     public AnswerViewParams(TextViewParamSets paramSet) {
-        this(buildLayoutParams(paramSet.layoutParams), paramSet.rotation);
+        this(buildLayoutParams(paramSet.width, paramSet.height, paramSet.alignParams));
     }
 
     public LayoutParams getLayoutParams() {
@@ -40,14 +40,6 @@ public class AnswerViewParams {
         this.layoutParams = layoutParams;
     }
 
-    public int getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-    }
-
     public Pair<String, String> getAnswer() {
         return answer;
     }
@@ -56,7 +48,7 @@ public class AnswerViewParams {
         this.answer = answer;
     }
 
-    private static List<AnswerViewParams> buildAnswerParamStructures() {
+    private static List<AnswerViewParams> buildAnswerLayoutParams() {
         List<AnswerViewParams> agg = new ArrayList<>();
         for (TextViewParamSets paramSet : TextViewParamSets.values()) {
             agg.add(new AnswerViewParams(paramSet));
@@ -65,7 +57,7 @@ public class AnswerViewParams {
     }
 
     public static List<AnswerViewParams> buildRandomisedParams(List<Pair<String, String>> answers) {
-        List<AnswerViewParams> params = buildAnswerParamStructures();
+        List<AnswerViewParams> params = buildAnswerLayoutParams();
 
         shuffle(params); // Randomise Elements
 
@@ -78,23 +70,25 @@ public class AnswerViewParams {
 
     enum TextViewParamSets {
 
-        TOP(asList(ALIGN_PARENT_LEFT, ALIGN_PARENT_RIGHT,
-                ALIGN_PARENT_START, ALIGN_PARENT_END, ALIGN_PARENT_TOP), 0),
-        BOTTOM(asList(ALIGN_PARENT_LEFT, ALIGN_PARENT_RIGHT,
-                ALIGN_PARENT_START, ALIGN_PARENT_END, ALIGN_PARENT_TOP), 0),
-        LEFT(asList(ALIGN_PARENT_LEFT, ALIGN_PARENT_START), 270),
-        RIGHT(asList(ALIGN_PARENT_RIGHT, ALIGN_PARENT_END), 90);
+        TOP(MATCH_PARENT, WRAP_CONTENT, asList(ALIGN_PARENT_LEFT, ALIGN_PARENT_RIGHT,
+                ALIGN_PARENT_START, ALIGN_PARENT_END, ALIGN_PARENT_TOP)),
+        BOTTOM(MATCH_PARENT, WRAP_CONTENT, asList(ALIGN_PARENT_LEFT, ALIGN_PARENT_RIGHT,
+                ALIGN_PARENT_START, ALIGN_PARENT_END, ALIGN_PARENT_BOTTOM)),
+        LEFT(WRAP_CONTENT, MATCH_PARENT, asList(ALIGN_PARENT_LEFT, ALIGN_PARENT_START, ALIGN_PARENT_TOP, ALIGN_PARENT_BOTTOM)),
+        RIGHT(WRAP_CONTENT, MATCH_PARENT, asList(ALIGN_PARENT_RIGHT, ALIGN_PARENT_END, ALIGN_PARENT_TOP, ALIGN_PARENT_BOTTOM));
 
-        List<Integer> layoutParams;
-        int rotation;
+        int width;
+        int height;
+        List<Integer> alignParams;
 
-        TextViewParamSets(List<Integer> layoutParams, int rotation) {
-            this.layoutParams = layoutParams;
-            this.rotation = rotation;
+        TextViewParamSets(int width, int height, List<Integer> alignParams) {
+            this.alignParams = alignParams;
+            this.width = width;
+            this.height = height;
         }
 
-        static LayoutParams buildLayoutParams(List<Integer> rules) {
-            LayoutParams params = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+        static LayoutParams buildLayoutParams(int width, int height, List<Integer> rules) {
+            LayoutParams params = new LayoutParams(width, height);
             for (int rule : rules) {
                 params.addRule(rule);
             }
