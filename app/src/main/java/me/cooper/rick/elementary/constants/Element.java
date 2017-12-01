@@ -150,7 +150,7 @@ public enum Element {
         return elements[index];
     }
 
-    public String getProperty(Property property) {
+    public String getPropertyValue(Property property) {
         switch (property) {
             case SYMBOL:
                 return chemicalSymbol;

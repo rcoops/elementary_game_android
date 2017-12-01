@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.AppCompatTextView;
-import android.view.Gravity;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.activity.fragment.layout.AnswerViewParams;
 
 import static android.view.Gravity.CENTER;
-import static me.cooper.rick.elementary.activity.fragment.layout.AnswerViewParams.buildRandomisedParams;
+import static me.cooper.rick.elementary.activity.fragment.layout.AnswerViewParams.buildAnswerLayoutParams;
 
 public class ElementAnswerView extends AppCompatTextView {
 
@@ -29,20 +28,23 @@ public class ElementAnswerView extends AppCompatTextView {
 
     public ElementAnswerView(Context context, AnswerViewParams params) {
         this(context);
-        this.answer = params.getAnswer().second;
         this.layoutParams = params.getLayoutParams();
         setTextAlignment(TEXT_ALIGNMENT_CENTER);
         setGravity(CENTER);
         setMaxLines(5);
         setPadding(8,8,8,8);
         setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        setText(params.getAnswer().first + ":\n" + params.getAnswer().second);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         viewBounds.set(this.getLeft(), this.getTop(), this.getRight(), this.getBottom());
+    }
+
+    public void setAnswer(Pair<String, String> answer) {
+        this.answer = answer.second;
+        setText(answer.first + ":\n" + answer.second);
     }
 
     public String getAnswer() {
@@ -53,13 +55,15 @@ public class ElementAnswerView extends AppCompatTextView {
         return layoutParams;
     }
 
-    public static List<ElementAnswerView> buildAnswerViews(Context context,
-                                                           List<Pair<String, String>> answers) {
-        List<AnswerViewParams> answerViewParams = buildRandomisedParams(answers);
+    public static List<ElementAnswerView> buildAnswerViews(Context context) {
         List<ElementAnswerView> agg = new ArrayList<>();
-        for (AnswerViewParams params : answerViewParams) {
-            agg.add(new ElementAnswerView(context, params));
+
+        List<AnswerViewParams> answerViewParams = buildAnswerLayoutParams();
+
+        for (int i = 0; i < 4; ++i) {
+            agg.add(new ElementAnswerView(context, answerViewParams.get(i)));
         }
+
         return agg;
     }
 

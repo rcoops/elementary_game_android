@@ -16,10 +16,13 @@ public class QuizManager {
 
     private static final int NO_OF_ELEMENTS = 4;
 
-    private static final Random rand = new Random();
+    private static final Random RAND = new Random();
 
     private static final Element[] ALL_ELEMENTS = Element.values();
     private static final Element[] CURRENT_ELEMENTS = new Element[NO_OF_ELEMENTS];
+
+    private static final Element.Property[] ALL_PROPERTIES = Element.Property.values();
+    private static final Element.Property[] CURRENT_PROPERTIES = new Element.Property[NO_OF_ELEMENTS];
 
     private Element.Property targetProperty;
 
@@ -31,21 +34,23 @@ public class QuizManager {
     }
 
     private QuizManager() {
-        resetElements();
+        resetAnswers();
     }
 
-    public static void resetElements() {
-        List<Element> availableElements = new ArrayList<>(getAllElements());
+    public void resetAnswers() {
+        reset(ALL_ELEMENTS, CURRENT_ELEMENTS);
+        reset(ALL_PROPERTIES, CURRENT_PROPERTIES);
+    }
+
+    private <T> void reset(T[] all, T[] current) {
+        List<T> available = new ArrayList<>(asList(all));
         for (int i = 0; i < NO_OF_ELEMENTS; ++i) {
-            int index = rand.nextInt(availableElements.size());
-            CURRENT_ELEMENTS[i] = availableElements.remove(index);
+            int index = RAND.nextInt(available.size());
+            current[i] = available.remove(index);
         }
     }
 
     public Element getTargetElement() {
-        if (CURRENT_ELEMENTS[0] == null) {
-            resetElements();
-        }
         return CURRENT_ELEMENTS[0];
     }
 
@@ -53,25 +58,18 @@ public class QuizManager {
         return targetProperty;
     }
 
-    public List<Pair<String, String>> getAnswers(boolean isVariedProperties) {
+    public List<Pair<String, String>> getAnswers() {
         List<Pair<String, String>> answers = new ArrayList<>();
-        targetProperty = Element.Property.getRandomQuizProperty();
-        Element.Property currentProperty = targetProperty;
+        targetProperty = CURRENT_PROPERTIES[0];
         for (int i = 0; i < NO_OF_ELEMENTS; ++i) {
-            answers.add(new Pair<>(currentProperty.label, CURRENT_ELEMENTS[i].getProperty(currentProperty)));
-            if (isVariedProperties) {
-                currentProperty = Element.Property.getRandomQuizProperty();
-            }
+            answers.add(new Pair<>(CURRENT_PROPERTIES[i].label,
+                    CURRENT_ELEMENTS[i].getPropertyValue(CURRENT_PROPERTIES[i])));
         }
         return answers;
     }
 
     public boolean isCorrectAnswer(String answer) {
-        return CURRENT_ELEMENTS[0].getProperty(targetProperty).equals(answer);
-    }
-
-    private static List<Element> getAllElements() {
-        return asList(ALL_ELEMENTS);
+        return CURRENT_ELEMENTS[0].getPropertyValue(targetProperty).equals(answer);
     }
 
 }

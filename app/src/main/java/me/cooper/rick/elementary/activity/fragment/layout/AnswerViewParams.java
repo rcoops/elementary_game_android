@@ -22,7 +22,6 @@ import static me.cooper.rick.elementary.activity.fragment.layout.AnswerViewParam
 public class AnswerViewParams {
 
     private RelativeLayout.LayoutParams layoutParams;
-    private Pair<String, String> answer;
 
     private AnswerViewParams(LayoutParams layoutParams) {
         this.layoutParams = layoutParams;
@@ -40,32 +39,12 @@ public class AnswerViewParams {
         this.layoutParams = layoutParams;
     }
 
-    public Pair<String, String> getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(Pair<String, String> answer) {
-        this.answer = answer;
-    }
-
-    private static List<AnswerViewParams> buildAnswerLayoutParams() {
+    public static List<AnswerViewParams> buildAnswerLayoutParams() {
         List<AnswerViewParams> agg = new ArrayList<>();
         for (TextViewParamSets paramSet : TextViewParamSets.values()) {
             agg.add(new AnswerViewParams(paramSet));
         }
         return agg;
-    }
-
-    public static List<AnswerViewParams> buildRandomisedParams(List<Pair<String, String>> answers) {
-        List<AnswerViewParams> params = buildAnswerLayoutParams();
-
-        shuffle(params); // Randomise Elements
-
-        for (int i = 0; i < params.size(); ++i) {
-            params.get(i).setAnswer(answers.get(i));
-        }
-
-        return params;
     }
 
     enum TextViewParamSets {

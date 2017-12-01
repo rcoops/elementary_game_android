@@ -27,7 +27,8 @@ public class ChemicalSymbolView extends View {
     private Paint circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private int backgroundColor = Color.WHITE;
-    private Point position;
+    private Point startingPosition;
+    private Point position = new Point();
     private Rect maxBounds;
     protected Rect viewBounds = new Rect();
 
@@ -37,24 +38,13 @@ public class ChemicalSymbolView extends View {
         super(context);
     }
 
-    public ChemicalSymbolView(Context context, Element element, int positionX, int positionY, int maxX, int maxY) {
+    public ChemicalSymbolView(Context context, Point startingPosition, Point maxBounds) {
         super(context);
-        this.element = element;
-        backgroundColor = Color.parseColor("#" + element.hexColourCode);
-        textPaint.setColor(getForeGroundColor(backgroundColor));
+        this.startingPosition = startingPosition;
+        this.maxBounds = new Rect(RADIUS, RADIUS, maxBounds.x - RADIUS, maxBounds.y - RADIUS);
         textPaint.setTextSize(100f);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        position = new Point(positionX, positionY);
-        maxBounds = new Rect(RADIUS, RADIUS, maxX - RADIUS, maxY - RADIUS);
     }
-
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        ViewGroup.LayoutParams params = this.getLayoutParams();
-//        params.width = params.height = RADIUS * 2;
-//        this.setLayoutParams(params);
-//    }
 
     public Element getElement() {
         return element;
@@ -114,6 +104,13 @@ public class ChemicalSymbolView extends View {
 
         ColorUtils.RGBToHSL(red, green, blue, HSL);
         return HSL[2] > 0.5 ? Color.BLACK : Color.WHITE;
+    }
+
+    public void reset(Element element) {
+        this.element = element;
+        backgroundColor = Color.parseColor("#" + element.hexColourCode);
+        textPaint.setColor(getForeGroundColor(backgroundColor));
+        position.set(startingPosition.x, startingPosition.y);
     }
 
 }

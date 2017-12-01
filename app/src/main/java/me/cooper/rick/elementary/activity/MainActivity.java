@@ -144,4 +144,13 @@ public class MainActivity extends AppCompatActivity
         makeText(this, message, LENGTH_SHORT).show();
     }
 
+    private void tostOnMain(){
+        gameFragment.getHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                gameFragment.makeToast("from other thread");
+            }
+        });
+    }
+
 }

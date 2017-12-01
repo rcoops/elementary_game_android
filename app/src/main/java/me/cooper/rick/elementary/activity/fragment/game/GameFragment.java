@@ -8,8 +8,10 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,11 +20,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import java.util.Collections;
 import java.util.List;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.constants.Element;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.ChemicalSymbolView;
 import me.cooper.rick.elementary.models.ElementAnswerView;
@@ -48,8 +51,6 @@ public class GameFragment extends Fragment implements Runnable {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private ViewGroup parent;
     private RelativeLayout content;
     private ChemicalSymbolView chemicalSymbolView;
     private List<ElementAnswerView> answerViews;
@@ -58,8 +59,7 @@ public class GameFragment extends Fragment implements Runnable {
     private Point centre;
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
-
-    private long lastUpdate = 0;
+    private Handler handler;
 
     Thread thread;
     boolean isRunning = true;
@@ -95,8 +95,7 @@ public class GameFragment extends Fragment implements Runnable {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
+        handler = new Handler();
         thread = new Thread(this);
     }
 
@@ -106,22 +105,56 @@ public class GameFragment extends Fragment implements Runnable {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_game, container, false);
 
-        parent = container;
+        if(size == null) {
+            size = new Point(container.getMeasuredWidth(), container.getMeasuredHeight());
+            centre = new Point(size.x / 2, size.y / 2);
+        }
 
         content = view.findViewById(R.id.game_space);
         content.setGravity(Gravity.CENTER);
 
+        addAnswerViews();
+        addChemicalSymbolView();
+
+        reset();
+
         return view;
+    }
+
+    private void addAnswerViews() {
+        answerViews = buildAnswerViews(getActivity());
+        for (ElementAnswerView answerView : answerViews) {
+            content.addView(answerView, answerView.getLayoutParams());
+        }
+    }
+
+    private void addChemicalSymbolView() {
+        chemicalSymbolView = new ChemicalSymbolView(getActivity(), centre, size);
+        content.addView(chemicalSymbolView);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        thread.start();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ElementAnswerView collidedView = checkCollisions();
+                if (collidedView != null) {
+                    if (quizManager.isCorrectAnswer(collidedView.getAnswer())) {
+                        Log.d("RICK", "YEEEEESSSSS");
+                    } else {
+                        Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        size = new Point(parent.getMeasuredWidth(), parent.getMeasuredHeight());
-        centre = new Point(size.x / 2, size.y / 2);
-
-        chemicalSymbolView = new ChemicalSymbolView(getActivity(), Element.getRandom(), centre.x, centre.y, size.x, size.y);
-        content.addView(chemicalSymbolView);
 
         SensorManager sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
         if (sensorManager != null) {
@@ -129,8 +162,9 @@ public class GameFragment extends Fragment implements Runnable {
             Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(new ShakeListener(), sensor, SensorManager.SENSOR_DELAY_GAME);
         }
-        addAnswerViews(quizManager.getAnswers(true));
-        thread.start();
+
+//        thread = new Thread(this);
+//        thread.start();
     }
 
     @Override
@@ -177,8 +211,32 @@ public class GameFragment extends Fragment implements Runnable {
         while (isRunning) {
             ElementAnswerView collidedView = checkCollisions();
             if (collidedView != null) {
-                System.out.println(collidedView.getAnswer());
+                if (quizManager.isCorrectAnswer(collidedView.getAnswer())) {
+                    Log.d("RICK", "YEEEEESSSSS");
+                } else {
+                    Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
+                }
             }
+        }
+    }
+
+    private void reset() {
+        quizManager.resetAnswers();
+
+        resetChemicalSymbolView();
+        resetAnswerViews();
+    }
+
+    private void resetChemicalSymbolView() {
+        chemicalSymbolView.reset(quizManager.getTargetElement());
+    }
+
+    private void resetAnswerViews() {
+        List<Pair<String, String>> answers = quizManager.getAnswers();
+        Collections.shuffle(answers);
+
+        for (int i = 0; i < 4; ++i) {
+            answerViews.get(i).setAnswer(answers.get(i));
         }
     }
 
@@ -188,14 +246,6 @@ public class GameFragment extends Fragment implements Runnable {
 
     public void setPlayer(Player player) {
         this.player = player;
-    }
-
-    private void addAnswerViews(List<Pair<String, String>> answers) {
-        answerViews = buildAnswerViews(getActivity(), answers);
-
-        for (ElementAnswerView answerView : answerViews) {
-            content.addView(answerView, answerView.getLayoutParams());
-        }
     }
 
     private ElementAnswerView checkCollisions() {
@@ -236,9 +286,21 @@ public class GameFragment extends Fragment implements Runnable {
             super.onSensorChanged(event);
 
             if (event.sensor.getType() == SENSOR_TYPE && isShake()) {
-
                 movementManager.activateNextMoveStrategy();
             }
         }
+    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public void makeToast(final String msg){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
