@@ -13,12 +13,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import me.cooper.rick.elementary.activity.fragment.game.GameFragment;
 import me.cooper.rick.elementary.activity.fragment.NewPlayerFragment;
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.activity.fragment.score.ScoreFragment;
 import me.cooper.rick.elementary.activity.fragment.score.content.ScoreContent;
 import me.cooper.rick.elementary.models.Player;
+import me.cooper.rick.elementary.models.Score;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment newPlayerFragment;
     private Fragment scoreFragment;
     private GameFragment gameFragment;
+    private DatabaseReference dbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,9 @@ public class MainActivity extends AppCompatActivity
         scoreFragment = new ScoreFragment();
         gameFragment = new GameFragment();
         gameFragment.setHasOptionsMenu(true);
+        dbRef = FirebaseDatabase.getInstance().getReference("scores");
+        String newScore = dbRef.push().getKey();
+        dbRef.child(newScore).setValue(new Score("Tim"));
     }
 
     @Override

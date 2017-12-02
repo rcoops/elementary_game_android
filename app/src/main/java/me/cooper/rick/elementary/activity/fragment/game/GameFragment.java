@@ -22,6 +22,10 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +36,6 @@ import me.cooper.rick.elementary.models.ElementAnswerView;
 import me.cooper.rick.elementary.models.Player;
 
 import static android.content.Context.SENSOR_SERVICE;
-import static me.cooper.rick.elementary.models.ElementAnswerView.buildAnswerViews;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,13 +56,14 @@ public class GameFragment extends Fragment implements Runnable {
     private String mParam2;
     private RelativeLayout content;
     private ChemicalSymbolView chemicalSymbolView;
-    private List<ElementAnswerView> answerViews;
+    private List<ElementAnswerView> answerViews = new ArrayList<>();
     private Player player;
     private Point size;
     private Point centre;
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
     private Handler handler;
+    private DatabaseReference dbRef;
 
     Thread thread;
     boolean isRunning = true;
@@ -97,6 +101,7 @@ public class GameFragment extends Fragment implements Runnable {
         }
         handler = new Handler();
         thread = new Thread(this);
+        dbRef = FirebaseDatabase.getInstance().getReference("scores");
     }
 
     @Override
@@ -113,7 +118,7 @@ public class GameFragment extends Fragment implements Runnable {
         content = view.findViewById(R.id.game_space);
         content.setGravity(Gravity.CENTER);
 
-        addAnswerViews();
+        setAnswerViewReferences(view);
         addChemicalSymbolView();
 
         reset();
@@ -121,11 +126,11 @@ public class GameFragment extends Fragment implements Runnable {
         return view;
     }
 
-    private void addAnswerViews() {
-        answerViews = buildAnswerViews(getActivity());
-        for (ElementAnswerView answerView : answerViews) {
-            content.addView(answerView, answerView.getLayoutParams());
-        }
+    private void setAnswerViewReferences(View view) {
+        answerViews.add((ElementAnswerView) view.findViewById(R.id.answer_top));
+        answerViews.add((ElementAnswerView) view.findViewById(R.id.answer_bottom));
+        answerViews.add((ElementAnswerView) view.findViewById(R.id.answer_left));
+        answerViews.add((ElementAnswerView) view.findViewById(R.id.answer_right));
     }
 
     private void addChemicalSymbolView() {
@@ -143,9 +148,14 @@ public class GameFragment extends Fragment implements Runnable {
                 ElementAnswerView collidedView = checkCollisions();
                 if (collidedView != null) {
                     if (quizManager.isCorrectAnswer(collidedView.getAnswer())) {
+                        player.incrementLives();
                         Log.d("RICK", "YEEEEESSSSS");
                     } else {
-                        Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
+                        player.decrementLives();
+                        if (player.getLives() <= 0) {
+                            Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
+                        }
+
                     }
                 }
             }

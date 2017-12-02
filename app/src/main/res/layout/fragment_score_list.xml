@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="me.cooper.rick.elementary.activity.fragment.score.ScoreFragment"
+    tools:context="me.cooper.rick.elementary.activity.fragment.playerScore.ScoreFragment"
     tools:listitem="@layout/fragment_score" />

@@ -66,7 +66,7 @@ public class ScoreRecyclerViewAdapter extends RecyclerView.Adapter<ScoreRecycler
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.playerName);
+            mContentView = (TextView) view.findViewById(R.id.name);
         }
 
         @Override

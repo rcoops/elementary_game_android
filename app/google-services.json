@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1084095727277",
+    "firebase_url": "https://elementary-287af.firebaseio.com",
+    "project_id": "elementary-287af",
+    "storage_bucket": "elementary-287af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084095727277:android:56a729b547d66cba",
+        "android_client_info": {
+          "package_name": "me.cooper.rick.elementary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084095727277-cssb9go54srrls057gppmgggfarphluv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.cooper.rick.elementary",
+            "certificate_hash": "8d0b49155f99a0175132bfa26292d9a2d88af0c0"
+          }
+        },
+        {
+          "client_id": "1084095727277-0c9kl4vqlbjig7ah4li0qbl9m2310e41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5K3bnkKSNmRDAN_AD2g4mqgZWPedHxIw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084095727277-0c9kl4vqlbjig7ah4li0qbl9m2310e41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
