@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activity.fragment.game.movestrategies;
+package me.cooper.rick.elementary.activities.fragments.game.movestrategies;
 
 import android.view.MotionEvent;
 import android.view.View;

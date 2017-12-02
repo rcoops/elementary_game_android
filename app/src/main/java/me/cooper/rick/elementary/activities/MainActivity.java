@@ -1,28 +1,23 @@
-package me.cooper.rick.elementary.activity;
+package me.cooper.rick.elementary.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import me.cooper.rick.elementary.activity.fragment.game.GameFragment;
-import me.cooper.rick.elementary.activity.fragment.NewPlayerFragment;
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.activity.fragment.score.ScoreFragment;
-import me.cooper.rick.elementary.activity.fragment.score.content.ScoreContent;
+import me.cooper.rick.elementary.activities.fragments.NewPlayerFragment;
+import me.cooper.rick.elementary.activities.fragments.game.GameFragment;
+import me.cooper.rick.elementary.activities.fragments.score.ScoreFragment;
+import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent;
 import me.cooper.rick.elementary.models.Player;
-import me.cooper.rick.elementary.models.Score;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -40,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment newPlayerFragment;
     private Fragment scoreFragment;
     private GameFragment gameFragment;
-    private DatabaseReference dbRef;
+//    private DatabaseReference dbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +58,9 @@ public class MainActivity extends AppCompatActivity
         scoreFragment = new ScoreFragment();
         gameFragment = new GameFragment();
         gameFragment.setHasOptionsMenu(true);
-        dbRef = FirebaseDatabase.getInstance().getReference("scores");
-        String newScore = dbRef.push().getKey();
-        dbRef.child(newScore).setValue(new Score("Tim"));
+//        dbRef = FirebaseDatabase.getInstance().getReference("scores");
+//        String newScore = dbRef.push().getKey();
+//        dbRef.child(newScore).setValue(new Score("Tim"));
     }
 
     @Override

@@ -7,7 +7,7 @@
     android:background="@drawable/main_background"
     android:id="@+id/content_main"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="me.cooper.rick.elementary.activity.MainActivity"
+    tools:context="me.cooper.rick.elementary.activities.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <FrameLayout

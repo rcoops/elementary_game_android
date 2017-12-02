@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activity.fragment.game;
+package me.cooper.rick.elementary.activities.fragments.game;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -21,9 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +60,7 @@ public class GameFragment extends Fragment implements Runnable {
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
     private Handler handler;
-    private DatabaseReference dbRef;
+//    private DatabaseReference dbRef;
 
     Thread thread;
     boolean isRunning = true;
@@ -101,7 +98,7 @@ public class GameFragment extends Fragment implements Runnable {
         }
         handler = new Handler();
         thread = new Thread(this);
-        dbRef = FirebaseDatabase.getInstance().getReference("scores");
+//        dbRef = FirebaseDatabase.getInstance().getReference("scores");
     }
 
     @Override

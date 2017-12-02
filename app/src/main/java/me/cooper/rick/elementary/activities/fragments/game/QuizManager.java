@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activity.fragment.game;
+package me.cooper.rick.elementary.activities.fragments.game;
 
 import android.support.v4.util.Pair;
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="me.cooper.rick.elementary.activity.fragment.game.GameFragment">
+    tools:context="me.cooper.rick.elementary.activities.fragments.game.GameFragment">
 
     <RelativeLayout
         android:id="@+id/game_space"

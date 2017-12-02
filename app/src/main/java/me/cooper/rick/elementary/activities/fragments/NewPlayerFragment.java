@@ -1,27 +1,17 @@
-package me.cooper.rick.elementary.activity.fragment;
+package me.cooper.rick.elementary.activities.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.activity.MainActivity;
 import me.cooper.rick.elementary.models.Player;
 
 

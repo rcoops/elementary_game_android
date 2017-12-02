@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activity.fragment.score;
+package me.cooper.rick.elementary.activities.fragments.score;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.activity.fragment.score.content.ScoreContent.ScoreItem;
+import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent.ScoreItem;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class ScoreRecyclerViewAdapter extends RecyclerView.Adapter<ScoreRecycler
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.name);
+            mContentView = (TextView) view.findViewById(R.id.playerName);
         }
 
         @Override

@@ -17,7 +17,7 @@
     <string name="email_default">R.P.Cooper1@edu.salford.ac.uk</string>
 
     <string name="err_not_implemented">Not Implemented!</string>
-    <string name="err_missing_name">A name must be entered before starting a game</string>
+    <string name="err_missing_name">A playerName must be entered before starting a game</string>
 
     <string name="hint_enter_name">Enter Player Name</string>
 

@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activity.fragment.score.content;
+package me.cooper.rick.elementary.activities.fragments.score.content;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public class ScoreContent {
     }
 
     /**
-     * A dummy item representing a piece of playerName.
+     * A dummy item representing a piece of Score.
      */
     public static class ScoreItem {
         public final String id;

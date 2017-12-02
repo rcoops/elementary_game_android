@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activity.fragment.game;
+package me.cooper.rick.elementary.activities.fragments.game;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -7,10 +7,10 @@ import android.hardware.SensorManager;
 import android.view.MotionEvent;
 import android.view.View;
 
-import me.cooper.rick.elementary.activity.fragment.game.movestrategies.MoveStrategy;
-import me.cooper.rick.elementary.activity.fragment.game.movestrategies.SensorMoveStrategy;
-import me.cooper.rick.elementary.activity.fragment.game.movestrategies.TouchMoveStrategy;
-import me.cooper.rick.elementary.datastructures.CircularLinkedList;
+import me.cooper.rick.elementary.activities.fragments.game.movestrategies.MoveStrategy;
+import me.cooper.rick.elementary.activities.fragments.game.movestrategies.SensorMoveStrategy;
+import me.cooper.rick.elementary.activities.fragments.game.movestrategies.TouchMoveStrategy;
+import me.cooper.rick.elementary.activities.fragments.game.datastructures.CircularLinkedList;
 
 public class MovementManager {
 

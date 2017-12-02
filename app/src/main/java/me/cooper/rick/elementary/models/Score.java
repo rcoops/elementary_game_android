@@ -1,16 +1,16 @@
 package me.cooper.rick.elementary.models;
 
-public final class Score {
+public class Score {
 
-    private final String name;
-    private int score = 0;
+    protected final String playerName;
+    protected int score = 0;
 
-    public Score(String name) {
-        this.name = name;
+    public Score(String playerName) {
+        this.playerName = playerName;
     }
 
-    public String getName() {
-        return name;
+    public String getPlayerName() {
+        return playerName;
     }
 
     public int getScore() {
