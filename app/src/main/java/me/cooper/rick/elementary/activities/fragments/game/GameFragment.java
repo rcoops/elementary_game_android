@@ -60,6 +60,8 @@ public class GameFragment extends Fragment implements Runnable {
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
     private Handler handler;
+
+    private int scoreIncrement = 100;
 //    private DatabaseReference dbRef;
 
     Thread thread;
@@ -145,14 +147,14 @@ public class GameFragment extends Fragment implements Runnable {
                 ElementAnswerView collidedView = checkCollisions();
                 if (collidedView != null) {
                     if (quizManager.isCorrectAnswer(collidedView.getAnswer())) {
-                        player.incrementLives();
-                        Log.d("RICK", "YEEEEESSSSS");
+                        player.adjustForRightAnswer();
+                        Log.d("RICK", player.toString());
                     } else {
-                        player.decrementLives();
+                        player.adjustForWrongAnswer();
+                        Log.d("RICK", player.toString());
                         if (player.getLives() <= 0) {
                             Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
                         }
-
                     }
                 }
             }
@@ -219,9 +221,14 @@ public class GameFragment extends Fragment implements Runnable {
             ElementAnswerView collidedView = checkCollisions();
             if (collidedView != null) {
                 if (quizManager.isCorrectAnswer(collidedView.getAnswer())) {
-                    Log.d("RICK", "YEEEEESSSSS");
+                    player.adjustForRightAnswer();
+                    Log.d("RICK", player.toString());
                 } else {
-                    Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
+                    player.adjustForWrongAnswer();
+                    Log.d("RICK", player.toString());
+                    if (player.getLives() <= 0) {
+                        Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
+                    }
                 }
             }
         }

@@ -21,7 +21,6 @@ import me.cooper.rick.elementary.activities.fragments.game.GameFragment;
 import me.cooper.rick.elementary.activities.fragments.score.ScoreFragment;
 import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent;
 import me.cooper.rick.elementary.models.Player;
-import me.cooper.rick.elementary.models.Score;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -64,8 +63,6 @@ public class MainActivity extends AppCompatActivity
         scoreFragment = new ScoreFragment();
         gameFragment = new GameFragment();
         gameFragment.setHasOptionsMenu(true);
-        String newScore = SCORES_DB.push().getKey();
-        SCORES_DB.child(newScore).setValue(new Score("Tim"));
     }
 
     @Override

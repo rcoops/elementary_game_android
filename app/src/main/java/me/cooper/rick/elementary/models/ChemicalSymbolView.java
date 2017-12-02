@@ -79,7 +79,7 @@ public class ChemicalSymbolView extends View {
         canvas.drawCircle(position.x, position.y, RADIUS, circlePaint);
         circlePaint.setColor(backgroundColor);
         canvas.drawCircle(position.x, position.y, RADIUS - 5, circlePaint);
-        canvas.drawText(element.chemicalSymbol, position.x, position.y + 35, textPaint);
+        canvas.drawText(element.chemicalSymbol, position.x, position.y + 17, textPaint);
 
         invalidate();
     }

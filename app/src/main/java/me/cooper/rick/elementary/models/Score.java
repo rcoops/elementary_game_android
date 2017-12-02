@@ -17,8 +17,4 @@ public class Score {
         return score;
     }
 
-    public void incrementScore(int adjustment) {
-        score += adjustment;
-    }
-
 }
