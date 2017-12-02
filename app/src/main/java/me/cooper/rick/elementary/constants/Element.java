@@ -2,6 +2,7 @@ package me.cooper.rick.elementary.constants;
 
 import java.util.Random;
 
+import static java.util.Arrays.copyOfRange;
 import static me.cooper.rick.elementary.constants.BondingType.ATOMIC;
 import static me.cooper.rick.elementary.constants.BondingType.COVALENT_NETWORK;
 import static me.cooper.rick.elementary.constants.BondingType.DIATOMIC;
@@ -143,7 +144,7 @@ public enum Element {
         this.group = group;
     }
 
-    public static Element getRandom() {
+    public static Element rand() {
         Element[] elements = Element.values();
         int index = RAND.nextInt(elements.length);
 
@@ -190,9 +191,8 @@ public enum Element {
             this.label = label;
         }
 
-        public static Property getRandomQuizProperty() {
-            int index = rand.nextInt(allProperties.length - 1) + 1; // Ignore symbol
-            return allProperties[index];
+        public static Property[] quizValues() {
+            return copyOfRange(allProperties, 1, allProperties.length - 1);
         }
 
     }

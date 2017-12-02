@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Random;
 
 import me.cooper.rick.elementary.constants.Element;
+import me.cooper.rick.elementary.constants.Element.Property;
 
 import static java.util.Arrays.asList;
+import static me.cooper.rick.elementary.constants.Element.Property.quizValues;
 
 public class QuizManager {
 
@@ -21,10 +23,10 @@ public class QuizManager {
     private static final Element[] ALL_ELEMENTS = Element.values();
     private static final Element[] CURRENT_ELEMENTS = new Element[NO_OF_ELEMENTS];
 
-    private static final Element.Property[] ALL_PROPERTIES = Element.Property.values();
-    private static final Element.Property[] CURRENT_PROPERTIES = new Element.Property[NO_OF_ELEMENTS];
+    private static final Property[] ALL_PROPERTIES = quizValues();
+    private static final Property[] CURRENT_PROPERTIES = new Property[NO_OF_ELEMENTS];
 
-    private Element.Property targetProperty;
+    private Property targetProperty;
 
     public static QuizManager getInstance() {
         if (instance == null) {
@@ -54,7 +56,7 @@ public class QuizManager {
         return CURRENT_ELEMENTS[0];
     }
 
-    public Element.Property getTargetProperty() {
+    public Property getTargetProperty() {
         return targetProperty;
     }
 

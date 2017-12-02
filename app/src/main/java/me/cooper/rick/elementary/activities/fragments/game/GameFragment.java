@@ -8,7 +8,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.util.Log;
@@ -20,19 +19,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import me.cooper.rick.elementary.R;
+import me.cooper.rick.elementary.constants.Element;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.ChemicalSymbolView;
 import me.cooper.rick.elementary.models.ElementAnswerView;
 import me.cooper.rick.elementary.models.Player;
 
 import static android.content.Context.SENSOR_SERVICE;
+import static me.cooper.rick.elementary.activities.MainActivity.SCORES_DB;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,10 +59,6 @@ public class GameFragment extends Fragment implements Runnable {
     private Point centre;
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
-    private Handler handler;
-
-    private int scoreIncrement = 100;
-//    private DatabaseReference dbRef;
 
     Thread thread;
     boolean isRunning = true;
@@ -98,9 +94,6 @@ public class GameFragment extends Fragment implements Runnable {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        handler = new Handler();
-        thread = new Thread(this);
-//        dbRef = FirebaseDatabase.getInstance().getReference("scores");
     }
 
     @Override
@@ -120,7 +113,8 @@ public class GameFragment extends Fragment implements Runnable {
         setAnswerViewReferences(view);
         addChemicalSymbolView();
 
-        reset();
+        initViews();
+        initThread();
 
         return view;
     }
@@ -140,7 +134,6 @@ public class GameFragment extends Fragment implements Runnable {
     @Override
     public void onStart() {
         super.onStart();
-        thread.start();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -171,9 +164,6 @@ public class GameFragment extends Fragment implements Runnable {
             Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(new ShakeListener(), sensor, SensorManager.SENSOR_DELAY_GAME);
         }
-
-//        thread = new Thread(this);
-//        thread.start();
     }
 
     @Override
@@ -220,6 +210,9 @@ public class GameFragment extends Fragment implements Runnable {
         while (isRunning) {
             ElementAnswerView collidedView = checkCollisions();
             if (collidedView != null) {
+                movementManager.stopMoving();
+                chemicalSymbolView.resetPosition();
+                isRunning = false;
                 if (quizManager.isCorrectAnswer(collidedView.getAnswer())) {
                     player.adjustForRightAnswer();
                     Log.d("RICK", player.toString());
@@ -227,25 +220,55 @@ public class GameFragment extends Fragment implements Runnable {
                     player.adjustForWrongAnswer();
                     Log.d("RICK", player.toString());
                     if (player.getLives() <= 0) {
+                        String newScore = SCORES_DB.push().getKey();
+                        SCORES_DB.child(newScore).setValue(player);
                         Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
                     }
                 }
+                resetUI();
             }
         }
     }
 
-    private void reset() {
-        quizManager.resetAnswers();
-
-        resetChemicalSymbolView();
-        resetAnswerViews();
+    private void resetUI() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                resetViews();
+            }
+        });
     }
 
-    private void resetChemicalSymbolView() {
+    private void initViews() {
+        quizManager.resetAnswers();
+        initChemicalSymbolView();
+        initAnswerViews();
+    }
+
+    private void resetViews() {
+        if (thread != null) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        initViews();
+        initThread();
+        movementManager.startMoving();
+    }
+
+    private void initThread() {
+        isRunning = true;
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    private void initChemicalSymbolView() {
         chemicalSymbolView.reset(quizManager.getTargetElement());
     }
 
-    private void resetAnswerViews() {
+    private void initAnswerViews() {
         List<Pair<String, String>> answers = quizManager.getAnswers();
         Collections.shuffle(answers);
 
@@ -305,16 +328,4 @@ public class GameFragment extends Fragment implements Runnable {
         }
     }
 
-    public Handler getHandler() {
-        return handler;
-    }
-
-    public void makeToast(final String msg){
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }

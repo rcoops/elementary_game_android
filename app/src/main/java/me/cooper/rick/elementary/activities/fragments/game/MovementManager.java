@@ -44,10 +44,18 @@ public class MovementManager {
         return nextStrategy == null ? null : nextStrategy.getDescription();
     }
 
-    public void activateNextMoveStrategy() {
+    public void stopMoving() {
         activeMoveStrategy.unregisterListener();
-        activeMoveStrategy = moveStrategies.cycleNext();
+    }
+
+    public void startMoving() {
         activeMoveStrategy.registerListener();
+    }
+
+    public void activateNextMoveStrategy() {
+        stopMoving();
+        activeMoveStrategy = moveStrategies.cycleNext();
+        startMoving();
     }
 
     private class MotionSensorListener implements SensorEventListener {

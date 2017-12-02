@@ -2,6 +2,8 @@ package me.cooper.rick.elementary.activities.fragments.game.movestrategies;
 
 import android.view.MotionEvent;
 import android.view.View;
+
+import me.cooper.rick.elementary.models.ChemicalSymbolView;
 //import static android.view.View.OnTouchListener;
 
 public class TouchMoveStrategy implements MoveStrategy {
@@ -48,16 +50,19 @@ public class TouchMoveStrategy implements MoveStrategy {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (v == view) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        dx = event.getX() - view.getX();
-                        dy = event.getY() - view.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        move(event.getX() - dx, event.getY() - dy);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        break;
+                ChemicalSymbolView chemicalSymbolView = (ChemicalSymbolView) view;
+                if (chemicalSymbolView.isInsideBounds(event.getX(), event.getY())) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            dx = event.getX() - view.getX();
+                            dy = event.getY() - view.getY();
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            move(event.getX() - dx, event.getY() - dy);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            break;
+                    }
                 }
             }
             return true;

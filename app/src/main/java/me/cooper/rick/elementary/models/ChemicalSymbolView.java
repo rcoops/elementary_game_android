@@ -1,20 +1,14 @@
 package me.cooper.rick.elementary.models;
 
 import android.content.Context;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.ColorUtils;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import me.cooper.rick.elementary.constants.Element;
 
@@ -84,14 +78,21 @@ public class ChemicalSymbolView extends View {
         invalidate();
     }
 
-    private boolean isOutsideBound(int position, int bound) {
+    public boolean isInsideBounds(float x, float y) {
+        return x > viewBounds.left
+                && x < viewBounds.right
+                && y > viewBounds.top
+                && y < viewBounds.bottom;
+    }
+
+    private boolean isOutsideMaxBound(int position, int bound) {
         return position < bound;
     }
 
     private int getAdjustedAxis(int position, int minBound, int maxBound) {
-        if (isOutsideBound(-position, -maxBound)) {
+        if (isOutsideMaxBound(-position, -maxBound)) {
             return maxBound;
-        } else if (isOutsideBound(position, minBound)) {
+        } else if (isOutsideMaxBound(position, minBound)) {
             return minBound;
         }
         return position;
@@ -106,11 +107,15 @@ public class ChemicalSymbolView extends View {
         return HSL[2] > 0.5 ? Color.BLACK : Color.WHITE;
     }
 
+    public void resetPosition() {
+        position.set(startingPosition.x, startingPosition.y);
+    }
+
     public void reset(Element element) {
         this.element = element;
         backgroundColor = Color.parseColor("#" + element.hexColourCode);
         textPaint.setColor(getForeGroundColor(backgroundColor));
-        position.set(startingPosition.x, startingPosition.y);
+        resetPosition();
     }
 
 }

@@ -21,6 +21,7 @@ import me.cooper.rick.elementary.activities.fragments.game.GameFragment;
 import me.cooper.rick.elementary.activities.fragments.score.ScoreFragment;
 import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent;
 import me.cooper.rick.elementary.models.Player;
+import me.cooper.rick.elementary.models.Score;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -147,15 +148,6 @@ public class MainActivity extends AppCompatActivity
 
     private void displayToastMessage(String message) {
         makeText(this, message, LENGTH_SHORT).show();
-    }
-
-    private void tostOnMain(){
-        gameFragment.getHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                gameFragment.makeToast("from other thread");
-            }
-        });
     }
 
 }
