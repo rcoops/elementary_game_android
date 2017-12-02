@@ -25,11 +25,13 @@ import java.util.Collections;
 import java.util.List;
 
 import me.cooper.rick.elementary.R;
+import me.cooper.rick.elementary.activities.MainActivity;
 import me.cooper.rick.elementary.constants.Element;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.ChemicalSymbolView;
 import me.cooper.rick.elementary.models.ElementAnswerView;
 import me.cooper.rick.elementary.models.Player;
+import me.cooper.rick.elementary.models.Score;
 
 import static android.content.Context.SENSOR_SERVICE;
 import static me.cooper.rick.elementary.activities.MainActivity.SCORES_DB;
@@ -59,6 +61,7 @@ public class GameFragment extends Fragment implements Runnable {
     private Point centre;
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
+    private MainActivity mainActivity;
 
     Thread thread;
     boolean isRunning = true;
@@ -94,6 +97,7 @@ public class GameFragment extends Fragment implements Runnable {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -112,6 +116,8 @@ public class GameFragment extends Fragment implements Runnable {
 
         setAnswerViewReferences(view);
         addChemicalSymbolView();
+
+        resetTitle();
 
         initViews();
         initThread();
@@ -134,24 +140,6 @@ public class GameFragment extends Fragment implements Runnable {
     @Override
     public void onStart() {
         super.onStart();
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ElementAnswerView collidedView = checkCollisions();
-                if (collidedView != null) {
-                    if (quizManager.isCorrectAnswer(collidedView.getAnswer())) {
-                        player.adjustForRightAnswer();
-                        Log.d("RICK", player.toString());
-                    } else {
-                        player.adjustForWrongAnswer();
-                        Log.d("RICK", player.toString());
-                        if (player.getLives() <= 0) {
-                            Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
-                        }
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -221,8 +209,9 @@ public class GameFragment extends Fragment implements Runnable {
                     Log.d("RICK", player.toString());
                     if (player.getLives() <= 0) {
                         String newScore = SCORES_DB.push().getKey();
-                        SCORES_DB.child(newScore).setValue(player);
                         Log.d("RICK", "NOOOOOOOOOOOOOOOOO");
+                        Score score = player;
+                        SCORES_DB.child(newScore).setValue(score);
                     }
                 }
                 resetUI();
@@ -231,7 +220,7 @@ public class GameFragment extends Fragment implements Runnable {
     }
 
     private void resetUI() {
-        getActivity().runOnUiThread(new Runnable() {
+        mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 resetViews();
@@ -239,7 +228,12 @@ public class GameFragment extends Fragment implements Runnable {
         });
     }
 
+    private void resetTitle() {
+        mainActivity.setTitle(player);
+    }
+
     private void initViews() {
+        resetTitle();
         quizManager.resetAnswers();
         initChemicalSymbolView();
         initAnswerViews();

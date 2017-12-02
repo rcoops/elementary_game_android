@@ -14,7 +14,7 @@ import me.cooper.rick.elementary.constants.Element;
 
 public class ChemicalSymbolView extends View {
 
-    public static final int RADIUS = 50;
+    public static final int RADIUS = 75;
 
     private Element element;
 
@@ -36,7 +36,7 @@ public class ChemicalSymbolView extends View {
         super(context);
         this.startingPosition = startingPosition;
         this.maxBounds = new Rect(RADIUS, RADIUS, maxBounds.x - RADIUS, maxBounds.y - RADIUS);
-        textPaint.setTextSize(50f);
+        textPaint.setTextSize(RADIUS);
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
 

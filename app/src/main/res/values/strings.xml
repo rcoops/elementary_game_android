@@ -29,4 +29,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="txt_create_player">New Player</string>
+
+    <string name="txt_title_game_left">Score: %1$d</string>
+    <string name="txt_title_game_right">Lives: %1$d</string>
+
+    <string name="txt_ele_answer">%1$s:\n%2$s</string>
 </resources>

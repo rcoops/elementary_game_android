@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,7 +22,6 @@ import me.cooper.rick.elementary.activities.fragments.game.GameFragment;
 import me.cooper.rick.elementary.activities.fragments.score.ScoreFragment;
 import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent;
 import me.cooper.rick.elementary.models.Player;
-import me.cooper.rick.elementary.models.Score;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity
     public static final DatabaseReference SCORES_DB = FirebaseDatabase
             .getInstance().getReference("scores");
 
-    private Player player;
+    private TextView titleLeft;
+    private TextView titleRight;
 
     private FragmentManager fragmentManager;
     private Fragment newPlayerFragment;
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        titleLeft = findViewById(R.id.txt_title_left);
+        titleRight = findViewById(R.id.txt_title_right);
         fragmentManager = getSupportFragmentManager();
         newPlayerFragment = new NewPlayerFragment();
         scoreFragment = new ScoreFragment();
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_quit:
                 exitApplication();
             default:
-                displayToastMessage(R.string.err_not_implemented); // Won't happen
+                displayToastMessage(R.string.err_not_implemented); // Shouldn't happen
         }
 
 
@@ -100,16 +103,13 @@ public class MainActivity extends AppCompatActivity
 
     private void startFragment(int contentId, Fragment fragment) {
         if (fragment != null) {
-            fragmentManager.beginTransaction()
-                    .replace(contentId, fragment)
-                    .commit();
+            fragmentManager.beginTransaction().replace(contentId, fragment).commit();
         }
     }
 
     @Override
     public void onPlayerCreated(Player player) {
         gameFragment.setPlayer(player);
-        this.player = player;
         displayToastMessage("Welcome: " + player.getPlayerName() + "!");
         startFragment(R.id.content_main, gameFragment);
     }
@@ -129,12 +129,17 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public Player getPlayer() {
-        return player;
+    @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+        titleLeft.setText("");
+        titleRight.setText("");
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setTitle(Player player) {
+        setTitle("");
+        titleLeft.setText(getString(R.string.txt_title_game_left, player.getScore()));
+        titleRight.setText(getString(R.string.txt_title_game_right, player.getLives()));
     }
 
     private void exitApplication() {

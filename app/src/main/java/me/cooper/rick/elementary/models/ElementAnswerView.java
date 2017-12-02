@@ -7,6 +7,8 @@ import android.support.v4.util.Pair;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
+import me.cooper.rick.elementary.R;
+
 public class ElementAnswerView extends AppCompatTextView {
 
     private String answer;
@@ -16,15 +18,16 @@ public class ElementAnswerView extends AppCompatTextView {
         super(context, attrs);
     }
 
+
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
         viewBounds.set(this.getLeft(), this.getTop(), this.getRight(), this.getBottom());
     }
 
     public void setAnswer(Pair<String, String> answer) {
         this.answer = answer.second;
-        setText(answer.first + ":\n" + answer.second);
+        setText(getContext().getString(R.string.txt_ele_answer, answer.first,  answer.second));
     }
 
     public String getAnswer() {
