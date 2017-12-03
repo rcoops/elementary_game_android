@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.graphics.ColorUtils;
 import android.view.View;
 
-import me.cooper.rick.elementary.constants.Element;
+import me.cooper.rick.elementary.constants.element.Element;
 
 public class ChemicalSymbolView extends View {
 

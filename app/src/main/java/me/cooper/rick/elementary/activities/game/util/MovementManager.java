@@ -1,16 +1,12 @@
 package me.cooper.rick.elementary.activities.game.util;
 
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.view.MotionEvent;
 import android.view.View;
 
 import me.cooper.rick.elementary.activities.game.movestrategies.MoveStrategy;
 import me.cooper.rick.elementary.activities.game.movestrategies.SensorMoveStrategy;
 import me.cooper.rick.elementary.activities.game.movestrategies.TouchMoveStrategy;
-import me.cooper.rick.elementary.activities.game.movestrategies.datastructures.CircularLinkedList;
+import me.cooper.rick.elementary.activities.game.util.datastructures.CircularLinkedList;
 
 public class MovementManager {
 

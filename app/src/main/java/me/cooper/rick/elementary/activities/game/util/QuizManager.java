@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import me.cooper.rick.elementary.constants.Element;
-import me.cooper.rick.elementary.constants.Element.Property;
+import me.cooper.rick.elementary.constants.element.Element;
+import me.cooper.rick.elementary.constants.element.Element.Property;
 
 import static java.util.Arrays.asList;
-import static me.cooper.rick.elementary.constants.Element.Property.quizValues;
+import static me.cooper.rick.elementary.constants.element.Element.Property.quizValues;
 
 public class QuizManager {
 

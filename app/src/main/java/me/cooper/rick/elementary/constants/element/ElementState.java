@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.constants;
+package me.cooper.rick.elementary.constants.element;
 
 public enum ElementState {
 

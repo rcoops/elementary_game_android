@@ -7,6 +7,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
@@ -34,6 +36,9 @@ import me.cooper.rick.elementary.models.view.ElementAnswerView;
 
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 import static me.cooper.rick.elementary.constants.Constants.SCORES_DB;
+import static me.cooper.rick.elementary.constants.Constants.VIBRATE_CORRECT;
+import static me.cooper.rick.elementary.constants.Constants.VIBRATE_QUIT;
+import static me.cooper.rick.elementary.constants.Constants.VIBRATE_WRONG;
 
 public class GameActivity extends AbstractAppCompatActivity implements Runnable {
 
@@ -66,6 +71,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         setSupportActionBar(toolbar);
 
         player = getIntent().getParcelableExtra(PLAYER_INTENT_TAG);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         disableKeyboard();
         setViewReferences();
@@ -139,12 +145,14 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     protected void onPause() {
         super.onPause();
         movementManager.stopMoving();
+        vibrator.vibrate(100);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         movementManager.startMoving();
+        vibrator.vibrate(100);
     }
 
     @Override
@@ -176,6 +184,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                 if (correctAnswer) {
                     player.adjustForRightAnswer();
                     Log.d("RICK", player.toString());
+                    vibrator.vibrate(VIBRATE_CORRECT, -1);
                 } else {
                     player.adjustForWrongAnswer();
                     Log.d("RICK", player.toString());
@@ -183,6 +192,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                         exit();
                         return;
                     }
+                    vibrator.vibrate(VIBRATE_WRONG, -1);
                 }
                 resetUI(correctAnswer);
             }
@@ -210,6 +220,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                vibrator.vibrate(VIBRATE_QUIT, -1);
                 displayToastMessage(R.string.txt_game_over);
             }
         });
