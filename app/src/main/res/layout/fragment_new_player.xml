@@ -24,7 +24,7 @@
         android:imeOptions="actionDone"
         android:inputType="text"
         android:textColorHint="@android:color/darker_gray"
-        android:textColorLink="@color/colorTextLight" />
+        android:textColorLink="@color/colorAccent" />
 
     <Button
         android:id="@+id/btn_create_player"

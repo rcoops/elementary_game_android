@@ -115,6 +115,18 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     }
 
     @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        onPause();
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    @Override
+    public void onPanelClosed(int featureId, Menu menu) {
+        onResume();
+        super.onPanelClosed(featureId, menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.game, menu);
