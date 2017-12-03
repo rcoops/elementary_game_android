@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activities.fragments.game.datastructures;
+package me.cooper.rick.elementary.activities.game.movestrategies.datastructures;
 
 public class CircularLinkedList<T> {
 

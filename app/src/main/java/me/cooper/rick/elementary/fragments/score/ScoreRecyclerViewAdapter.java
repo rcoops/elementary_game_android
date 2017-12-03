@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activities.fragments.score;
+package me.cooper.rick.elementary.fragments.score;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent.ScoreItem;
+import me.cooper.rick.elementary.fragments.score.content.ScoreContent.ScoreItem;
 
 import java.util.List;
 

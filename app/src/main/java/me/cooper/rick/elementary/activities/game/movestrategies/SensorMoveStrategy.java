@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activities.fragments.game.movestrategies;
+package me.cooper.rick.elementary.activities.game.movestrategies;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,10 +10,10 @@ import me.cooper.rick.elementary.listeners.AcceleroListener;
 
 public class SensorMoveStrategy extends AcceleroListener implements MoveStrategy {
 
-    private static final float X_SENSITIVITY = 4;
-    private static final float Y_SENSITIVITY = 5;
+    private static final float X_SENSITIVITY = 2.0f;
+    private static final float Y_SENSITIVITY = 2.5f;
 
-    private static final String DESCRIPTION = "Motion Sensor";
+    private static final String DESCRIPTION = "Tilt";
 
     private View view;
     private SensorManager sensorManager;

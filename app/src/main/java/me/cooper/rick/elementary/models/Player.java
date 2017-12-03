@@ -1,16 +1,30 @@
 package me.cooper.rick.elementary.models;
 
+import android.os.Parcel;
+
+import com.google.firebase.database.Exclude;
+
+import static me.cooper.rick.elementary.constants.Constants.SCORE_BASE_INCREMENT;
+import static me.cooper.rick.elementary.constants.Constants.SCORE_INCREMENT_INCREMENT;
+
 public final class Player extends Score {
 
-    private static final int SCORE_INCREMENT_INCREMENT = 10;
 
+    public static final Creator<Player> CREATOR = new ParcelablePlayerCreator();
+
+    private int scoreIncrement = SCORE_BASE_INCREMENT;
     private int lives = 10;
-    private int scoreIncrement = 100;
 
     public Player(String playerName) {
         super(playerName);
     }
 
+    // Don't need lives or score outside game activity
+    public Player(Parcel parcel) {
+        super(parcel);
+    }
+
+    @Exclude
     public int getLives() {
         return lives;
     }
@@ -22,7 +36,13 @@ public final class Player extends Score {
 
     public void adjustForWrongAnswer() {
         lives --;
-        scoreIncrement = SCORE_INCREMENT_INCREMENT;
+        scoreIncrement = SCORE_BASE_INCREMENT;
+    }
+
+    // Don't need lives or score outside game activity
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
     }
 
     @Override
@@ -33,6 +53,20 @@ public final class Player extends Score {
                 ", lives=" + lives +
                 ", scoreIncrement=" + scoreIncrement +
                 '}';
+    }
+
+    private static class ParcelablePlayerCreator implements Creator<Player> {
+
+        @Override
+        public Player createFromParcel(Parcel parcel) {
+            return new Player(parcel);
+        }
+
+        @Override
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+
     }
 
 }

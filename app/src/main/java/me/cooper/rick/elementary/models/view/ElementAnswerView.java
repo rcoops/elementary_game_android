@@ -1,7 +1,6 @@
-package me.cooper.rick.elementary.models;
+package me.cooper.rick.elementary.models.view;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.AppCompatTextView;

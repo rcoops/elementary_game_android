@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activities.fragments.score.content;
+package me.cooper.rick.elementary.fragments.score.content;
 
 import java.util.ArrayList;
 import java.util.HashMap;
