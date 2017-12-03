@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activities.fragments.game.movestrategies;
+package me.cooper.rick.elementary.activities.game.movestrategies;
 
 public interface MoveStrategy {
 

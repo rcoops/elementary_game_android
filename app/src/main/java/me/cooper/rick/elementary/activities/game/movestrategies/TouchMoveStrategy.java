@@ -1,9 +1,9 @@
-package me.cooper.rick.elementary.activities.fragments.game.movestrategies;
+package me.cooper.rick.elementary.activities.game.movestrategies;
 
 import android.view.MotionEvent;
 import android.view.View;
 
-import me.cooper.rick.elementary.models.ChemicalSymbolView;
+import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
 //import static android.view.View.OnTouchListener;
 
 public class TouchMoveStrategy implements MoveStrategy {

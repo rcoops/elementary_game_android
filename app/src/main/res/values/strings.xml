@@ -1,18 +1,9 @@
 <resources>
     <string name="action_toggle_control">Toggle control: %1$s</string>
-    <string name="action_toggle_tilt">Tilt</string>
-    <string name="action_toggle_touch">Touch</string>
 
     <string name="app_name">Elementary</string>
 
     <string name="btn_create_player">Create</string>
-
-    <string name="ele_full_name">Full Name: </string>
-    <string name="ele_atomic_number">Atomic Number: </string>
-    <string name="ele_atomic_mass">Atomic Mass: </string>
-    <string name="ele_natural_state">Natural State: </string>
-    <string name="ele_bonding_type">Bonding Type: </string>
-    <string name="ele_group">Element Group: </string>
 
     <string name="email_default">R.P.Cooper1@edu.salford.ac.uk</string>
 
@@ -34,4 +25,9 @@
     <string name="txt_title_game_right">Lives: %1$d</string>
 
     <string name="txt_ele_answer">%1$s:\n%2$s</string>
+    <string name="txt_welcome_game">Welcome %1$s !</string>
+    <string name="txt_game_over">Game Over!</string>
+    <string name="title_activity_game">GameActivity</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

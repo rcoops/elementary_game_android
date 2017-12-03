@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.activities.fragments.score;
+package me.cooper.rick.elementary.fragments.score;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent;
-import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent.ScoreItem;
+import me.cooper.rick.elementary.fragments.score.content.ScoreContent;
+import me.cooper.rick.elementary.fragments.score.content.ScoreContent.ScoreItem;
 
 /**
  * A fragment representing a list of Items.

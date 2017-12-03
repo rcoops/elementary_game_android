@@ -1,6 +1,6 @@
 package me.cooper.rick.elementary.activities;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -8,41 +8,29 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import org.jetbrains.annotations.NotNull;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.activities.fragments.NewPlayerFragment;
-import me.cooper.rick.elementary.activities.fragments.game.GameFragment;
-import me.cooper.rick.elementary.activities.fragments.score.ScoreFragment;
-import me.cooper.rick.elementary.activities.fragments.score.content.ScoreContent;
+import me.cooper.rick.elementary.activities.game.GameActivity;
+import me.cooper.rick.elementary.fragments.NewPlayerFragment;
+import me.cooper.rick.elementary.fragments.score.ScoreFragment;
+import me.cooper.rick.elementary.fragments.score.content.ScoreContent;
 import me.cooper.rick.elementary.models.Player;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
-import static java.lang.System.exit;
+import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AbstractAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         NewPlayerFragment.OnPlayerCreatedListener,
-        GameFragment.OnFragmentInteractionListener,
         ScoreFragment.OnListFragmentInteractionListener {
-
-    public static final DatabaseReference SCORES_DB = FirebaseDatabase
-            .getInstance().getReference("scores");
-
-    private TextView titleLeft;
-    private TextView titleRight;
 
     private FragmentManager fragmentManager;
     private Fragment newPlayerFragment;
     private Fragment scoreFragment;
-    private GameFragment gameFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +48,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        titleLeft = findViewById(R.id.txt_title_left);
-        titleRight = findViewById(R.id.txt_title_right);
         fragmentManager = getSupportFragmentManager();
-        newPlayerFragment = new NewPlayerFragment();
         scoreFragment = new ScoreFragment();
-        gameFragment = new GameFragment();
-        gameFragment.setHasOptionsMenu(true);
     }
 
     @Override
@@ -80,10 +63,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+    public boolean onNavigationItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_new_game:
+                newPlayerFragment = new NewPlayerFragment();
                 startFragment(R.id.dialog_layout, newPlayerFragment);
                 break;
             case R.id.nav_scores:
@@ -107,16 +90,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onPlayerCreated(Player player) {
-        gameFragment.setPlayer(player);
-        displayToastMessage("Welcome: " + player.getPlayerName() + "!");
-        startFragment(R.id.content_main, gameFragment);
+    private void endFragment(Fragment fragment) {
+        if (fragment != null) {
+            fragmentManager.beginTransaction().remove(fragment).commit();
+        }
+        setTitle(getString(R.string.app_name));
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onPlayerCreated(Player player) {
+        endFragment(newPlayerFragment);
+        Intent gameIntent = new Intent(this, GameActivity.class);
+        gameIntent.putExtra(PLAYER_INTENT_TAG, player);
+        startActivity(gameIntent);
     }
 
     @Override
@@ -127,32 +113,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
-        titleLeft.setText("");
-        titleRight.setText("");
-    }
-
-    public void setTitle(Player player) {
-        setTitle("");
-        titleLeft.setText(getString(R.string.txt_title_game_left, player.getScore()));
-        titleRight.setText(getString(R.string.txt_title_game_right, player.getLives()));
-    }
-
-    private void exitApplication() {
-        finish();
-        exit(0);
-    }
-
-    private void displayToastMessage(int stringId) {
-        displayToastMessage(getString(stringId));
-    }
-
-    private void displayToastMessage(String message) {
-        makeText(this, message, LENGTH_SHORT).show();
     }
 
 }

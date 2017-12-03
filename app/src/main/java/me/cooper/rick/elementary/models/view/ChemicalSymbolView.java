@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.models;
+package me.cooper.rick.elementary.models.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

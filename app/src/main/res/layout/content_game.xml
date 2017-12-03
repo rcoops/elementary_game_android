@@ -1,21 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="me.cooper.rick.elementary.activities.fragments.game.GameFragment">
-
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="me.cooper.rick.elementary.activities.game.GameActivity"
+    tools:showIn="@layout/app_bar_game">
     <RelativeLayout
         android:id="@+id/game_space"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
+        android:background="@color/colorTextLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <me.cooper.rick.elementary.models.ElementAnswerView
+        <me.cooper.rick.elementary.models.view.ElementAnswerView
             android:id="@+id/answer_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,10 +29,10 @@
             android:padding="8dp"
             android:textAlignment="center"
             android:maxLines="4"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorTextLight"
             android:background="@color/colorPrimaryDark"/>
 
-        <me.cooper.rick.elementary.models.ElementAnswerView
+        <me.cooper.rick.elementary.models.view.ElementAnswerView
             android:id="@+id/answer_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,10 +44,10 @@
             android:padding="8dp"
             android:textAlignment="center"
             android:maxLines="4"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorTextLight"
             android:background="@color/colorPrimaryDark"/>
 
-        <me.cooper.rick.elementary.models.ElementAnswerView
+        <me.cooper.rick.elementary.models.view.ElementAnswerView
             android:id="@+id/answer_left"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -56,10 +58,10 @@
             android:padding="8dp"
             android:gravity="center"
             android:maxLines="4"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorTextLight"
             android:background="@color/colorPrimaryDark"/>
 
-        <me.cooper.rick.elementary.models.ElementAnswerView
+        <me.cooper.rick.elementary.models.view.ElementAnswerView
             android:id="@+id/answer_right"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -70,8 +72,8 @@
             android:padding="8dp"
             android:gravity="center"
             android:maxLines="4"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorTextLight"
             android:background="@color/colorPrimaryDark"/>
     </RelativeLayout>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
