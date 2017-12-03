@@ -7,11 +7,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
+import android.os.Vibrator;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -29,15 +28,16 @@ import me.cooper.rick.elementary.activities.AbstractAppCompatActivity;
 import me.cooper.rick.elementary.activities.game.util.MovementManager;
 import me.cooper.rick.elementary.activities.game.util.QuizManager;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
+import me.cooper.rick.elementary.models.Player;
 import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
 import me.cooper.rick.elementary.models.view.ElementAnswerView;
-import me.cooper.rick.elementary.models.Player;
 
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 import static me.cooper.rick.elementary.constants.Constants.SCORES_DB;
 
-public class GameActivity extends AbstractAppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Runnable {
+public class GameActivity extends AbstractAppCompatActivity implements Runnable {
+
+    private Vibrator vibrator;
 
     private RelativeLayout content;
     private Point size = new Point();
@@ -62,18 +62,10 @@ public class GameActivity extends AbstractAppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         content = findViewById(R.id.game_space);
-        player = getIntent().getParcelableExtra(PLAYER_INTENT_TAG);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        toggleItem = navigationView.getMenu().findItem(R.id.nav_toggle_control);
+        player = getIntent().getParcelableExtra(PLAYER_INTENT_TAG);
 
         disableKeyboard();
         setViewReferences();
@@ -158,25 +150,6 @@ public class GameActivity extends AbstractAppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_toggle_control:
-                movementManager.activateNextMoveStrategy();
-                setToggleMenuText();
-                break;
-            case R.id.nav_quit:
-                exit();
-                break;
-            default:
-                displayToastMessage(R.string.err_not_implemented);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override

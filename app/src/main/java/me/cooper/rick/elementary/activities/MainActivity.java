@@ -20,7 +20,6 @@ import me.cooper.rick.elementary.fragments.score.ScoreFragment;
 import me.cooper.rick.elementary.fragments.score.content.ScoreContent;
 import me.cooper.rick.elementary.models.Player;
 
-import static android.widget.Toast.makeText;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 
 public class MainActivity extends AbstractAppCompatActivity

@@ -22,7 +22,9 @@
         android:layout_gravity="center"
         android:hint="@string/hint_enter_name"
         android:imeOptions="actionDone"
-        android:inputType="text" />
+        android:inputType="text"
+        android:textColorHint="@android:color/darker_gray"
+        android:textColorLink="@color/colorTextLight" />
 
     <Button
         android:id="@+id/btn_create_player"
