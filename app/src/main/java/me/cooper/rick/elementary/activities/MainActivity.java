@@ -13,24 +13,29 @@ import android.view.MenuItem;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.activities.game.GameActivity;
 import me.cooper.rick.elementary.fragments.NewPlayerFragment;
-import me.cooper.rick.elementary.fragments.score.ScoreFragment;
-import me.cooper.rick.elementary.fragments.score.content.ScoreContent;
+import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.models.Player;
+import me.cooper.rick.elementary.models.Score;
 
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 
 public class MainActivity extends AbstractAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         NewPlayerFragment.OnPlayerCreatedListener,
-        ScoreFragment.OnListFragmentInteractionListener {
+        HighScoreFragment.OnListFragmentInteractionListener {
 
     private FragmentManager fragmentManager;
     private Fragment newPlayerFragment;
-    private Fragment scoreFragment;
+    private Fragment highScoreFragment;
 
+
+    private List<Score> highScores = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +53,7 @@ public class MainActivity extends AbstractAppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentManager = getSupportFragmentManager();
-        scoreFragment = new ScoreFragment();
+        highScoreFragment = new HighScoreFragment();
     }
 
     @Override
@@ -69,7 +74,7 @@ public class MainActivity extends AbstractAppCompatActivity
                 startFragment(R.id.dialog_layout, newPlayerFragment);
                 break;
             case R.id.nav_scores:
-                startFragment(R.id.content_main, scoreFragment);
+                startFragment(R.id.content_main, highScoreFragment);
                 break;
             case R.id.nav_quit:
                 exitApplication();
@@ -105,7 +110,7 @@ public class MainActivity extends AbstractAppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(ScoreContent.ScoreItem item) {
+    public void onListFragmentInteraction(Score item) {
 
     }
 

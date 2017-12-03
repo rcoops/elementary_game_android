@@ -7,8 +7,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
@@ -29,23 +27,23 @@ import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.activities.AbstractAppCompatActivity;
 import me.cooper.rick.elementary.activities.game.util.MovementManager;
 import me.cooper.rick.elementary.activities.game.util.QuizManager;
+import me.cooper.rick.elementary.firebase.FireBaseManager;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.Player;
 import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
 import me.cooper.rick.elementary.models.view.ElementAnswerView;
 
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
-import static me.cooper.rick.elementary.constants.Constants.SCORES_DB;
-import static me.cooper.rick.elementary.constants.Constants.VIBRATE_CORRECT;
-import static me.cooper.rick.elementary.constants.Constants.VIBRATE_QUIT;
-import static me.cooper.rick.elementary.constants.Constants.VIBRATE_WRONG;
+import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
+import static me.cooper.rick.elementary.constants.VibratePattern.QUIT;
+import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
 
 public class GameActivity extends AbstractAppCompatActivity implements Runnable {
 
     private Vibrator vibrator;
 
     private RelativeLayout content;
-    private Point size = new Point();
+    private Point size;
     private Point centre;
 
     private TextView titleLeft;
@@ -58,6 +56,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
 
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
+    private FireBaseManager fireBaseManager = FireBaseManager.getInstance();
 
     private Thread thread;
     boolean isRunning = true;
@@ -81,7 +80,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         setupSensorManager();
         resetTitle();
         initThread();
-
+        fireBaseManager.printHighScores();
         displayToastMessage(R.string.txt_welcome_game, player.getPlayerName());
     }
 
@@ -104,7 +103,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     }
 
     private void setViewSize() {
-        if (size == null || size.x == 0 || size.y == 0) {
+        if (size == null) {
+            size = new Point();
             getWindowManager().getDefaultDisplay().getSize(size);
             centre = new Point(size.x / 2, size.y / 2);
         }
@@ -184,15 +184,16 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                 if (correctAnswer) {
                     player.adjustForRightAnswer();
                     Log.d("RICK", player.toString());
-                    vibrator.vibrate(VIBRATE_CORRECT, -1);
+                    vibrator.vibrate(CORRECT.pattern, -1);
                 } else {
                     player.adjustForWrongAnswer();
                     Log.d("RICK", player.toString());
                     if (player.getLives() <= 0) {
+                        fireBaseManager.printHighScores();
                         exit();
                         return;
                     }
-                    vibrator.vibrate(VIBRATE_WRONG, -1);
+                    vibrator.vibrate(WRONG.pattern, -1);
                 }
                 resetUI(correctAnswer);
             }
@@ -216,22 +217,15 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     private void exit() {
         movementManager.stopMoving();
         isRunning = false;
-        saveScore();
+        fireBaseManager.saveScore(player);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                vibrator.vibrate(VIBRATE_QUIT, -1);
+                vibrator.vibrate(QUIT.pattern, -1);
                 displayToastMessage(R.string.txt_game_over);
             }
         });
         finish();
-    }
-
-    private void saveScore() {
-        if (player.hasScore()) {
-            String newScore = SCORES_DB.push().getKey();
-            SCORES_DB.child(newScore).setValue(player);
-        }
     }
 
     private void addChemicalSymbolView() {
@@ -347,6 +341,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                 movementManager.activateNextMoveStrategy();
             }
         }
+
     }
 
 }

@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name="me.cooper.rick.elementary.activity.fragment.ScoreFragment"
+    android:name="me.cooper.rick.elementary.fragments.score.HighScoreFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:background="@color/colorAccent"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".fragments.score.ScoreFragment"
-    tools:listitem="@layout/fragment_score" />
+    tools:context="me.cooper.rick.elementary.fragments.score.HighScoreFragment"
+    tools:listitem="@layout/fragment_high_score" />
