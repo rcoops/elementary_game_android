@@ -30,8 +30,6 @@ public class MainActivity extends AbstractAppCompatActivity
         NewPlayerFragment.OnPlayerCreatedListener {
 
     private FragmentManager fragmentManager;
-    private Fragment newPlayerFragment;
-    private Fragment highScoreFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +48,6 @@ public class MainActivity extends AbstractAppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentManager = getSupportFragmentManager();
-        highScoreFragment = new HighScoreFragment();
     }
 
     @Override
@@ -67,11 +64,10 @@ public class MainActivity extends AbstractAppCompatActivity
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_new_game:
-                newPlayerFragment = new NewPlayerFragment();
-                startFragment(R.id.dialog_layout, newPlayerFragment, "new player");
+                startFragment(R.id.dialog_layout, new NewPlayerFragment(), "new player");
                 break;
             case R.id.nav_scores:
-                startFragment(R.id.content_main, highScoreFragment, "high scores");
+                startFragment(R.id.content_main, new HighScoreFragment(), "high scores");
                 break;
             case R.id.nav_quit:
                 exitApplication();
@@ -94,19 +90,9 @@ public class MainActivity extends AbstractAppCompatActivity
         }
     }
 
-    private void endFragment(Fragment fragment) {
-        fragmentManager.beginTransaction().remove(fragment).commit();
-    }
-
-    private boolean isActive(Fragment fragment) {
-        return fragment != null && fragment.isVisible();
-    }
-
     @Override
     public void onPlayerCreated(Player player) {
-        if (isActive(newPlayerFragment)) {
-            endFragment(newPlayerFragment);
-        }
+        fragmentManager.popBackStack();
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(PLAYER_INTENT_TAG, player);
         startActivity(gameIntent);

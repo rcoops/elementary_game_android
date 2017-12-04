@@ -111,16 +111,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         onPause();
         return super.onMenuOpened(featureId, menu);
@@ -197,6 +187,12 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                 resetUI(correctAnswer);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        exit();
     }
 
     private void setToggleMenuText() {
