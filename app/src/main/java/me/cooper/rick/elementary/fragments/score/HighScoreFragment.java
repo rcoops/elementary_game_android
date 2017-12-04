@@ -21,26 +21,17 @@ import me.cooper.rick.elementary.models.Score;
  */
 public class HighScoreFragment extends Fragment implements FireBaseManager.FireBaseListener {
 
-    private OnListFragmentInteractionListener mListener;
-
     private static FireBaseManager fireBaseManager = FireBaseManager.getInstance();
 
     private HighScoreRecyclerViewAdapter adapter;
 
-    public HighScoreFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static HighScoreFragment newInstance(int columnCount) {
-        return new HighScoreFragment();
-    }
+    public HighScoreFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_high_score_list, container, false);
-        fireBaseManager.addListener(this);
+        fireBaseManager.addHighScoreListListener(this);
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -53,29 +44,8 @@ public class HighScoreFragment extends Fragment implements FireBaseManager.FireB
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public void onFireBaseChange() {
         adapter.notifyDataSetChanged();
     }
 
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Score item);
-    }
 }

@@ -14,7 +14,7 @@ import me.cooper.rick.elementary.models.Player;
 import me.cooper.rick.elementary.models.Score;
 
 import static me.cooper.rick.elementary.constants.Constants.DB_NAME;
-import static me.cooper.rick.elementary.constants.Constants.HIGH_SCORE_LIMIT;
+import static me.cooper.rick.elementary.constants.Constants.HIGH_SCORE_ENTRIES_LIMIT;
 import static me.cooper.rick.elementary.constants.Constants.SCORE_FIELD_NAME;
 
 public class FireBaseManager {
@@ -38,11 +38,11 @@ public class FireBaseManager {
         scoresDb = FirebaseDatabase.getInstance().getReference(DB_NAME);
 
         scoresDb.orderByChild(SCORE_FIELD_NAME)
-                .limitToFirst(HIGH_SCORE_LIMIT)
+                .limitToLast(HIGH_SCORE_ENTRIES_LIMIT)
                 .addChildEventListener(new HighScoreChildEventListener());
     }
 
-    public void addListener(FireBaseListener listener) {
+    public void addHighScoreListListener(FireBaseListener listener) {
         this.scoreFireBaseListener = listener;
     }
 
@@ -57,15 +57,7 @@ public class FireBaseManager {
         return highScores;
     }
 
-    // TODO - remove
-    public void printHighScores() {
-        int index = 0;
-        for (Score highScore : highScores) {
-            System.out.println(++index + ": " + highScore);
-        }
-    }
-
-    public void notifyListener() {
+    private void notifyListener() {
         if (scoreFireBaseListener != null) {
             scoreFireBaseListener.onFireBaseChange();
         }

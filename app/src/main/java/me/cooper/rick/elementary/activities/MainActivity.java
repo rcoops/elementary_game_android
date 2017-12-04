@@ -27,15 +27,12 @@ import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 
 public class MainActivity extends AbstractAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        NewPlayerFragment.OnPlayerCreatedListener,
-        HighScoreFragment.OnListFragmentInteractionListener {
+        NewPlayerFragment.OnPlayerCreatedListener {
 
     private FragmentManager fragmentManager;
     private Fragment newPlayerFragment;
     private Fragment highScoreFragment;
 
-
-    private List<Score> highScores = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,10 +68,10 @@ public class MainActivity extends AbstractAppCompatActivity
         switch (item.getItemId()) {
             case R.id.nav_new_game:
                 newPlayerFragment = new NewPlayerFragment();
-                startFragment(R.id.dialog_layout, newPlayerFragment);
+                startFragment(R.id.dialog_layout, newPlayerFragment, "new player");
                 break;
             case R.id.nav_scores:
-                startFragment(R.id.content_main, highScoreFragment);
+                startFragment(R.id.content_main, highScoreFragment, "high scores");
                 break;
             case R.id.nav_quit:
                 exitApplication();
@@ -88,30 +85,31 @@ public class MainActivity extends AbstractAppCompatActivity
         return true;
     }
 
-    private void startFragment(int contentId, Fragment fragment) {
+    private void startFragment(int contentId, Fragment fragment, String tag) {
         if (fragment != null) {
-            fragmentManager.beginTransaction().replace(contentId, fragment).commit();
+            fragmentManager.beginTransaction()
+                    .add(contentId, fragment)
+                    .addToBackStack(tag)
+                    .commit();
         }
     }
 
     private void endFragment(Fragment fragment) {
-        if (fragment != null) {
-            fragmentManager.beginTransaction().remove(fragment).commit();
-        }
-        setTitle(getString(R.string.app_name));
+        fragmentManager.beginTransaction().remove(fragment).commit();
+    }
+
+    private boolean isActive(Fragment fragment) {
+        return fragment != null && fragment.isVisible();
     }
 
     @Override
     public void onPlayerCreated(Player player) {
-        endFragment(newPlayerFragment);
+        if (isActive(newPlayerFragment)) {
+            endFragment(newPlayerFragment);
+        }
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(PLAYER_INTENT_TAG, player);
         startActivity(gameIntent);
-    }
-
-    @Override
-    public void onListFragmentInteraction(Score item) {
-
     }
 
     @Override

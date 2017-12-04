@@ -24,6 +24,9 @@
     <string name="txt_title_game_left">Score: %1$d</string>
     <string name="txt_title_game_right">Lives: %1$d</string>
 
+    <string name="txt_correct_answer">Correct! :D</string>
+    <string name="txt_wrong_answer">Wrong! :(</string>
+
     <string name="txt_ele_answer">%1$s:\n%2$s</string>
     <string name="txt_welcome_game">Welcome %1$s !</string>
     <string name="txt_game_over">Game Over!</string>

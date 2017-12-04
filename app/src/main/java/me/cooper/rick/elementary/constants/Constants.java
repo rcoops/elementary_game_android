@@ -10,7 +10,7 @@ public final class Constants {
     public static final String DB_NAME = "scores";
     public static final String SCORE_FIELD_NAME = "score";
 
-    public static final int HIGH_SCORE_LIMIT = 10;
+    public static final int HIGH_SCORE_ENTRIES_LIMIT = 20;
 
     private Constants() {}
 

@@ -49,6 +49,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     private TextView titleLeft;
     private TextView titleRight;
     private MenuItem toggleItem;
+
     private ChemicalSymbolView chemicalSymbolView;
     private List<ElementAnswerView> answerViews = new ArrayList<>();
 
@@ -80,7 +81,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         setupSensorManager();
         resetTitle();
         initThread();
-        fireBaseManager.printHighScores();
         displayToastMessage(R.string.txt_welcome_game, player.getPlayerName());
     }
 
@@ -189,7 +189,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                     player.adjustForWrongAnswer();
                     Log.d("RICK", player.toString());
                     if (player.getLives() <= 0) {
-                        fireBaseManager.printHighScores();
                         exit();
                         return;
                     }
@@ -247,14 +246,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         }
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
     private void resetTitle() {
         setTitle(player);
     }
@@ -292,9 +283,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
 
     private void displayAnswerResult(boolean correctAnswer) {
         if (correctAnswer) {
-            displayToastMessage(R.string.txt_title_game_left, player.getScore());
+            displayToastMessage(R.string.txt_correct_answer);
         } else {
-            displayToastMessage(R.string.txt_title_game_right, player.getLives());
+            displayToastMessage(R.string.txt_wrong_answer);
         }
     }
 
@@ -328,10 +319,12 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
 
     private final class ShakeListener extends AcceleroListener implements SensorEventListener {
 
-        ShakeListener() {}
+        ShakeListener() {
+        }
 
         @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
 
         @Override
         public void onSensorChanged(SensorEvent event) {
