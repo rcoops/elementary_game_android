@@ -13,23 +13,25 @@ import android.view.MenuItem;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.activities.game.GameActivity;
 import me.cooper.rick.elementary.fragments.NewPlayerFragment;
-import me.cooper.rick.elementary.fragments.score.ScoreFragment;
-import me.cooper.rick.elementary.fragments.score.content.ScoreContent;
+import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.models.Player;
+import me.cooper.rick.elementary.models.Score;
 
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 
 public class MainActivity extends AbstractAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        NewPlayerFragment.OnPlayerCreatedListener,
-        ScoreFragment.OnListFragmentInteractionListener {
+        NewPlayerFragment.OnPlayerCreatedListener {
 
     private FragmentManager fragmentManager;
     private Fragment newPlayerFragment;
-    private Fragment scoreFragment;
+    private Fragment highScoreFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class MainActivity extends AbstractAppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentManager = getSupportFragmentManager();
-        scoreFragment = new ScoreFragment();
+        highScoreFragment = new HighScoreFragment();
     }
 
     @Override
@@ -66,10 +68,10 @@ public class MainActivity extends AbstractAppCompatActivity
         switch (item.getItemId()) {
             case R.id.nav_new_game:
                 newPlayerFragment = new NewPlayerFragment();
-                startFragment(R.id.dialog_layout, newPlayerFragment);
+                startFragment(R.id.dialog_layout, newPlayerFragment, "new player");
                 break;
             case R.id.nav_scores:
-                startFragment(R.id.content_main, scoreFragment);
+                startFragment(R.id.content_main, highScoreFragment, "high scores");
                 break;
             case R.id.nav_quit:
                 exitApplication();
@@ -83,30 +85,31 @@ public class MainActivity extends AbstractAppCompatActivity
         return true;
     }
 
-    private void startFragment(int contentId, Fragment fragment) {
+    private void startFragment(int contentId, Fragment fragment, String tag) {
         if (fragment != null) {
-            fragmentManager.beginTransaction().replace(contentId, fragment).commit();
+            fragmentManager.beginTransaction()
+                    .add(contentId, fragment)
+                    .addToBackStack(tag)
+                    .commit();
         }
     }
 
     private void endFragment(Fragment fragment) {
-        if (fragment != null) {
-            fragmentManager.beginTransaction().remove(fragment).commit();
-        }
-        setTitle(getString(R.string.app_name));
+        fragmentManager.beginTransaction().remove(fragment).commit();
+    }
+
+    private boolean isActive(Fragment fragment) {
+        return fragment != null && fragment.isVisible();
     }
 
     @Override
     public void onPlayerCreated(Player player) {
-        endFragment(newPlayerFragment);
+        if (isActive(newPlayerFragment)) {
+            endFragment(newPlayerFragment);
+        }
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(PLAYER_INTENT_TAG, player);
         startActivity(gameIntent);
-    }
-
-    @Override
-    public void onListFragmentInteraction(ScoreContent.ScoreItem item) {
-
     }
 
     @Override

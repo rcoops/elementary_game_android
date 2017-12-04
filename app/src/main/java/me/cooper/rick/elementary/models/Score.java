@@ -2,16 +2,26 @@ package me.cooper.rick.elementary.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
-public class Score implements Parcelable {
+import java.util.Objects;
+
+public class Score implements Parcelable, Comparable<Score> {
 
     public static final Creator<Score> CREATOR = new ParcelableScoreCreator();
 
-    protected final String playerName;
+    protected String playerName;
     protected int score = 0;
+
+    public Score() {}
 
     public Score(String playerName) {
         this.playerName = playerName;
+    }
+
+    public Score(String playerName, int score) {
+        this(playerName);
+        this.score = score;
     }
 
     protected Score(Parcel parcel) {
@@ -23,12 +33,55 @@ public class Score implements Parcelable {
         return playerName;
     }
 
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public boolean hasScore() {
         return score > 0;
     }
 
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Score score1 = (Score) o;
+        return score == score1.score &&
+                Objects.equals(playerName, score1.playerName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerName, score);
+    }
+
+    @Override
+    public String toString() {
+        return "Score{" +
+                "playerName='" + playerName + '\'' +
+                ", score=" + score +
+                '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull Score other) {
+        int comparision = other.getScore() - score;
+        if (comparision == 0) {
+            comparision = playerName.compareTo(other.getPlayerName());
+        }
+        return comparision;
     }
 
     @Override
