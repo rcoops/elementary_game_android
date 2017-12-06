@@ -1,7 +1,5 @@
 package me.cooper.rick.elementary.constants.element;
 
-import java.util.Random;
-
 import static java.util.Arrays.copyOfRange;
 
 public enum Element {
@@ -114,8 +112,6 @@ public enum Element {
     public final BondingType bondingType;
     public final ElementGroup group;
 
-    private static final Random RAND = new Random();
-
     Element(String chemicalSymbol, String fullName, int atomicNumber, int atomicMass, String hexColourCode,
             ElementState naturalState, BondingType bondingType, ElementGroup group) {
         this.chemicalSymbol = chemicalSymbol;
@@ -126,13 +122,6 @@ public enum Element {
         this.naturalState = naturalState;
         this.bondingType = bondingType;
         this.group = group;
-    }
-
-    public static Element rand() {
-        Element[] elements = Element.values();
-        int index = RAND.nextInt(elements.length);
-
-        return elements[index];
     }
 
     public String getPropertyValue(Property property) {
@@ -156,6 +145,20 @@ public enum Element {
         }
     }
 
+    public int getPropertyValueMatches(Element[] elements, Property[] properties) {
+        int matches = 0;
+        for (int i = 0; i < elements.length; ++i) {
+            if (hasPropertyValue(properties[i], elements[i].getPropertyValue(properties[i]))) {
+                matches++;
+            }
+        }
+        return matches;
+    }
+
+    public boolean hasPropertyValue(Property property, String value) {
+        return getPropertyValue(property).equals(value);
+    }
+
     public enum Property {
 
         SYMBOL("Symbol"),
@@ -165,8 +168,6 @@ public enum Element {
         NATURAL_STATE("Natural\nState"),
         BONDING_TYPE("Bonding\nType"),
         GROUP("Element\nGroup");
-
-        private static final Random rand = new Random();
         private static Property[] allProperties = Property.values();
 
         public final String label;
@@ -176,7 +177,7 @@ public enum Element {
         }
 
         public static Property[] quizValues() {
-            return copyOfRange(allProperties, 1, allProperties.length - 1);
+            return copyOfRange(allProperties, 1, allProperties.length );
         }
 
     }

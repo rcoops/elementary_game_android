@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/edit_name"
-    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:gravity="center"
     android:layout_gravity="center"
     android:layout_centerVertical="true"
@@ -9,11 +9,12 @@
     android:background="@drawable/layout_dialog">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/txt_create_player"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        style="@style/elementary_header"
+        android:background="@drawable/ele_header" />
 
     <EditText
         android:id="@+id/edt_enter_name"
@@ -24,13 +25,15 @@
         android:imeOptions="actionDone"
         android:inputType="text"
         android:textColorHint="@android:color/darker_gray"
-        android:textColorLink="@color/colorAccent" />
+        android:textColorLink="@color/colorAccent"
+        android:layout_margin="20dp"/>
 
     <Button
         android:id="@+id/btn_create_player"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
         android:text="@string/btn_create_player" />
 
 </LinearLayout>

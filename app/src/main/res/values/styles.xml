@@ -17,4 +17,17 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="elementary_header">
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">@dimen/elementary_header_padding</item>
+        <item name="android:paddingBottom">@dimen/elementary_header_padding</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">@dimen/elementary_header_text_size</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

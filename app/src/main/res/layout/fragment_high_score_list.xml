@@ -6,7 +6,7 @@
     android:name="me.cooper.rick.elementary.fragments.score.HighScoreFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@drawable/game_background"
     app:layoutManager="LinearLayoutManager"
     tools:context="me.cooper.rick.elementary.fragments.score.HighScoreFragment"
     tools:listitem="@layout/fragment_high_score" />

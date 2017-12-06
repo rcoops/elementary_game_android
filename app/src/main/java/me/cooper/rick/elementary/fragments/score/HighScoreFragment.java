@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.firebase.FireBaseManager;
-import me.cooper.rick.elementary.models.Score;
+import me.cooper.rick.elementary.services.FireBaseManager;
 
 /**
  * A fragment representing a list of Items.

@@ -1,6 +1,9 @@
 package me.cooper.rick.elementary.activities;
 
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,16 +16,12 @@ import android.view.MenuItem;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.activities.game.GameActivity;
-import me.cooper.rick.elementary.fragments.NewPlayerFragment;
+import me.cooper.rick.elementary.fragments.newplayer.NewPlayerFragment;
 import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.models.Player;
-import me.cooper.rick.elementary.models.Score;
 
+import static me.cooper.rick.elementary.constants.Constants.MUSIC_VOLUME;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 
 public class MainActivity extends AbstractAppCompatActivity
@@ -30,6 +29,8 @@ public class MainActivity extends AbstractAppCompatActivity
         NewPlayerFragment.OnPlayerCreatedListener {
 
     private FragmentManager fragmentManager;
+    private MediaPlayer mediaPlayer;
+    private SoundPool soundPool;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,15 @@ public class MainActivity extends AbstractAppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentManager = getSupportFragmentManager();
+
+        initMedia();
+    }
+
+    private void initMedia() {
+        mediaPlayer = MediaPlayer.create(this, R.raw.main);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(MUSIC_VOLUME, MUSIC_VOLUME);
+        mediaPlayer.start();
     }
 
     @Override
@@ -95,6 +105,8 @@ public class MainActivity extends AbstractAppCompatActivity
         fragmentManager.popBackStack();
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(PLAYER_INTENT_TAG, player);
+
+        mediaPlayer.stop();
         startActivity(gameIntent);
     }
 
