@@ -1,9 +1,7 @@
 package me.cooper.rick.elementary.activities;
 
 import android.content.Intent;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,31 +9,43 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.jetbrains.annotations.NotNull;
 
 import me.cooper.rick.elementary.R;
+import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.fragments.newplayer.NewPlayerFragment;
 import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.models.Player;
 
-import static me.cooper.rick.elementary.constants.Constants.MUSIC_VOLUME;
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_NEW_PLAYER;
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
+import static me.cooper.rick.elementary.constants.Constants.MAIN_MUSIC;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
+import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
 
 public class MainActivity extends AbstractAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        NewPlayerFragment.OnPlayerCreatedListener {
+        NewPlayerFragment.OnPlayerCreatedListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private FragmentManager fragmentManager;
-    private MediaPlayer mediaPlayer;
-    private SoundPool soundPool;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
+        fragmentManager = getSupportFragmentManager();
+
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,16 +58,13 @@ public class MainActivity extends AbstractAppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fragmentManager = getSupportFragmentManager();
-
         initMedia();
     }
 
     private void initMedia() {
-        mediaPlayer = MediaPlayer.create(this, R.raw.main);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.setVolume(MUSIC_VOLUME, MUSIC_VOLUME);
-        mediaPlayer.start();
+        sounds.put(MAIN_MUSIC, soundPool.load(this, R.raw.main, 1));
+        float volume = getVolumeSetting(preferences, PREF_VOL_MUSIC);
+        soundPool.play(sounds.get(MAIN_MUSIC), volume, volume, 1, -1, 1);
     }
 
     @Override
@@ -74,10 +81,13 @@ public class MainActivity extends AbstractAppCompatActivity
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_new_game:
-                startFragment(R.id.dialog_layout, new NewPlayerFragment(), "new player");
+                startFragment(R.id.dialog_layout, new NewPlayerFragment(), FRAG_TAG_NEW_PLAYER);
                 break;
             case R.id.nav_scores:
-                startFragment(R.id.content_main, new HighScoreFragment(), "high scores");
+                startFragment(R.id.content_main, new HighScoreFragment(), FRAG_TAG_SCORES);
+                break;
+            case R.id.nav_settings:
+                startFragment(R.id.content_main, new SettingsFragment(), FRAG_TAG_SETTINGS);
                 break;
             case R.id.nav_quit:
                 exitApplication();
@@ -105,9 +115,19 @@ public class MainActivity extends AbstractAppCompatActivity
         fragmentManager.popBackStack();
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(PLAYER_INTENT_TAG, player);
-
-        mediaPlayer.stop();
+        soundPool.stop(sounds.get(MAIN_MUSIC));
         startActivity(gameIntent);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+        switch (key) {
+            case PREF_VOL_MUSIC:
+                setVolume(MAIN_MUSIC, getVolumeSetting(preferences, PREF_VOL_MUSIC));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

@@ -43,7 +43,7 @@ public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HeaderHolder) {
             HeaderHolder headerHolder = (HeaderHolder) holder;
-            headerHolder.headerView.setText("High Scores");
+            headerHolder.headerView.setText(context.getString(R.string.nav_high_scores));
         } else {
             ViewHolder itemHolder = (ViewHolder) holder;
             itemHolder.score = highScores.get(position - 1);

@@ -1,16 +1,15 @@
 package me.cooper.rick.elementary.activities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,22 +21,25 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.services.movement.MovementManager;
-import me.cooper.rick.elementary.services.QuizManager;
-import me.cooper.rick.elementary.services.FireBaseManager;
+import me.cooper.rick.elementary.constants.VibratePattern;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.Player;
 import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
 import me.cooper.rick.elementary.models.view.ElementAnswerView;
+import me.cooper.rick.elementary.services.FireBaseManager;
+import me.cooper.rick.elementary.services.QuizManager;
+import me.cooper.rick.elementary.services.movement.MovementManager;
 
 import static me.cooper.rick.elementary.constants.Constants.GAME_MUSIC;
-import static me.cooper.rick.elementary.constants.Constants.MUSIC_VOLUME;
+import static me.cooper.rick.elementary.constants.Constants.MAIN_MUSIC;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
+import static me.cooper.rick.elementary.constants.Constants.PREF_TOG_VIBRATE;
+import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_EFFECTS;
+import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
+import static me.cooper.rick.elementary.constants.Constants.SOUND_CLICK;
 import static me.cooper.rick.elementary.constants.Constants.SOUND_GAME_OVER;
 import static me.cooper.rick.elementary.constants.Constants.SOUND_RIGHT;
 import static me.cooper.rick.elementary.constants.Constants.SOUND_WRONG;
@@ -45,10 +47,8 @@ import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
 import static me.cooper.rick.elementary.constants.VibratePattern.QUIT;
 import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
 
-public class GameActivity extends AbstractAppCompatActivity implements Runnable {
-
-    private Vibrator vibrator;
-    private SoundPool soundPool;
+public class GameActivity extends AbstractAppCompatActivity implements Runnable,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private RelativeLayout content;
     private Point size;
@@ -66,15 +66,16 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
     private FireBaseManager fireBaseManager = FireBaseManager.getInstance();
+    private SharedPreferences preferences;
 
     private Thread thread;
-    boolean isRunning = true;
-
-    Map<String, Integer> sounds = new HashMap<>();
+    private boolean isRunning = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
         initMedia();
         setContentView(R.layout.activity_game);
         content = findViewById(R.id.game_space);
@@ -82,7 +83,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         setSupportActionBar(toolbar);
 
         player = getIntent().getParcelableExtra(PLAYER_INTENT_TAG);
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if(preferences.getBoolean(PREF_TOG_VIBRATE, true)) {
+            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        }
 
         disableKeyboard();
         setViewReferences();
@@ -93,22 +96,17 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         resetTitle();
         initThread();
         displayToastMessage(R.string.txt_welcome_game, player.getPlayerName());
-        soundPool.play(sounds.get(GAME_MUSIC), MUSIC_VOLUME, MUSIC_VOLUME, 1, -1, 1);
+        soundPool.play(sounds.get(GAME_MUSIC),
+                getVolumeSetting(preferences, PREF_VOL_MUSIC),
+                getVolumeSetting(preferences, PREF_VOL_MUSIC), 1, -1, 1);
     }
 
     private void initMedia() {
-        soundPool = new SoundPool.Builder()
-                .setAudioAttributes(
-                        new AudioAttributes.Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                .setUsage(AudioAttributes.USAGE_GAME)
-                                .build())
-                .setMaxStreams(2)
-                .build();
         sounds.put(GAME_MUSIC, soundPool.load(this, R.raw.game_music, 1));
         sounds.put(SOUND_WRONG, soundPool.load(this, R.raw.negative, 1));
         sounds.put(SOUND_GAME_OVER, soundPool.load(this, R.raw.negative_2, 1));
         sounds.put(SOUND_RIGHT, soundPool.load(this, R.raw.positive, 1));
+        sounds.put(SOUND_CLICK, soundPool.load(this, R.raw.click, 1));
     }
 
     private void setupSensorManager() {
@@ -203,7 +201,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                 if (correctAnswer) {
                     player.adjustForRightAnswer();
                     Log.d("DEBUG", player.toString());
-                    vibrator.vibrate(CORRECT.pattern, -1);
+                    vibrate(CORRECT);
                 } else {
                     player.adjustForWrongAnswer();
                     Log.d("DEBUG", player.toString());
@@ -211,10 +209,25 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                         exit();
                         return;
                     }
-                    vibrator.vibrate(WRONG.pattern, -1);
+                    vibrate(WRONG);
                 }
                 resetUI(correctAnswer);
             }
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+        switch (key) {
+            case PREF_VOL_MUSIC:
+                setVolume(GAME_MUSIC, getVolumeSetting(preferences, key));
+                break;
+            case PREF_VOL_EFFECTS:
+                setSoundVolume(getVolumeSetting(preferences, key));
+                break;
+            case PREF_TOG_VIBRATE:
+                toggleVibrate(preferences.getBoolean(key, false));
+                break;
         }
     }
 
@@ -247,12 +260,24 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                vibrator.vibrate(QUIT.pattern, -1);
+                vibrate(QUIT);
                 displayToastMessage(R.string.txt_game_over);
             }
         });
         soundPool.play(sounds.get(SOUND_GAME_OVER), 0.9f, 0.9f, 1, 0, 1);
         finish();
+    }
+
+    private void vibrate(long millis) {
+        if (vibrator != null) {
+            vibrator.vibrate(millis);
+        }
+    }
+
+    private void vibrate(VibratePattern pattern) {
+        if (vibrator != null) {
+            vibrator.vibrate(pattern.pattern, -1);
+        }
     }
 
     private void addChemicalSymbolView() {

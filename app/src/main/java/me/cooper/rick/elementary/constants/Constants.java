@@ -16,12 +16,23 @@ public final class Constants {
     public static final String PLAYER_INTENT_TAG = "player";
 
     public static final String SCORE_FIELD_NAME = "score";
-    public static final String GAME_MUSIC = "music";
+
+    public static final String GAME_MUSIC = "game music";
+    public static final String MAIN_MUSIC = "main music";
     public static final String SOUND_WRONG = "wrong";
     public static final String SOUND_GAME_OVER = "game_over";
     public static final String SOUND_RIGHT = "correct";
+    public static final String SOUND_CLICK = "click";
 
-    public static final float MUSIC_VOLUME = 0.6f;
+    public static final String FRAG_TAG_SETTINGS = "settings";
+    public static final String FRAG_TAG_SCORES = "highScores";
+    public static final String FRAG_TAG_NEW_PLAYER = "newPlayer";
+
+    public static final String PREF_VOL_MUSIC = "pref_volume_music";
+    public static final String PREF_VOL_EFFECTS = "pref_volume_effects";
+    public static final String PREF_TOG_VIBRATE = "pref_toggle_vibrate";
+
+    public static final int DEFAULT_VOLUME = 6;
 
     public static final Random RAND = new Random();
 
