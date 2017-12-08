@@ -1,15 +1,14 @@
 package me.cooper.rick.elementary.activities;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.constants.VibratePattern;
+import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.Player;
 import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
@@ -33,22 +32,20 @@ import me.cooper.rick.elementary.services.FireBaseManager;
 import me.cooper.rick.elementary.services.QuizManager;
 import me.cooper.rick.elementary.services.movement.MovementManager;
 
-import static me.cooper.rick.elementary.constants.Constants.GAME_MUSIC;
-import static me.cooper.rick.elementary.constants.Constants.MAIN_MUSIC;
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
-import static me.cooper.rick.elementary.constants.Constants.PREF_TOG_VIBRATE;
-import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_EFFECTS;
 import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
 import static me.cooper.rick.elementary.constants.Constants.SOUND_CLICK;
 import static me.cooper.rick.elementary.constants.Constants.SOUND_GAME_OVER;
 import static me.cooper.rick.elementary.constants.Constants.SOUND_RIGHT;
 import static me.cooper.rick.elementary.constants.Constants.SOUND_WRONG;
+import static me.cooper.rick.elementary.constants.VibratePattern.CLICK;
 import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
 import static me.cooper.rick.elementary.constants.VibratePattern.QUIT;
 import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
 
-public class GameActivity extends AbstractAppCompatActivity implements Runnable,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class GameActivity extends AbstractAppCompatActivity implements Runnable {
 
     private RelativeLayout content;
     private Point size;
@@ -66,7 +63,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
     private FireBaseManager fireBaseManager = FireBaseManager.getInstance();
-    private SharedPreferences preferences;
 
     private Thread thread;
     private boolean isRunning = true;
@@ -74,18 +70,14 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.registerOnSharedPreferenceChangeListener(this);
-        initMedia();
+
         setContentView(R.layout.activity_game);
         content = findViewById(R.id.game_space);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         player = getIntent().getParcelableExtra(PLAYER_INTENT_TAG);
-        if(preferences.getBoolean(PREF_TOG_VIBRATE, true)) {
-            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        }
 
         disableKeyboard();
         setViewReferences();
@@ -96,17 +88,20 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         resetTitle();
         initThread();
         displayToastMessage(R.string.txt_welcome_game, player.getPlayerName());
-        soundPool.play(sounds.get(GAME_MUSIC),
-                getVolumeSetting(preferences, PREF_VOL_MUSIC),
-                getVolumeSetting(preferences, PREF_VOL_MUSIC), 1, -1, 1);
+
+        initMedia();
     }
 
-    private void initMedia() {
-        sounds.put(GAME_MUSIC, soundPool.load(this, R.raw.game_music, 1));
+    @Override
+    protected void initMedia() {
+        super.initMedia();
         sounds.put(SOUND_WRONG, soundPool.load(this, R.raw.negative, 1));
         sounds.put(SOUND_GAME_OVER, soundPool.load(this, R.raw.negative_2, 1));
         sounds.put(SOUND_RIGHT, soundPool.load(this, R.raw.positive, 1));
-        sounds.put(SOUND_CLICK, soundPool.load(this, R.raw.click, 1));
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.game_music);
+        setMusicVolume(getVolumeSetting(preferences, PREF_VOL_MUSIC));
+        mediaPlayer.start();
     }
 
     private void setupSensorManager() {
@@ -159,21 +154,24 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     @Override
     protected void onPause() {
         super.onPause();
-        soundPool.pause(sounds.get(GAME_MUSIC));
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+        }
         movementManager.stopMoving();
-        vibrator.vibrate(100);
+        vibrate(CLICK);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        soundPool.resume(sounds.get(GAME_MUSIC));
+        mediaPlayer.start();
         movementManager.startMoving();
-        vibrator.vibrate(100);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        playSound(SOUND_CLICK);
+        vibrate(CLICK);
         switch (item.getItemId()) {
             case R.id.nav_toggle_control:
                 movementManager.activateNextMoveStrategy();
@@ -181,6 +179,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
                 break;
             case R.id.nav_quit:
                 exit();
+                break;
+            case R.id.nav_game_settings:
+                startFragment(R.id.game_space, new SettingsFragment(), FRAG_TAG_SETTINGS);
                 break;
             default:
                 displayToastMessage(R.string.err_not_implemented);
@@ -217,24 +218,10 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-        switch (key) {
-            case PREF_VOL_MUSIC:
-                setVolume(GAME_MUSIC, getVolumeSetting(preferences, key));
-                break;
-            case PREF_VOL_EFFECTS:
-                setSoundVolume(getVolumeSetting(preferences, key));
-                break;
-            case PREF_TOG_VIBRATE:
-                toggleVibrate(preferences.getBoolean(key, false));
-                break;
-        }
-    }
-
-    @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        exit();
+        if (!getSupportFragmentManager().popBackStackImmediate()) {
+            exit();
+        }
     }
 
     private void setToggleMenuText() {
@@ -246,14 +233,15 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String sound = correctAnswer ? SOUND_RIGHT : SOUND_WRONG;
-                soundPool.play(sounds.get(sound), 0.9f, 0.9f, 1, 0, 1);
+                playSound(correctAnswer ? SOUND_RIGHT : SOUND_WRONG);
                 resetViews(correctAnswer);
             }
         });
     }
 
     private void exit() {
+        mediaPlayer.release();
+        mediaPlayer = null;
         movementManager.stopMoving();
         isRunning = false;
         fireBaseManager.saveScore(player);
@@ -264,20 +252,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
                 displayToastMessage(R.string.txt_game_over);
             }
         });
-        soundPool.play(sounds.get(SOUND_GAME_OVER), 0.9f, 0.9f, 1, 0, 1);
+        playSound(SOUND_GAME_OVER);
         finish();
-    }
-
-    private void vibrate(long millis) {
-        if (vibrator != null) {
-            vibrator.vibrate(millis);
-        }
-    }
-
-    private void vibrate(VibratePattern pattern) {
-        if (vibrator != null) {
-            vibrator.vibrate(pattern.pattern, -1);
-        }
     }
 
     private void addChemicalSymbolView() {

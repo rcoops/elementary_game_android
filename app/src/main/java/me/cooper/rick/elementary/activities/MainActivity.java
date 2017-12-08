@@ -1,21 +1,21 @@
 package me.cooper.rick.elementary.activities;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
 
 import me.cooper.rick.elementary.R;
+import me.cooper.rick.elementary.constants.VibratePattern;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.fragments.newplayer.NewPlayerFragment;
 import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
@@ -24,52 +24,61 @@ import me.cooper.rick.elementary.models.Player;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_NEW_PLAYER;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
-import static me.cooper.rick.elementary.constants.Constants.MAIN_MUSIC;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
+import static me.cooper.rick.elementary.constants.Constants.SOUND_CLICK;
+import static me.cooper.rick.elementary.constants.Constants.SOUND_DRAWER;
 
-public class MainActivity extends AbstractAppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        NewPlayerFragment.OnPlayerCreatedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AbstractAppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        NewPlayerFragment.OnPlayerCreatedListener {
 
-    private FragmentManager fragmentManager;
-    private SharedPreferences preferences;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.registerOnSharedPreferenceChangeListener(this);
-        fragmentManager = getSupportFragmentManager();
 
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        initMedia();
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new SoundActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        initMedia();
+        ((NavigationView) findViewById(R.id.nav_view)).setNavigationItemSelectedListener(this);
     }
 
-    private void initMedia() {
-        sounds.put(MAIN_MUSIC, soundPool.load(this, R.raw.main, 1));
-        float volume = getVolumeSetting(preferences, PREF_VOL_MUSIC);
-        soundPool.play(sounds.get(MAIN_MUSIC), volume, volume, 1, -1, 1);
+    @Override
+    protected void initMedia() {
+        super.initMedia();
+        sounds.put(SOUND_DRAWER, soundPool.load(this, R.raw.rollover3, 1));
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.main);
+        setMusicVolume(getVolumeSetting(preferences, PREF_VOL_MUSIC));
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mediaPlayer.start();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -79,6 +88,8 @@ public class MainActivity extends AbstractAppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
+        playSound(SOUND_CLICK);
+        vibrate(VibratePattern.CLICK);
         switch (item.getItemId()) {
             case R.id.nav_new_game:
                 startFragment(R.id.dialog_layout, new NewPlayerFragment(), FRAG_TAG_NEW_PLAYER);
@@ -95,19 +106,8 @@ public class MainActivity extends AbstractAppCompatActivity
                 displayToastMessage(R.string.err_not_implemented); // Shouldn't happen
         }
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void startFragment(int contentId, Fragment fragment, String tag) {
-        if (fragment != null) {
-            fragmentManager.beginTransaction()
-                    .add(contentId, fragment)
-                    .addToBackStack(tag)
-                    .commit();
-        }
     }
 
     @Override
@@ -115,23 +115,35 @@ public class MainActivity extends AbstractAppCompatActivity
         fragmentManager.popBackStack();
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(PLAYER_INTENT_TAG, player);
-        soundPool.stop(sounds.get(MAIN_MUSIC));
+        mediaPlayer.pause();
         startActivity(gameIntent);
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-        switch (key) {
-            case PREF_VOL_MUSIC:
-                setVolume(MAIN_MUSIC, getVolumeSetting(preferences, PREF_VOL_MUSIC));
-                break;
-            default:
-                break;
-        }
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
+    private class SoundActionBarDrawerToggle extends ActionBarDrawerToggle {
+
+        public SoundActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout,
+                                          Toolbar toolbar, int openDrawerContentDescRes,
+                                          int closeDrawerContentDescRes) {
+            super(activity, drawerLayout, toolbar, openDrawerContentDescRes,
+                    closeDrawerContentDescRes);
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+            super.onDrawerClosed(drawerView);
+            playSound(SOUND_DRAWER);
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            super.onDrawerOpened(drawerView);
+            playSound(SOUND_DRAWER);
+        }
 
     }
 
