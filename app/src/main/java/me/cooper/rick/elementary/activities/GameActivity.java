@@ -47,7 +47,8 @@ import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
 import static me.cooper.rick.elementary.constants.VibratePattern.QUIT;
 import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
 
-public class GameActivity extends AbstractAppCompatActivity implements Runnable {
+public class GameActivity extends AbstractAppCompatActivity implements Runnable,
+        InstructionsFragment.OnFragmentInteractionListener {
 
     private RelativeLayout content;
     private Point size;
@@ -236,6 +237,11 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         } else {
             onResume();
         }
+    }
+
+    @Override
+    public void onFragmentInteraction() {
+        onBackPressed();
     }
 
     private void setToggleMenuText() {

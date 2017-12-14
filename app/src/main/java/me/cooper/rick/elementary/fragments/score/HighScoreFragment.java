@@ -12,12 +12,6 @@ import android.view.ViewGroup;
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.services.FireBaseManager;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class HighScoreFragment extends Fragment implements FireBaseManager.FireBaseListener {
 
     private static FireBaseManager fireBaseManager = FireBaseManager.getInstance();
