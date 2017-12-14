@@ -1,20 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--card_view:cardCornerRadius="@dimen/ele_corner_radius">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/txt_header"-->
+            <!--style="@style/elementary_header"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:background="@drawable/ele_header" />-->
+    <!--</android.support.v7.widget.CardView>-->
+<!--</LinearLayout>-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ins_hd"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@drawable/ele_header">
 
-    <android.support.v7.widget.CardView
+    <TextView
+        android:id="@+id/txt_header"
+        style="@style/elementary_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="3dp">
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/ins_hd_main"
+        android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/txt_header"
-            style="@style/elementary_header"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/ele_header" />
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/elementary_header_padding"
+        android:background="#00000000"
+        android:contentDescription="@string/btn_close"
+        android:src="@drawable/ic_close" />
+</RelativeLayout>

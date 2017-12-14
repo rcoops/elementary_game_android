@@ -69,13 +69,13 @@ public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView numberView;
-        public final TextView playerNameView;
-        public final TextView scoreView;
-        public Score score;
+        final View mView;
+        final TextView numberView;
+        final TextView playerNameView;
+        final TextView scoreView;
+        Score score;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             numberView = (TextView) view.findViewById(R.id.number);
@@ -90,10 +90,10 @@ public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     public class HeaderHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView headerView;
+        final View mView;
+        final TextView headerView;
 
-        public HeaderHolder(View view) {
+        HeaderHolder(View view) {
             super(view);
             mView = view;
             headerView = (TextView) view.findViewById(R.id.txt_header);

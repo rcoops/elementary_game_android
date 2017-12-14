@@ -27,6 +27,7 @@ import static me.cooper.rick.elementary.constants.Constants.PREF_TOG_VIBRATE;
 import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_EFFECTS;
 import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
 import static me.cooper.rick.elementary.constants.Constants.SOUND_CLICK;
+import static me.cooper.rick.elementary.constants.VibratePattern.CLICK;
 
 
 public abstract class AbstractAppCompatActivity extends AppCompatActivity implements
@@ -138,6 +139,9 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
                 break;
             case PREF_TOG_VIBRATE:
                 vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, true);
+                if (vibrate) {
+                    vibrate(CLICK);
+                }
                 break;
         }
     }

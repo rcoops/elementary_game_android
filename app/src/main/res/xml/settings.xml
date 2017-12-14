@@ -22,6 +22,7 @@
         android:title="@string/pref_vib_title">
 
         <android.support.v7.preference.SwitchPreferenceCompat
+            android:id="@+id/tog_vib"
             android:key="pref_toggle_vibrate"
             android:title="@string/pref_vib_toggle"
             android:defaultValue="true" />

@@ -1,12 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="me.cooper.rick.elementary.fragments.score.HighScoreFragment"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/game_background"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="me.cooper.rick.elementary.fragments.score.HighScoreFragment"
-    tools:listitem="@layout/fragment_high_score" />
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:background="@drawable/layout_dialog">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/high_score_hd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ele_header">
+
+        <TextView
+            android:id="@+id/txt_header"
+            style="@style/elementary_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/nav_high_scores"
+            android:textAlignment="center" />
+
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/elementary_header_padding"
+            android:background="#00000000"
+            android:contentDescription="@string/btn_close"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/score_list"
+        android:name="me.cooper.rick.elementary.fragments.score.HighScoreFragment"
+        android:layout_below="@+id/high_score_hd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="me.cooper.rick.elementary.fragments.score.HighScoreFragment"
+        tools:listitem="@layout/fragment_high_score" />
+</RelativeLayout>

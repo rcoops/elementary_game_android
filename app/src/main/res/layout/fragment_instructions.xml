@@ -35,7 +35,7 @@
                 android:layout_centerInParent="true"
                 android:background="#00000000"
                 android:src="@drawable/ic_close"
-                android:layout_marginRight="@dimen/elementary_header_padding"/>
+                android:layout_marginEnd="@dimen/elementary_header_padding"/>
         </RelativeLayout>
 
 
