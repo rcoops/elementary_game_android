@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/txt_create_player"
+        android:text="@string/txt_new_game"
         style="@style/elementary_header"
         android:background="@drawable/ele_header" />
 
@@ -34,6 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
-        android:text="@string/btn_create_player" />
+        android:text="@string/btn_new_game" />
 
 </LinearLayout>

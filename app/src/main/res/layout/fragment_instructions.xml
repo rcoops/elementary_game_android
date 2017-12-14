@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true"
+    tools:context="me.cooper.rick.elementary.fragments.InstructionsFragment"
+    android:background="@drawable/layout_dialog"
+    android:layout_margin="@dimen/activity_horizontal_margin">
+        <TextView
+            android:id="@+id/ins_hd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            style="@style/elementary_header"
+            android:text="@string/ins_hd_main"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@drawable/ele_header" />
+
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:id="@+id/scrl_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ins_hd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="@dimen/elementary_header_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ins_hd_basic_gameplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ins_hd_basic_gameplay"
+                android:textSize="@dimen/instructions_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ins_basic_gameplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ins_basic_gameplay"
+                android:textSize="@dimen/instructions_text_size" />
+
+            <TextView
+                android:id="@+id/ins_hd_control"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ins_hd_control"
+                android:textSize="@dimen/instructions_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ins_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ins_control"
+                android:textSize="@dimen/instructions_text_size" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import me.cooper.rick.elementary.R;
+import me.cooper.rick.elementary.fragments.InstructionsFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.Player;
@@ -32,6 +33,7 @@ import me.cooper.rick.elementary.services.FireBaseManager;
 import me.cooper.rick.elementary.services.QuizManager;
 import me.cooper.rick.elementary.services.movement.MovementManager;
 
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_INSTRUCTIONS;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
@@ -90,6 +92,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         displayToastMessage(R.string.txt_welcome_game, player.getPlayerName());
 
         initMedia();
+
+        startFragment(R.id.game_space, new InstructionsFragment(), FRAG_TAG_INSTRUCTIONS);
     }
 
     @Override
@@ -100,6 +104,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         sounds.put(SOUND_RIGHT, soundPool.load(this, R.raw.positive, 1));
 
         mediaPlayer = MediaPlayer.create(this, R.raw.game_music);
+        mediaPlayer.setLooping(true);
         setMusicVolume(getVolumeSetting(preferences, PREF_VOL_MUSIC));
         mediaPlayer.start();
     }
@@ -138,8 +143,10 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
 
     @Override
     public void onPanelClosed(int featureId, Menu menu) {
-        onResume();
         super.onPanelClosed(featureId, menu);
+        if (!isFragOpen) {
+            onResume();
+        }
     }
 
     @Override
@@ -164,6 +171,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     @Override
     protected void onResume() {
         super.onResume();
+        isRunning = true;
         mediaPlayer.start();
         movementManager.startMoving();
     }
@@ -176,9 +184,13 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
             case R.id.nav_toggle_control:
                 movementManager.activateNextMoveStrategy();
                 setToggleMenuText();
+                onResume();
                 break;
             case R.id.nav_quit:
                 exit();
+                break;
+            case R.id.nav_instructions:
+                startFragment(R.id.game_space, new InstructionsFragment(), FRAG_TAG_INSTRUCTIONS);
                 break;
             case R.id.nav_game_settings:
                 startFragment(R.id.game_space, new SettingsFragment(), FRAG_TAG_SETTINGS);
@@ -221,6 +233,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     public void onBackPressed() {
         if (!getSupportFragmentManager().popBackStackImmediate()) {
             exit();
+        } else {
+            onResume();
         }
     }
 

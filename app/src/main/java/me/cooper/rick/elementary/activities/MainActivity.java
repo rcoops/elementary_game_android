@@ -16,11 +16,13 @@ import org.jetbrains.annotations.NotNull;
 
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.constants.VibratePattern;
+import me.cooper.rick.elementary.fragments.InstructionsFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
-import me.cooper.rick.elementary.fragments.newplayer.NewPlayerFragment;
+import me.cooper.rick.elementary.fragments.NewGameFragment;
 import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.models.Player;
 
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_INSTRUCTIONS;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_NEW_PLAYER;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
@@ -31,7 +33,7 @@ import static me.cooper.rick.elementary.constants.Constants.SOUND_DRAWER;
 
 public class MainActivity extends AbstractAppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        NewPlayerFragment.OnPlayerCreatedListener {
+        NewGameFragment.OnPlayerCreatedListener {
 
     private DrawerLayout drawer;
 
@@ -61,6 +63,7 @@ public class MainActivity extends AbstractAppCompatActivity implements
         sounds.put(SOUND_DRAWER, soundPool.load(this, R.raw.rollover3, 1));
 
         mediaPlayer = MediaPlayer.create(this, R.raw.main);
+        mediaPlayer.setLooping(true);
         setMusicVolume(getVolumeSetting(preferences, PREF_VOL_MUSIC));
         mediaPlayer.start();
     }
@@ -82,6 +85,7 @@ public class MainActivity extends AbstractAppCompatActivity implements
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            mediaPlayer.start();
             super.onBackPressed();
         }
     }
@@ -92,10 +96,13 @@ public class MainActivity extends AbstractAppCompatActivity implements
         vibrate(VibratePattern.CLICK);
         switch (item.getItemId()) {
             case R.id.nav_new_game:
-                startFragment(R.id.dialog_layout, new NewPlayerFragment(), FRAG_TAG_NEW_PLAYER);
+                startFragment(R.id.dialog_layout, new NewGameFragment(), FRAG_TAG_NEW_PLAYER);
                 break;
             case R.id.nav_scores:
                 startFragment(R.id.content_main, new HighScoreFragment(), FRAG_TAG_SCORES);
+                break;
+            case R.id.nav_instructions:
+                startFragment(R.id.content_main, new InstructionsFragment(), FRAG_TAG_INSTRUCTIONS);
                 break;
             case R.id.nav_settings:
                 startFragment(R.id.content_main, new SettingsFragment(), FRAG_TAG_SETTINGS);

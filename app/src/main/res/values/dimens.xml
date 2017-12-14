@@ -7,6 +7,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="elementary_header_text_size">30sp</dimen>
+    <dimen name="instructions_text_size">22sp</dimen>
+    <dimen name="instructions_header_height">30dp</dimen>
     <dimen name="elementary_header_padding">4dp</dimen>
     <dimen name="ele_corner_radius">10dp</dimen>
 </resources>

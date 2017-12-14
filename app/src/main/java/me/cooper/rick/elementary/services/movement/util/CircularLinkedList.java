@@ -1,5 +1,6 @@
 package me.cooper.rick.elementary.services.movement.util;
 
+// Very basic implementation to allow cycling of items
 public class CircularLinkedList<T> {
 
     private Node<T> tail;

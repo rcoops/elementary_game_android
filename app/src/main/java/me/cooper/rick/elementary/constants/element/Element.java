@@ -177,7 +177,7 @@ public enum Element {
         }
 
         public static Property[] quizValues() {
-            return copyOfRange(allProperties, 1, allProperties.length );
+            return copyOfRange(allProperties, 1, allProperties.length ); // Exclude symbol
         }
 
     }

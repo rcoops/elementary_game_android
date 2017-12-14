@@ -41,6 +41,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     private Vibrator vibrator;
 
     private boolean vibrate;
+    protected boolean isFragOpen = false;
 
     protected Map<String, Integer> sounds = new HashMap<>();
 
@@ -117,6 +118,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     protected void startFragment(int contentId, Fragment fragment, String tag) {
+        isFragOpen = true;
         if (fragment != null) {
             fragmentManager.beginTransaction()
                     .add(contentId, fragment)

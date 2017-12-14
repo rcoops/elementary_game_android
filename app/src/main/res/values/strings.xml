@@ -3,7 +3,7 @@
 
     <string name="app_name">Elementary</string>
 
-    <string name="btn_create_player">Create</string>
+    <string name="btn_new_game">Start Game</string>
 
     <string name="email_default">R.P.Cooper1@edu.salford.ac.uk</string>
 
@@ -19,7 +19,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="txt_create_player">New Player</string>
+    <string name="txt_new_game">New Game</string>
 
     <string name="txt_title_game_left">Score: %1$d</string>
     <string name="txt_title_game_right">Lives: %1$d</string>
@@ -40,4 +40,20 @@
     <string name="pref_sound_effects">Effects Volume</string>
     <string name="pref_vib_title">Vibrate Settings</string>
     <string name="pref_vib_toggle">Toggle Vibration</string>
+    <string name="ins_hd_main">How to Play</string>
+    <string name="ins_hd_basic_gameplay">Basic Game Play</string>
+    <string name="ins_basic_gameplay">
+        1. When you start a new game, a random element will be displayed.
+        \n2. To get points simply drag or tilt the element into the property which belongs to it.
+        \n3. The more answers you get right in a row, the more points you can get!
+        \n4. But watch out, if you get an answer wrong, you\'ll lose a life and your points
+        increment will reset to %1$d.
+    </string>
+    <string name="ins_hd_control">Controls</string>
+    <string name="ins_control">
+        You can switch between two different ways to move your element.
+        \n1. Drag the element.
+        \n2. Tilt the screen.
+        \nTo switch between controls, simply give me a shake or select the other method from the menu.
+    </string>
 </resources>

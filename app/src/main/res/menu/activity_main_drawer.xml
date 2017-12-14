@@ -12,6 +12,10 @@
             android:id="@+id/nav_scores"
             android:icon="@android:drawable/btn_star"
             android:title="@string/nav_high_scores" />
+        <item
+            android:id="@+id/nav_instructions"
+            android:icon="@drawable/ic_instructions"
+            android:title="@string/ins_hd_main" />
 
         <item
             android:id="@+id/nav_settings"

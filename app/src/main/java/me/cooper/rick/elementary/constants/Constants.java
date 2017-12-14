@@ -8,7 +8,7 @@ public final class Constants {
 
     public static final int SCORE_BASE_INCREMENT = 100;
 
-    public static final int SCORE_INCREMENT_INCREMENT = 10;
+    public static final int SCORE_INCREMENT_INCREMENT = 50;
     public static final int HIGH_SCORE_ENTRIES_LIMIT = 20;
 
     public static final String DB_NAME = "scores";
@@ -25,6 +25,7 @@ public final class Constants {
 
     public static final String FRAG_TAG_SETTINGS = "settings";
     public static final String FRAG_TAG_SCORES = "highScores";
+    public static final String FRAG_TAG_INSTRUCTIONS = "instructions";
     public static final String FRAG_TAG_NEW_PLAYER = "newPlayer";
 
     public static final String PREF_VOL_MUSIC = "pref_volume_music";

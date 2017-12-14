@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.fragments.newplayer;
+package me.cooper.rick.elementary.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,19 +15,19 @@ import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.models.Player;
 
 
-public class NewPlayerFragment extends DialogFragment {
+public class NewGameFragment extends DialogFragment {
 
     private OnPlayerCreatedListener mListener;
 
     private Button btnCreate;
 
-    public NewPlayerFragment() {}
+    public NewGameFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_new_player, container, false);
+        View view = inflater.inflate(R.layout.fragment_new_game, container, false);
         final EditText edtEnterName = (EditText) view.findViewById(R.id.edt_enter_name);
         edtEnterName.addTextChangedListener(new EditNameTextWatcher());
 
