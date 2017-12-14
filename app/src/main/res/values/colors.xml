@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#BBBBBB</color>
     <color name="ele_answer_background">#44BBBBFF</color>
+    <color name="new_player_hint">#555555</color>
+    <color name="dialog_background">#CCFFFFFF</color>
 </resources>

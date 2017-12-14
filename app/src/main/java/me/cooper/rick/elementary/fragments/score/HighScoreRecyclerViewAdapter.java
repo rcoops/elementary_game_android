@@ -15,9 +15,6 @@ import me.cooper.rick.elementary.models.Score;
 
 public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ITEM = 1;
-
     private final List<Score> highScores;
 
     private final Context context;
@@ -29,11 +26,6 @@ public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEADER) {
-            View v = LayoutInflater.from(context)
-                    .inflate(R.layout.fragment_high_score_header, parent, false);
-            return new HeaderHolder(v);
-        }
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.fragment_high_score, parent, false);
         return new ViewHolder(view);
@@ -41,31 +33,16 @@ public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof HeaderHolder) {
-            HeaderHolder headerHolder = (HeaderHolder) holder;
-            headerHolder.headerView.setText(context.getString(R.string.nav_high_scores));
-        } else {
-            ViewHolder itemHolder = (ViewHolder) holder;
-            itemHolder.score = highScores.get(position - 1);
-            itemHolder.numberView.setText(context.getString(R.string.numeric, position));
-            itemHolder.playerNameView.setText(itemHolder.score.getPlayerName());
-            itemHolder.scoreView.setText(context.getString(R.string.numeric, itemHolder.score.getScore()));
-
-            itemHolder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-        }
-    }
-    @Override
-    public int getItemViewType(int position) {
-        return position == 0 ? TYPE_HEADER : TYPE_ITEM;
+        ViewHolder itemHolder = (ViewHolder) holder;
+        itemHolder.score = highScores.get(position);
+        itemHolder.numberView.setText(context.getString(R.string.numeric, position + 1));
+        itemHolder.playerNameView.setText(itemHolder.score.getPlayerName());
+        itemHolder.scoreView.setText(context.getString(R.string.numeric, itemHolder.score.getScore()));
     }
 
     @Override
     public int getItemCount() {
-        return highScores.size() + 1;
+        return highScores.size() ;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -89,19 +66,5 @@ public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         }
     }
 
-    public class HeaderHolder extends RecyclerView.ViewHolder {
-        final View mView;
-        final TextView headerView;
-
-        HeaderHolder(View view) {
-            super(view);
-            mView = view;
-            headerView = (TextView) view.findViewById(R.id.txt_header);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + headerView.getText() + "'";
-        }
-    }
 }
+

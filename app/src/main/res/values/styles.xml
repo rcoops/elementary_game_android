@@ -30,5 +30,10 @@
         <item name="android:shadowRadius">2</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorAccent">@android:color/darker_gray</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 
 </resources>

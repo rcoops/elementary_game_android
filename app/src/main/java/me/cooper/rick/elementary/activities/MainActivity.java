@@ -33,8 +33,7 @@ import static me.cooper.rick.elementary.constants.Constants.SOUND_DRAWER;
 
 public class MainActivity extends AbstractAppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        NewGameFragment.OnPlayerCreatedListener,
-        InstructionsFragment.OnFragmentInteractionListener {
+        NewGameFragment.OnPlayerCreatedListener {
 
     private DrawerLayout drawer;
 
@@ -89,12 +88,6 @@ public class MainActivity extends AbstractAppCompatActivity implements
             mediaPlayer.start();
             super.onBackPressed();
         }
-    }
-
-
-    @Override
-    public void onFragmentInteraction() {
-        onBackPressed();
     }
 
     @Override

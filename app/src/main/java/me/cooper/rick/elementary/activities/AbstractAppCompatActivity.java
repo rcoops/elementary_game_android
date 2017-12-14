@@ -18,6 +18,8 @@ import java.util.Map;
 
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.constants.VibratePattern;
+import me.cooper.rick.elementary.fragments.InstructionsFragment;
+import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -31,7 +33,9 @@ import static me.cooper.rick.elementary.constants.VibratePattern.CLICK;
 
 
 public abstract class AbstractAppCompatActivity extends AppCompatActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        InstructionsFragment.OnFragmentInteractionListener,
+        HighScoreFragment.OnFragmentInteractionListener {
 
     protected FragmentManager fragmentManager;
     protected SharedPreferences preferences;
@@ -139,11 +143,17 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
                 break;
             case PREF_TOG_VIBRATE:
                 vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, true);
-                if (vibrate) {
-                    vibrate(CLICK);
-                }
+                vibrate(CLICK);
                 break;
         }
+    }
+
+
+    @Override
+    public void onFragmentInteraction() {
+        playSound(SOUND_CLICK);
+        vibrate(CLICK);
+        onBackPressed();
     }
 
 }

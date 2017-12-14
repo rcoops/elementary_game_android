@@ -24,7 +24,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:padding="8dp"
+            android:padding="@dimen/ele_answer_padding"
             android:textAlignment="center"
             android:maxLines="4"
             android:textColor="@android:color/black"
@@ -37,7 +37,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:padding="8dp"
+            android:padding="@dimen/ele_answer_padding"
             android:textAlignment="center"
             android:maxLines="4"
             android:textColor="@android:color/black"
@@ -53,7 +53,7 @@
             android:background="@color/ele_answer_background"
             android:gravity="center"
             android:maxLines="4"
-            android:padding="8dp"
+            android:padding="@dimen/ele_answer_padding"
             android:textColor="@android:color/black" />
 
         <me.cooper.rick.elementary.models.view.ElementAnswerView
@@ -63,7 +63,7 @@
             android:layout_alignParentEnd="true"
             android:layout_above="@+id/answer_bottom"
             android:layout_below="@+id/answer_top"
-            android:padding="8dp"
+            android:padding="@dimen/ele_answer_padding"
             android:gravity="center"
             android:maxLines="4"
             android:textColor="@android:color/black"

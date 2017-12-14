@@ -14,6 +14,8 @@ import me.cooper.rick.elementary.services.FireBaseManager;
 
 public class HighScoreFragment extends Fragment implements FireBaseManager.FireBaseListener {
 
+    private OnFragmentInteractionListener mListener;
+
     private static FireBaseManager fireBaseManager = FireBaseManager.getInstance();
 
     private HighScoreRecyclerViewAdapter adapter;
@@ -31,12 +33,33 @@ public class HighScoreFragment extends Fragment implements FireBaseManager.FireB
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new HighScoreRecyclerViewAdapter(fireBaseManager.getHighScores(), getActivity());
         recyclerView.setAdapter(adapter);
+        view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onFragmentInteraction();
+            }
+        });
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public void onFireBaseChange() {
         adapter.notifyDataSetChanged();
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction();
     }
 
 }

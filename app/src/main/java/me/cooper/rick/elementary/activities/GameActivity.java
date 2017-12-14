@@ -25,6 +25,7 @@ import java.util.List;
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.fragments.InstructionsFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
+import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.Player;
 import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
@@ -47,8 +48,7 @@ import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
 import static me.cooper.rick.elementary.constants.VibratePattern.QUIT;
 import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
 
-public class GameActivity extends AbstractAppCompatActivity implements Runnable,
-        InstructionsFragment.OnFragmentInteractionListener {
+public class GameActivity extends AbstractAppCompatActivity implements Runnable {
 
     private RelativeLayout content;
     private Point size;
@@ -237,11 +237,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         } else {
             onResume();
         }
-    }
-
-    @Override
-    public void onFragmentInteraction() {
-        onBackPressed();
     }
 
     private void setToggleMenuText() {

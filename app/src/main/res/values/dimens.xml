@@ -7,8 +7,16 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="elementary_header_text_size">30sp</dimen>
-    <dimen name="instructions_text_size">22sp</dimen>
+    <dimen name="instructions_text_size">20sp</dimen>
     <dimen name="instructions_header_height">30dp</dimen>
     <dimen name="elementary_header_padding">4dp</dimen>
     <dimen name="ele_corner_radius">10dp</dimen>
+    <dimen name="dialog_border">2dp</dimen>
+    <dimen name="ele_answer_padding">8dp</dimen>
+    <dimen name="txt_title">20sp</dimen>
+    <dimen name="margin_right_lives">10dp</dimen>
+    <dimen name="margin_left_lives">0dp</dimen>
+    <dimen name="margin_main">8dp</dimen>
+    <dimen name="width_score_item">0dp</dimen>
+    <dimen name="margin_new_game_name">20dp</dimen>
 </resources>

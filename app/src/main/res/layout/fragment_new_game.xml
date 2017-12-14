@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_name"
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:gravity="center"
@@ -21,19 +22,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_new_game_name"
         android:hint="@string/hint_enter_name"
         android:imeOptions="actionDone"
         android:inputType="text"
-        android:textColorHint="@android:color/darker_gray"
-        android:textColorLink="@color/colorAccent"
-        android:layout_margin="20dp"/>
+        android:textColorHint="@color/new_player_hint"
+        android:textColorLink="@android:color/black"
+        android:backgroundTint="@color/new_player_hint"
+        android:textCursorDrawable="@drawable/ic_menu_send" />
 
     <Button
         android:id="@+id/btn_create_player"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/margin_new_game_name"
+        android:theme="@style/AppTheme.Button"
         android:text="@string/btn_new_game" />
 
 </LinearLayout>

@@ -59,12 +59,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ins_hd_basic_gameplay"
                 android:textSize="@dimen/instructions_text_size"
+                android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ins_basic_gameplay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
                 android:text="@string/ins_basic_gameplay"
                 android:textSize="@dimen/instructions_text_size" />
 
@@ -72,6 +74,7 @@
                 android:id="@+id/ins_hd_control"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
                 android:text="@string/ins_hd_control"
                 android:textSize="@dimen/instructions_text_size"
                 android:textStyle="bold" />
@@ -80,6 +83,7 @@
                 android:id="@+id/ins_control"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
                 android:text="@string/ins_control"
                 android:textSize="@dimen/instructions_text_size" />
         </LinearLayout>
