@@ -137,6 +137,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         switch (key) {
             case PREF_VOL_MUSIC:
                 setMusicVolume(getVolumeSetting(preferences, key));
+                break;
             case PREF_VOL_EFFECTS:
                 setSoundVolume(getVolumeSetting(preferences, key));
                 playSound(SOUND_CLICK);
@@ -151,6 +152,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
 
     @Override
     public void onFragmentInteraction() {
+        isFragOpen = false;
         playSound(SOUND_CLICK);
         vibrate(CLICK);
         onBackPressed();

@@ -145,7 +145,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     @Override
     public void onPanelClosed(int featureId, Menu menu) {
         super.onPanelClosed(featureId, menu);
-        if (!isFragOpen) {
+        if (!isFragOpen && isRunning) {
             onResume();
         }
     }
@@ -193,6 +193,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
             case R.id.nav_instructions:
                 startFragment(R.id.game_space, new InstructionsFragment(), FRAG_TAG_INSTRUCTIONS);
                 break;
+            case R.id.nav_scores:
+                startFragment(R.id.game_space, new HighScoreFragment(), FRAG_TAG_SCORES);
+                break;
             case R.id.nav_game_settings:
                 startFragment(R.id.game_space, new SettingsFragment(), FRAG_TAG_SETTINGS);
                 break;
@@ -235,6 +238,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
         if (!getSupportFragmentManager().popBackStackImmediate()) {
             exit();
         } else {
+            isFragOpen = false;
             onResume();
         }
     }
