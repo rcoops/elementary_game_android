@@ -24,7 +24,7 @@ import me.cooper.rick.elementary.models.Player;
 
 import static java.lang.System.exit;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_INSTRUCTIONS;
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_NEW_PLAYER;
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_NEW_GAME;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
@@ -97,7 +97,7 @@ public class MainActivity extends AbstractAppCompatActivity implements
         vibrate(VibratePattern.CLICK);
         switch (item.getItemId()) {
             case R.id.nav_new_game:
-                startFragment(R.id.dialog_layout, new NewGameFragment(), FRAG_TAG_NEW_PLAYER);
+                startFragment(R.id.dialog_layout, new NewGameFragment(), FRAG_TAG_NEW_GAME);
                 break;
             case R.id.nav_scores:
                 startFragment(R.id.content_main, new HighScoreFragment(), FRAG_TAG_SCORES);

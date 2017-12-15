@@ -24,6 +24,7 @@ import java.util.List;
 
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.fragments.InstructionsFragment;
+import me.cooper.rick.elementary.fragments.QuitGameFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
@@ -35,6 +36,7 @@ import me.cooper.rick.elementary.services.QuizManager;
 import me.cooper.rick.elementary.services.movement.MovementManager;
 
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_INSTRUCTIONS;
+import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_QUIT_GAME;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
@@ -48,7 +50,8 @@ import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
 import static me.cooper.rick.elementary.constants.VibratePattern.QUIT;
 import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
 
-public class GameActivity extends AbstractAppCompatActivity implements Runnable {
+public class GameActivity extends AbstractAppCompatActivity implements Runnable,
+        QuitGameFragment.OnFragmentInteractionListener {
 
     private RelativeLayout content;
     private Point size;
@@ -188,7 +191,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
                 onResume();
                 break;
             case R.id.nav_quit:
-                exit();
+                startFragment(R.id.game_space, new QuitGameFragment(), FRAG_TAG_QUIT_GAME);
                 break;
             case R.id.nav_instructions:
                 startFragment(R.id.game_space, new InstructionsFragment(), FRAG_TAG_INSTRUCTIONS);
@@ -236,10 +239,19 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
     @Override
     public void onBackPressed() {
         if (!getSupportFragmentManager().popBackStackImmediate()) {
-            exit();
+            startFragment(R.id.game_space, new QuitGameFragment(), FRAG_TAG_QUIT_GAME);
         } else {
             isFragOpen = false;
             onResume();
+        }
+    }
+
+    @Override
+    public void onFragmentInteraction(boolean isQuitConfirmed) {
+        if (isQuitConfirmed) {
+            exit();
+        } else {
+            onBackPressed();
         }
     }
 

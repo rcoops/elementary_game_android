@@ -32,11 +32,18 @@ public final class Player extends Score {
     public void adjustForRightAnswer() {
         score += scoreIncrement;
         scoreIncrement += SCORE_INCREMENT_INCREMENT;
+        if (shouldAddLife()) {
+            lives++;
+        }
     }
 
     public void adjustForWrongAnswer() {
         lives --;
         scoreIncrement = SCORE_BASE_INCREMENT;
+    }
+
+    private boolean shouldAddLife() {
+        return scoreIncrement % 250 == 0;
     }
 
     // Don't need lives or score outside game activity

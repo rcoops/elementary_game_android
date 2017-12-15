@@ -26,7 +26,8 @@ public final class Constants {
     public static final String FRAG_TAG_SETTINGS = "settings";
     public static final String FRAG_TAG_SCORES = "highScores";
     public static final String FRAG_TAG_INSTRUCTIONS = "instructions";
-    public static final String FRAG_TAG_NEW_PLAYER = "newPlayer";
+    public static final String FRAG_TAG_NEW_GAME = "newGame";
+    public static final String FRAG_TAG_QUIT_GAME = "quitGame";
 
     public static final String PREF_VOL_MUSIC = "pref_volume_music";
     public static final String PREF_VOL_EFFECTS = "pref_volume_effects";
