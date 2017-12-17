@@ -40,8 +40,7 @@ public class ChemicalSymbolView extends View {
 
     public ChemicalSymbolView(Context context, Point startingPosition, Point maxBounds) {
         super(context);
-        SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-        this.mover = new Mover(sensorManager, this);
+        this.mover = new Mover((SensorManager) context.getSystemService(SENSOR_SERVICE), this);
         this.startingPosition = startingPosition;
         this.maxBounds = new Rect(RADIUS, RADIUS, maxBounds.x - RADIUS, maxBounds.y - RADIUS);
         textPaint.setTextSize(RADIUS);
@@ -131,6 +130,16 @@ public class ChemicalSymbolView extends View {
 
     public void stopMoving() {
         mover.stopMoving();
+    }
+
+    public String getStrategyDescription() {
+        return mover.getCurrentStategyDescription();
+    }
+
+    public String nextStrategy() {
+        mover.activateNextMoveStrategy();
+
+        return mover.getNextStrategyDescription();
     }
 
 }

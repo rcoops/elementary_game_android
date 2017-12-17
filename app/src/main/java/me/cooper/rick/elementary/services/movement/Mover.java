@@ -8,24 +8,30 @@ import me.cooper.rick.elementary.services.movement.strategies.SensorMoveStrategy
 import me.cooper.rick.elementary.services.movement.strategies.TouchMoveStrategy;
 import me.cooper.rick.elementary.services.movement.util.CircularLinkedList;
 
-public class MovementManager {
+public class Mover {
 
     private MoveStrategy activeMoveStrategy;
 
     private CircularLinkedList<MoveStrategy> moveStrategies = new CircularLinkedList<>();
 
-    public MovementManager(SensorManager sensorManager, View view) {
+    public Mover(SensorManager sensorManager, View view) {
+        moveStrategies.add(new TouchMoveStrategy(view));
         if (sensorManager != null) {
             moveStrategies.add(new SensorMoveStrategy(view, sensorManager));
         }
-        moveStrategies.add(new TouchMoveStrategy(view));
-        activeMoveStrategy = moveStrategies.cycleNext();
         activateNextMoveStrategy();
     }
 
     public String getNextStrategyDescription() {
-        MoveStrategy nextStrategy = moveStrategies.getNext();
-        return nextStrategy == null ? null : nextStrategy.getDescription();
+        return getStrategyDescription(moveStrategies.getNext());
+    }
+
+    public String getCurrentStategyDescription() {
+        return getStrategyDescription(moveStrategies.getCurrent());
+    }
+
+    private String getStrategyDescription(MoveStrategy strategy) {
+        return strategy == null ? null : strategy.getDescription();
     }
 
     public void stopMoving() {

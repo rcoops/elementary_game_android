@@ -21,17 +21,24 @@ public class CircularLinkedList<T> {
         }
     }
 
-    public T getNext() {
+    public T getCurrent() {
         if(current == null) {
             return null;
         }
         return current.data;
     }
 
+    public T getNext() {
+        if(current == null) {
+            return null;
+        }
+        return current.next.data;
+    }
+
     public T cycleNext() {
-        T data = getNext();
         current = current.next;
-        return data;
+
+        return current.data;
     }
 
     class Node<T1> {

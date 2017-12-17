@@ -27,7 +27,6 @@ import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
 import me.cooper.rick.elementary.models.view.ElementAnswerView;
 import me.cooper.rick.elementary.services.FireBaseManager;
 import me.cooper.rick.elementary.services.QuizManager;
-import me.cooper.rick.elementary.services.movement.MovementManager;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
@@ -55,7 +54,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     private Player player;
 
-    private MovementManager movementManager;
     private QuizManager quizManager = QuizManager.getInstance();
     private FireBaseManager fireBaseManager = FireBaseManager.getInstance();
 
@@ -115,21 +113,21 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.game, menu);
         toggleItem = menu.findItem(R.id.nav_toggle_control);
-        setToggleMenuText(); // Must go after sensorManager
+        setToggleMenuText(chemicalSymbolView.getStrategyDescription()); // Must go after sensorManager
         return true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        movementManager.stopMoving();
+        chemicalSymbolView.stopMoving();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         isRunning = true;
-        movementManager.startMoving();
+        chemicalSymbolView.startMoving();
     }
 
     @Override
@@ -137,8 +135,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         doClickResponse();
         switch (item.getItemId()) {
             case R.id.nav_toggle_control:
-                movementManager.activateNextMoveStrategy();
-                setToggleMenuText();
+                onShake();
                 onResume();
                 break;
             case R.id.nav_quit:
@@ -163,7 +160,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
             ElementAnswerView collidedView = checkCollisions();
             if (collidedView != null) {
                 isRunning = false;
-                movementManager.stopMoving();
+                chemicalSymbolView.stopMoving();
                 chemicalSymbolView.resetPosition();
                 boolean correctAnswer = quizManager.isCorrectAnswer(collidedView.getAnswer());
                 if (correctAnswer) {
@@ -205,12 +202,12 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     @Override
     public void onShake() {
-        movementManager.activateNextMoveStrategy();
-        setToggleMenuText();
+        String nextStrategyDescription = chemicalSymbolView.nextStrategy();
+        setToggleMenuText(nextStrategyDescription);
     }
 
-    private void setToggleMenuText() {
-        String newTitle = getString(R.string.action_toggle_control, movementManager.getNextStrategyDescription());
+    private void setToggleMenuText(String nextStrategyDescription) {
+        String newTitle = getString(R.string.action_toggle_control, nextStrategyDescription);
         toggleItem.setTitle(newTitle);
     }
 
@@ -227,7 +224,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     private void initMovementSensors() {
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        movementManager = new MovementManager(sensorManager, chemicalSymbolView);
         if (sensorManager != null) {
             Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(new ShakeListener(this), sensor,
@@ -253,7 +249,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     private void exit() {
-        movementManager.stopMoving();
+        chemicalSymbolView.stopMoving();
         isRunning = false;
         fireBaseManager.saveScore(player);
         runOnUiThread(new Runnable() {
@@ -310,7 +306,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         }
         initViews();
         initThread();
-        movementManager.startMoving();
+        chemicalSymbolView.startMoving();
     }
 
     private void initThread() {
