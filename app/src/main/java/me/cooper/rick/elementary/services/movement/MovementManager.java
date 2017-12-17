@@ -11,14 +11,14 @@ import me.cooper.rick.elementary.services.movement.util.CircularLinkedList;
 public class MovementManager {
 
     private MoveStrategy activeMoveStrategy;
+
     private CircularLinkedList<MoveStrategy> moveStrategies = new CircularLinkedList<>();
 
     public MovementManager(SensorManager sensorManager, View view) {
         if (sensorManager != null) {
             moveStrategies.add(new SensorMoveStrategy(view, sensorManager));
         }
-        TouchMoveStrategy touchMoveStrategy = new TouchMoveStrategy(view);
-        moveStrategies.add(touchMoveStrategy);
+        moveStrategies.add(new TouchMoveStrategy(view));
         activeMoveStrategy = moveStrategies.cycleNext();
         activateNextMoveStrategy();
     }

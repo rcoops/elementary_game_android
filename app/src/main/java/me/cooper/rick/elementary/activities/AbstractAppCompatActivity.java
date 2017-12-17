@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 
@@ -30,7 +29,6 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         InstructionsFragment.OnFragmentInteractionListener,
         HighScoreFragment.OnFragmentInteractionListener {
 
-    protected static final String SOUND_DRAWER = "drawer";
     protected static final String PREF_VOL_MUSIC = "pref_volume_music";
 
     private static final String PREF_VOL_EFFECTS = "pref_volume_effects";
@@ -39,12 +37,8 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     private static final String SOUND_CLICK = "click";
 
     private static final int DEFAULT_VOLUME = 5;
-
-    private SharedPreferences preferences;
-    private FragmentManager fragmentManager;
     private MediaPlayer mediaPlayer;
     private SoundPool soundPool;
-    private Vibrator vibrator;
 
     private Map<String, Integer> sounds = new HashMap<>();
 
@@ -57,21 +51,16 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         super.onCreate(savedInstanceState);
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, true);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, false);
         preferences.registerOnSharedPreferenceChangeListener(this);
 
-        fragmentManager = getSupportFragmentManager();
-
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .build();
         soundPool = new SoundPool.Builder()
-                .setAudioAttributes(audioAttributes)
+                .setAudioAttributes(new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_GAME)
+                        .build())
                 .setMaxStreams(1)
                 .build();
     }
@@ -87,7 +76,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
                 playSound(SOUND_CLICK);
                 break;
             case PREF_TOG_VIBRATE:
-                vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, true);
+                vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, false);
                 vibrate(CLICK);
                 break;
         }
@@ -119,7 +108,8 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     protected void initMusic(int musicId) {
         mediaPlayer = MediaPlayer.create(this, musicId);
         mediaPlayer.setLooping(true);
-        onSharedPreferenceChanged(preferences, PREF_VOL_MUSIC);
+        onSharedPreferenceChanged(PreferenceManager.getDefaultSharedPreferences(this),
+                PREF_VOL_MUSIC);
         startMusic();
     }
 
@@ -156,7 +146,8 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     protected void playSound(String key) {
-        float volume = getVolumeSetting(preferences, PREF_VOL_EFFECTS);
+        float volume = getVolumeSetting(PreferenceManager.getDefaultSharedPreferences(this),
+                PREF_VOL_EFFECTS);
 
         soundPool.play(sounds.get(key), volume, volume, 1, 0, 1);
     }
@@ -168,14 +159,17 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
 
     protected void vibrate(VibratePattern pattern) {
         if (vibrate) {
-            vibrator.vibrate(pattern.pattern, -1);
+            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null) {
+                vibrator.vibrate(pattern.pattern, -1);
+            }
         }
     }
 
     protected void startFragment(int contentId, Fragment fragment, String tag) {
         isFragOpen = true;
         if (fragment != null) {
-            fragmentManager.beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(contentId, fragment)
                     .addToBackStack(tag)
                     .commit();
@@ -183,7 +177,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     protected boolean popFragment() {
-        return fragmentManager.popBackStackImmediate();
+        return getSupportFragmentManager().popBackStackImmediate();
     }
 
     private void displayToastMessage(String message) {

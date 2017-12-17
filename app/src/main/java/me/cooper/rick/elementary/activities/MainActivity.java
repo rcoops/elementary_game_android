@@ -26,6 +26,8 @@ public class MainActivity extends AbstractAppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         NewGameFragment.OnPlayerCreatedListener {
 
+    private static final String SOUND_DRAWER = "drawer";
+
     private DrawerLayout drawer;
 
     @Override
