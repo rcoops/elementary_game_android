@@ -301,13 +301,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     private void resetViews() {
-        tearDownThread();
-        initViews();
-        initThread();
-        movementManager.startMoving();
-    }
-
-    private void tearDownThread() {
         if (thread != null) {
             try {
                 thread.join();
@@ -315,6 +308,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
                 e.printStackTrace();
             }
         }
+        initViews();
+        initThread();
+        movementManager.startMoving();
     }
 
     private void initThread() {

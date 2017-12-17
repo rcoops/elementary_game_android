@@ -37,6 +37,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     private static final String SOUND_CLICK = "click";
 
     private static final int DEFAULT_VOLUME = 5;
+
     private MediaPlayer mediaPlayer;
     private SoundPool soundPool;
 
@@ -113,12 +114,6 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         startMusic();
     }
 
-    private void controlMediaPlayer(MediaPlayerAction action) {
-        if (mediaPlayer != null) {
-            action.execute(mediaPlayer);
-        }
-    }
-
     protected void startMusic() {
         controlMediaPlayer(new MediaPlayerAction() {
             @Override
@@ -180,8 +175,23 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         return getSupportFragmentManager().popBackStackImmediate();
     }
 
-    private void displayToastMessage(String message) {
-        makeText(this, message, LENGTH_SHORT).show();
+    private void controlMediaPlayer(MediaPlayerAction action) {
+        if (mediaPlayer != null) {
+            action.execute(mediaPlayer);
+        }
+    }
+
+    private float getVolumeSetting(SharedPreferences preferences, String tag) {
+        return preferences.getInt(tag, DEFAULT_VOLUME) / 10.0f;
+    }
+
+    private void setMusicVolume(final float volume) {
+        controlMediaPlayer(new MediaPlayerAction() {
+            @Override
+            public void execute(MediaPlayer mediaPlayer) {
+                mediaPlayer.setVolume(volume, volume);
+            }
+        });
     }
 
     private void setEffectVolume(String tag, float volume) {
@@ -194,20 +204,12 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         }
     }
 
-    private void setMusicVolume(float volume) {
-        if (mediaPlayer != null) {
-            mediaPlayer.setVolume(volume, volume);
-        }
-    }
-
-    private float getVolumeSetting(SharedPreferences preferences, String tag) {
-        return preferences.getInt(tag, DEFAULT_VOLUME) / 10.0f;
+    private void displayToastMessage(String message) {
+        makeText(this, message, LENGTH_SHORT).show();
     }
 
     private interface MediaPlayerAction {
-
         void execute(MediaPlayer mediaPlayer);
-
     }
 
 }

@@ -14,9 +14,9 @@ import static me.cooper.rick.elementary.constants.element.Element.Property.quizV
 
 public class QuizManager {
 
-    public static final int NO_OF_ELEMENTS = 4;
-
     private static QuizManager instance;
+
+    public static final int NO_OF_ELEMENTS = 4;
 
     private static final Element[] ALL_ELEMENTS = Element.values();
     private static final Element[] CURRENT_ELEMENTS = new Element[NO_OF_ELEMENTS];
