@@ -17,7 +17,7 @@ public class ElementUnitTest {
     public void elementHasMatches() throws Exception {
         // Given An array of Elements
         Element[] elements = new Element[] {Element.AC, Element.TH, Element.PA, Element.KR};
-        // And an array of properties of which property values are shared between the first three elements
+        // And an array of properties for which property values are shared between the first three elements
         Element.Property[] properties = new Element.Property[] {Element.Property.SYMBOL, Element.Property.NATURAL_STATE, Element.Property.GROUP, Element.Property.BONDING_TYPE};
         // When checking for the number of matches
         int noOfMatches = elements[0].getPropertyValueMatches(elements, properties);

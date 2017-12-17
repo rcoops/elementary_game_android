@@ -8,6 +8,8 @@ public final class Player extends Score {
 
     public static final String PLAYER_INTENT_TAG = "player";
 
+    private static final int NEW_LIFE_SCORE_THRESHOLD = SCORE_INCREMENT_INCREMENT * 5;
+
     public static final Creator<Player> CREATOR = new ParcelablePlayerCreator();
 
     private int scoreIncrement = SCORE_BASE_INCREMENT;
@@ -22,7 +24,7 @@ public final class Player extends Score {
         super(parcel);
     }
 
-    @Exclude
+    @Exclude // Prevent Firebase from recording this
     public int getLives() {
         return lives;
     }
@@ -41,7 +43,8 @@ public final class Player extends Score {
     }
 
     private boolean shouldAddLife() {
-        return scoreIncrement % 250 == 0;
+        int currentIncrementOverBase = scoreIncrement - SCORE_BASE_INCREMENT;
+        return currentIncrementOverBase % NEW_LIFE_SCORE_THRESHOLD == 0;
     }
 
     // Don't need lives or score outside game activity

@@ -210,7 +210,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     private void setToggleMenuText() {
-        String newTitle = getString(R.string.action_toggle_control, movementManager.getMoveMenuItemText());
+        String newTitle = getString(R.string.action_toggle_control, movementManager.getNextStrategyDescription());
         toggleItem.setTitle(newTitle);
     }
 
@@ -227,8 +227,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     private void initMovementSensors() {
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        movementManager = new MovementManager(sensorManager, chemicalSymbolView);
         if (sensorManager != null) {
-            movementManager = new MovementManager(sensorManager, chemicalSymbolView);
             Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(new ShakeListener(this), sensor,
                     SENSOR_DELAY_GAME);

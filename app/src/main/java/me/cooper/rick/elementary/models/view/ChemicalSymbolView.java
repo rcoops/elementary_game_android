@@ -6,11 +6,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.ColorUtils;
 import android.view.View;
 
 import me.cooper.rick.elementary.constants.element.Element;
+import me.cooper.rick.elementary.services.movement.Mover;
+
+import static android.content.Context.SENSOR_SERVICE;
 
 public class ChemicalSymbolView extends View {
 
@@ -26,7 +30,9 @@ public class ChemicalSymbolView extends View {
     private Rect maxBounds;
     protected Rect viewBounds = new Rect();
 
-    private final float HSL[] = new float[3];
+    private final float HUE_SATURATION_LIGHTNESS[] = new float[3];
+
+    private Mover mover;
 
     public ChemicalSymbolView(Context context) {
         super(context);
@@ -34,6 +40,8 @@ public class ChemicalSymbolView extends View {
 
     public ChemicalSymbolView(Context context, Point startingPosition, Point maxBounds) {
         super(context);
+        SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+        this.mover = new Mover(sensorManager, this);
         this.startingPosition = startingPosition;
         this.maxBounds = new Rect(RADIUS, RADIUS, maxBounds.x - RADIUS, maxBounds.y - RADIUS);
         textPaint.setTextSize(RADIUS);
@@ -48,7 +56,6 @@ public class ChemicalSymbolView extends View {
     public float getX() {
         return position.x;
     }
-
 
     @Override
     public void setX(float x) {
@@ -103,8 +110,8 @@ public class ChemicalSymbolView extends View {
         int green = Color.green(backgroundColor);
         int blue  = Color.blue(backgroundColor);
 
-        ColorUtils.RGBToHSL(red, green, blue, HSL);
-        return HSL[2] > 0.5 ? Color.BLACK : Color.WHITE;
+        ColorUtils.RGBToHSL(red, green, blue, HUE_SATURATION_LIGHTNESS);
+        return HUE_SATURATION_LIGHTNESS[2] > 0.5 ? Color.BLACK : Color.WHITE;
     }
 
     public void resetPosition() {
@@ -116,6 +123,14 @@ public class ChemicalSymbolView extends View {
         backgroundColor = Color.parseColor("#" + element.hexColourCode);
         textPaint.setColor(getForeGroundColor(backgroundColor));
         resetPosition();
+    }
+
+    public void startMoving() {
+        mover.startMoving();
+    }
+
+    public void stopMoving() {
+        mover.stopMoving();
     }
 
 }

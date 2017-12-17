@@ -23,7 +23,7 @@ public class MovementManager {
         activateNextMoveStrategy();
     }
 
-    public String getMoveMenuItemText() {
+    public String getNextStrategyDescription() {
         MoveStrategy nextStrategy = moveStrategies.getNext();
         return nextStrategy == null ? null : nextStrategy.getDescription();
     }

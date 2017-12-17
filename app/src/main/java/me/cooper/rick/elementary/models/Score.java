@@ -38,10 +38,12 @@ public class Score implements Parcelable, Comparable<Score> {
         return playerName;
     }
 
+    @SuppressWarnings("unused") // Used for Firebase parse
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
 
+    @SuppressWarnings("unused") // Used for Firebase parse
     public void setScore(int score) {
         this.score = score;
     }
