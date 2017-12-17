@@ -17,10 +17,10 @@ import me.cooper.rick.elementary.fragments.InstructionsFragment;
 import me.cooper.rick.elementary.fragments.NewGameFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
-import me.cooper.rick.elementary.models.Player;
+import me.cooper.rick.elementary.models.score.Player;
 
 import static java.lang.System.exit;
-import static me.cooper.rick.elementary.models.Player.PLAYER_INTENT_TAG;
+import static me.cooper.rick.elementary.models.score.Player.PLAYER_INTENT_TAG;
 
 public class MainActivity extends AbstractAppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,

@@ -22,9 +22,9 @@ import me.cooper.rick.elementary.fragments.InstructionsFragment;
 import me.cooper.rick.elementary.fragments.QuitGameFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.listeners.ShakeListener;
-import me.cooper.rick.elementary.models.Player;
-import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
-import me.cooper.rick.elementary.models.view.ElementAnswerView;
+import me.cooper.rick.elementary.models.score.Player;
+import me.cooper.rick.elementary.models.game.PlayerView;
+import me.cooper.rick.elementary.models.game.AnswerView;
 import me.cooper.rick.elementary.services.FireBaseManager;
 import me.cooper.rick.elementary.services.QuizManager;
 
@@ -32,7 +32,7 @@ import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
 import static me.cooper.rick.elementary.constants.VibratePattern.QUIT;
 import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
-import static me.cooper.rick.elementary.models.Player.PLAYER_INTENT_TAG;
+import static me.cooper.rick.elementary.models.score.Player.PLAYER_INTENT_TAG;
 import static me.cooper.rick.elementary.services.QuizManager.NO_OF_ELEMENTS;
 
 public class GameActivity extends AbstractAppCompatActivity implements Runnable,
@@ -49,8 +49,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     private MenuItem toggleItem;
 
-    private ChemicalSymbolView chemicalSymbolView;
-    private List<ElementAnswerView> answerViews = new ArrayList<>();
+    private PlayerView playerView;
+    private List<AnswerView> answerViews = new ArrayList<>();
 
     private Player player;
 
@@ -113,21 +113,21 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.game, menu);
         toggleItem = menu.findItem(R.id.nav_toggle_control);
-        setToggleMenuText(chemicalSymbolView.getStrategyDescription()); // Must go after sensorManager
+        onShake();
         return true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        chemicalSymbolView.stopMoving();
+        playerView.stopMoving();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         isRunning = true;
-        chemicalSymbolView.startMoving();
+        playerView.startMoving();
     }
 
     @Override
@@ -157,11 +157,11 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     @Override
     public void run() {
         while (isRunning) {
-            ElementAnswerView collidedView = checkCollisions();
+            AnswerView collidedView = checkCollisions();
             if (collidedView != null) {
                 isRunning = false;
-                chemicalSymbolView.stopMoving();
-                chemicalSymbolView.resetPosition();
+                playerView.stopMoving();
+                playerView.resetPosition();
                 boolean correctAnswer = quizManager.isCorrectAnswer(collidedView.getAnswer());
                 if (correctAnswer) {
                     player.adjustForRightAnswer();
@@ -202,7 +202,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     @Override
     public void onShake() {
-        String nextStrategyDescription = chemicalSymbolView.nextStrategy();
+        String nextStrategyDescription = playerView.nextStrategy();
         setToggleMenuText(nextStrategyDescription);
     }
 
@@ -249,7 +249,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     private void exit() {
-        chemicalSymbolView.stopMoving();
+        playerView.stopMoving();
         isRunning = false;
         fireBaseManager.saveScore(player);
         runOnUiThread(new Runnable() {
@@ -264,8 +264,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     private void addChemicalSymbolView() {
-        chemicalSymbolView = new ChemicalSymbolView(this, centre, size);
-        content.addView(chemicalSymbolView);
+        playerView = new PlayerView(this, centre, size);
+        content.addView(playerView);
     }
 
     private void setViewReferences() {
@@ -277,7 +277,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     private void setAnswerViewReferences(int... ids) {
         for (int id : ids) {
-            answerViews.add((ElementAnswerView) findViewById(id));
+            answerViews.add((AnswerView) findViewById(id));
         }
     }
 
@@ -306,7 +306,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         }
         initViews();
         initThread();
-        chemicalSymbolView.startMoving();
+        playerView.startMoving();
     }
 
     private void initThread() {
@@ -316,7 +316,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     private void initChemicalSymbolView() {
-        chemicalSymbolView.reset(quizManager.getTargetElement());
+        playerView.reset(quizManager.getTargetElement());
     }
 
     private void initAnswerViews() {
@@ -328,9 +328,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         }
     }
 
-    private ElementAnswerView checkCollisions() {
-        for (ElementAnswerView view : answerViews) {
-            if (view.isIntersecting(chemicalSymbolView)) {
+    private AnswerView checkCollisions() {
+        for (AnswerView view : answerViews) {
+            if (view.isIntersecting(playerView)) {
                 return view;
             }
         }

@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.services.movement.strategies;
+package me.cooper.rick.elementary.models.movementstrategies;
 
 public interface MoveStrategy {
 

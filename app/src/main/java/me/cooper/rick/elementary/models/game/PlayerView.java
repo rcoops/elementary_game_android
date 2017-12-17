@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.models.view;
+package me.cooper.rick.elementary.models.game;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,11 +12,14 @@ import android.support.v4.graphics.ColorUtils;
 import android.view.View;
 
 import me.cooper.rick.elementary.constants.element.Element;
-import me.cooper.rick.elementary.services.movement.Mover;
+import me.cooper.rick.elementary.models.movementstrategies.MoveStrategy;
+import me.cooper.rick.elementary.models.movementstrategies.SensorMoveStrategy;
+import me.cooper.rick.elementary.models.movementstrategies.TouchMoveStrategy;
+import me.cooper.rick.elementary.models.util.CircularLinkedList;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-public class ChemicalSymbolView extends View {
+public class PlayerView extends View {
 
     public static final int RADIUS = 75;
 
@@ -32,23 +35,27 @@ public class ChemicalSymbolView extends View {
 
     private final float HUE_SATURATION_LIGHTNESS[] = new float[3];
 
-    private Mover mover;
+    private MoveStrategy activeMoveStrategy;
 
-    public ChemicalSymbolView(Context context) {
+    private CircularLinkedList<MoveStrategy> moveStrategies = new CircularLinkedList<>();
+
+    public PlayerView(Context context) {
         super(context);
     }
 
-    public ChemicalSymbolView(Context context, Point startingPosition, Point maxBounds) {
+    public PlayerView(Context context, Point startingPosition, Point maxBounds) {
         super(context);
-        this.mover = new Mover((SensorManager) context.getSystemService(SENSOR_SERVICE), this);
         this.startingPosition = startingPosition;
         this.maxBounds = new Rect(RADIUS, RADIUS, maxBounds.x - RADIUS, maxBounds.y - RADIUS);
         textPaint.setTextSize(RADIUS);
         textPaint.setTextAlign(Paint.Align.CENTER);
-    }
 
-    public Element getElement() {
-        return element;
+        SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+        if (sensorManager != null) {
+            moveStrategies.add(new SensorMoveStrategy(this, sensorManager));
+        }
+        moveStrategies.add(new TouchMoveStrategy(this));
+        activeMoveStrategy = moveStrategies.getCurrent();
     }
 
     @Override
@@ -125,21 +132,31 @@ public class ChemicalSymbolView extends View {
     }
 
     public void startMoving() {
-        mover.startMoving();
+        activeMoveStrategy.registerListener();
     }
 
     public void stopMoving() {
-        mover.stopMoving();
-    }
-
-    public String getStrategyDescription() {
-        return mover.getCurrentStategyDescription();
+        activeMoveStrategy.unregisterListener();
     }
 
     public String nextStrategy() {
-        mover.activateNextMoveStrategy();
+        activateNextMoveStrategy();
 
-        return mover.getNextStrategyDescription();
+        return getNextStrategyDescription();
+    }
+
+    private String getNextStrategyDescription() {
+        return getStrategyDescription(moveStrategies.getNext());
+    }
+
+    private String getStrategyDescription(MoveStrategy strategy) {
+        return strategy == null ? null : strategy.getDescription();
+    }
+
+    private void activateNextMoveStrategy() {
+        stopMoving();
+        activeMoveStrategy = moveStrategies.cycleCurrentToNext();
+        startMoving();
     }
 
 }

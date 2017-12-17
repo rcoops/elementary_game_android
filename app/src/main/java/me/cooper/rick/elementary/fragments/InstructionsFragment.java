@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import me.cooper.rick.elementary.R;
 
-import static me.cooper.rick.elementary.models.Score.SCORE_BASE_INCREMENT;
-import static me.cooper.rick.elementary.models.Score.SCORE_INCREMENT_INCREMENT;
+import static me.cooper.rick.elementary.models.score.Score.SCORE_BASE_INCREMENT;
+import static me.cooper.rick.elementary.models.score.Score.SCORE_INCREMENT_INCREMENT;
 import static me.cooper.rick.elementary.services.QuizManager.NO_OF_ELEMENTS;
 
 public class InstructionsFragment extends DialogFragment {

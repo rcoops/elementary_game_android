@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.services.movement.strategies;
+package me.cooper.rick.elementary.models.movementstrategies;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

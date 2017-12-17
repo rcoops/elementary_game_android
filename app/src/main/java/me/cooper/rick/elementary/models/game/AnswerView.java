@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.models.view;
+package me.cooper.rick.elementary.models.game;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -8,12 +8,12 @@ import android.util.AttributeSet;
 
 import me.cooper.rick.elementary.R;
 
-public class ElementAnswerView extends AppCompatTextView {
+public class AnswerView extends AppCompatTextView {
 
     private String answer;
     protected Rect viewBounds = new Rect();
 
-    public ElementAnswerView(Context context, AttributeSet attrs) {
+    public AnswerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -32,7 +32,7 @@ public class ElementAnswerView extends AppCompatTextView {
         return answer;
     }
 
-    public boolean isIntersecting(ChemicalSymbolView view) {
+    public boolean isIntersecting(PlayerView view) {
         return viewBounds.intersect(view.viewBounds);
     }
 

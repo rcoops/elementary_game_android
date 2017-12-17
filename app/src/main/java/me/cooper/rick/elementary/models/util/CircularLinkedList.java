@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.services.movement.util;
+package me.cooper.rick.elementary.models.util;
 
 // Very basic implementation to allow cycling of items
 public class CircularLinkedList<T> {
@@ -18,6 +18,7 @@ public class CircularLinkedList<T> {
         } else {
             newNode.next = tail.next;
             tail.next = newNode;
+            tail = newNode;
         }
     }
 
@@ -35,7 +36,7 @@ public class CircularLinkedList<T> {
         return current.next.data;
     }
 
-    public T cycleNext() {
+    public T cycleCurrentToNext() {
         current = current.next;
 
         return current.data;

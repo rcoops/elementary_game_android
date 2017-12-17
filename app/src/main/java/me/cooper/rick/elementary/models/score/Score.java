@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.models;
+package me.cooper.rick.elementary.models.score;
 
 import android.os.Parcel;
 import android.os.Parcelable;

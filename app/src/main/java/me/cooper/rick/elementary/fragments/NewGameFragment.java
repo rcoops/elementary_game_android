@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.models.Player;
+import me.cooper.rick.elementary.models.score.Player;
 
 
 public class NewGameFragment extends DialogFragment {

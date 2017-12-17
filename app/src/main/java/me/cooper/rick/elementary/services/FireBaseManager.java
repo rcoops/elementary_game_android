@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import me.cooper.rick.elementary.models.Player;
-import me.cooper.rick.elementary.models.Score;
+import me.cooper.rick.elementary.models.score.Player;
+import me.cooper.rick.elementary.models.score.Score;
 
 public class FireBaseManager {
 

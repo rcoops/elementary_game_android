@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.models.Score;
+import me.cooper.rick.elementary.models.score.Score;
 
 
 public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
