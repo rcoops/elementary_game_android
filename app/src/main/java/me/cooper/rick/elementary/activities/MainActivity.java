@@ -22,6 +22,7 @@ import me.cooper.rick.elementary.fragments.NewGameFragment;
 import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.models.Player;
 
+import static java.lang.System.exit;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_INSTRUCTIONS;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_NEW_PLAYER;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
@@ -64,7 +65,7 @@ public class MainActivity extends AbstractAppCompatActivity implements
 
         mediaPlayer = MediaPlayer.create(this, R.raw.main);
         mediaPlayer.setLooping(true);
-        setMusicVolume(getVolumeSetting(preferences, PREF_VOL_MUSIC));
+        onSharedPreferenceChanged(preferences, PREF_VOL_MUSIC);
         mediaPlayer.start();
     }
 
@@ -129,6 +130,11 @@ public class MainActivity extends AbstractAppCompatActivity implements
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    private void exitApplication() {
+        finish();
+        exit(0);
     }
 
     private class SoundActionBarDrawerToggle extends ActionBarDrawerToggle {

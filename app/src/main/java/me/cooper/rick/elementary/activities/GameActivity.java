@@ -106,7 +106,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable 
 
         mediaPlayer = MediaPlayer.create(this, R.raw.game_music);
         mediaPlayer.setLooping(true);
-        setMusicVolume(getVolumeSetting(preferences, PREF_VOL_MUSIC));
+        onSharedPreferenceChanged(preferences, PREF_VOL_MUSIC);
         mediaPlayer.start();
     }
 

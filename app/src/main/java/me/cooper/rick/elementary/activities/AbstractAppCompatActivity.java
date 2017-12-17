@@ -45,10 +45,10 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
 
     private Vibrator vibrator;
 
-    private boolean vibrate;
     protected boolean isFragOpen = false;
-
     protected Map<String, Integer> sounds = new HashMap<>();
+
+    private boolean vibrate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,65 +71,6 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
                 .setAudioAttributes(audioAttributes)
                 .setMaxStreams(1)
                 .build();
-    }
-
-    protected void initMedia() {
-        sounds.put(SOUND_CLICK, soundPool.load(this, R.raw.click, 1));
-    }
-
-    protected void displayToastMessage(int stringId, Object... args) {
-        displayToastMessage(getString(stringId, (Object[]) args));
-    }
-
-    protected void displayToastMessage(String message) {
-        makeText(this, message, LENGTH_SHORT).show();
-    }
-
-    protected float getVolumeSetting(SharedPreferences preferences, String tag) {
-        return preferences.getInt(tag, DEFAULT_VOLUME) / 10f;
-    }
-
-    protected void exitApplication() {
-        finish();
-        exit(0);
-    }
-
-    protected void playSound(String key) {
-        float volume = getVolumeSetting(preferences, PREF_VOL_EFFECTS);
-
-        soundPool.play(sounds.get(key), volume, volume, 1, 0, 1);
-    }
-
-    private void setEffectVolume(String tag, float volume) {
-        soundPool.setVolume(sounds.get(tag), volume, volume);
-    }
-
-    protected void setSoundVolume(float volume) {
-        for (String key : sounds.keySet()) {
-            setEffectVolume(key, volume);
-        }
-    }
-
-    protected void setMusicVolume(float volume) {
-        if (mediaPlayer != null) {
-            mediaPlayer.setVolume(volume, volume);
-        }
-    }
-
-    protected void vibrate(VibratePattern pattern) {
-        if (vibrate) {
-            vibrator.vibrate(pattern.pattern, -1);
-        }
-    }
-
-    protected void startFragment(int contentId, Fragment fragment, String tag) {
-        isFragOpen = true;
-        if (fragment != null) {
-            fragmentManager.beginTransaction()
-                    .add(contentId, fragment)
-                    .addToBackStack(tag)
-                    .commit();
-        }
     }
 
     @Override
@@ -156,6 +97,60 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         playSound(SOUND_CLICK);
         vibrate(CLICK);
         onBackPressed();
+    }
+
+    protected void initMedia() {
+        sounds.put(SOUND_CLICK, soundPool.load(this, R.raw.click, 1));
+    }
+
+    protected void displayToastMessage(int stringId, Object... args) {
+        displayToastMessage(getString(stringId, (Object[]) args));
+    }
+
+    protected void displayToastMessage(String message) {
+        makeText(this, message, LENGTH_SHORT).show();
+    }
+
+    protected void playSound(String key) {
+        float volume = getVolumeSetting(preferences, PREF_VOL_EFFECTS);
+
+        soundPool.play(sounds.get(key), volume, volume, 1, 0, 1);
+    }
+
+    protected void vibrate(VibratePattern pattern) {
+        if (vibrate) {
+            vibrator.vibrate(pattern.pattern, -1);
+        }
+    }
+
+    protected void startFragment(int contentId, Fragment fragment, String tag) {
+        isFragOpen = true;
+        if (fragment != null) {
+            fragmentManager.beginTransaction()
+                    .add(contentId, fragment)
+                    .addToBackStack(tag)
+                    .commit();
+        }
+    }
+
+    private void setEffectVolume(String tag, float volume) {
+        soundPool.setVolume(sounds.get(tag), volume, volume);
+    }
+
+    private void setSoundVolume(float volume) {
+        for (String key : sounds.keySet()) {
+            setEffectVolume(key, volume);
+        }
+    }
+
+    private void setMusicVolume(float volume) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setVolume(volume, volume);
+        }
+    }
+
+    private float getVolumeSetting(SharedPreferences preferences, String tag) {
+        return preferences.getInt(tag, DEFAULT_VOLUME) / 10f;
     }
 
 }
