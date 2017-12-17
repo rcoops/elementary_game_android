@@ -8,7 +8,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,7 +25,6 @@ import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.fragments.InstructionsFragment;
 import me.cooper.rick.elementary.fragments.QuitGameFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
-import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.listeners.AcceleroListener;
 import me.cooper.rick.elementary.models.Player;
 import me.cooper.rick.elementary.models.view.ChemicalSymbolView;
@@ -37,7 +35,6 @@ import me.cooper.rick.elementary.services.movement.MovementManager;
 
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_INSTRUCTIONS;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_QUIT_GAME;
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
 import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
 import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
 import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
@@ -90,7 +87,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         setViewSize();
         addChemicalSymbolView();
         initViews();
-        setupSensorManager();
+        initSensorManager();
         resetTitle();
         initThread();
         displayToastMessage(R.string.txt_welcome_game, player.getPlayerName());
@@ -113,7 +110,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         mediaPlayer.start();
     }
 
-    private void setupSensorManager() {
+    private void initSensorManager() {
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (sensorManager != null) {
             movementManager = new MovementManager(sensorManager, chemicalSymbolView);
@@ -124,9 +121,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     private void disableKeyboard() {
         if (content != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(content.getWindowToken(), 0);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.hideSoftInputFromWindow(content.getWindowToken(), 0);
             }
         }
     }
