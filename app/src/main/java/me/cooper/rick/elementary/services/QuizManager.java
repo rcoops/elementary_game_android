@@ -4,16 +4,17 @@ import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import me.cooper.rick.elementary.constants.element.Element;
 import me.cooper.rick.elementary.constants.element.Element.Property;
 
 import static java.util.Arrays.asList;
-import static me.cooper.rick.elementary.constants.Constants.NO_OF_ELEMENTS;
-import static me.cooper.rick.elementary.constants.Constants.RAND;
 import static me.cooper.rick.elementary.constants.element.Element.Property.quizValues;
 
 public class QuizManager {
+
+    public static final int NO_OF_ELEMENTS = 4;
 
     private static QuizManager instance;
 
@@ -22,6 +23,8 @@ public class QuizManager {
 
     private static final Property[] ALL_PROPERTIES = quizValues();
     private static final Property[] CURRENT_PROPERTIES = new Property[NO_OF_ELEMENTS];
+
+    private static final Random RAND = new Random();
 
     private Property targetProperty;
 

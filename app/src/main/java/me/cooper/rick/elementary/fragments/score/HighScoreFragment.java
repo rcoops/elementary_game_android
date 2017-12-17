@@ -14,6 +14,8 @@ import me.cooper.rick.elementary.services.FireBaseManager;
 
 public class HighScoreFragment extends Fragment implements FireBaseManager.FireBaseListener {
 
+    public static final String TAG = "highScores";
+
     private OnFragmentInteractionListener mListener;
 
     private static FireBaseManager fireBaseManager = FireBaseManager.getInstance();

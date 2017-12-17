@@ -23,30 +23,32 @@ import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
-import static java.lang.System.exit;
-import static me.cooper.rick.elementary.constants.Constants.DEFAULT_VOLUME;
-import static me.cooper.rick.elementary.constants.Constants.PREF_TOG_VIBRATE;
-import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_EFFECTS;
-import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
-import static me.cooper.rick.elementary.constants.Constants.SOUND_CLICK;
 import static me.cooper.rick.elementary.constants.VibratePattern.CLICK;
-
 
 public abstract class AbstractAppCompatActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener,
         InstructionsFragment.OnFragmentInteractionListener,
         HighScoreFragment.OnFragmentInteractionListener {
 
-    protected FragmentManager fragmentManager;
-    protected SharedPreferences preferences;
+    protected static final String SOUND_DRAWER = "drawer";
+    protected static final String PREF_VOL_MUSIC = "pref_volume_music";
 
-    protected SoundPool soundPool;
-    protected MediaPlayer mediaPlayer;
+    private static final String PREF_VOL_EFFECTS = "pref_volume_effects";
+    private static final String PREF_TOG_VIBRATE = "pref_toggle_vibrate";
 
+    private static final String SOUND_CLICK = "click";
+
+    private static final int DEFAULT_VOLUME = 5;
+
+    private SharedPreferences preferences;
+    private FragmentManager fragmentManager;
+    private MediaPlayer mediaPlayer;
+    private SoundPool soundPool;
     private Vibrator vibrator;
 
+    private Map<String, Integer> sounds = new HashMap<>();
+
     protected boolean isFragOpen = false;
-    protected Map<String, Integer> sounds = new HashMap<>();
 
     private boolean vibrate;
 
@@ -57,6 +59,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, true);
+
         preferences.registerOnSharedPreferenceChangeListener(this);
 
         fragmentManager = getSupportFragmentManager();
@@ -90,31 +93,74 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         }
     }
 
-
     @Override
     public void onFragmentInteraction() {
         isFragOpen = false;
-        playSound(SOUND_CLICK);
-        vibrate(CLICK);
+        doClickResponse();
         onBackPressed();
     }
 
     protected void initMedia() {
-        sounds.put(SOUND_CLICK, soundPool.load(this, R.raw.click, 1));
+        addSound(SOUND_CLICK, R.raw.click);
+    }
+
+    protected void initMusic(int musicId) {
+        mediaPlayer = MediaPlayer.create(this, musicId);
+        mediaPlayer.setLooping(true);
+        onSharedPreferenceChanged(preferences, PREF_VOL_MUSIC);
+        startMusic();
+    }
+
+    private void controlMediaPlayer(MediaPlayerAction action) {
+        if (mediaPlayer != null) {
+            action.execute(mediaPlayer);
+        }
+    }
+
+    protected void startMusic() {
+        controlMediaPlayer(new MediaPlayerAction() {
+            @Override
+            public void execute(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+    }
+
+    protected void pauseMusic() {
+        controlMediaPlayer(new MediaPlayerAction() {
+            @Override
+            public void execute(MediaPlayer mediaPlayer) {
+                mediaPlayer.pause();
+            }
+        });
+    }
+
+    protected void stopMusic() {
+        controlMediaPlayer(new MediaPlayerAction() {
+            @Override
+            public void execute(MediaPlayer mediaPlayer) {
+                mediaPlayer.release();
+            }
+        });
     }
 
     protected void displayToastMessage(int stringId, Object... args) {
         displayToastMessage(getString(stringId, (Object[]) args));
     }
 
-    protected void displayToastMessage(String message) {
-        makeText(this, message, LENGTH_SHORT).show();
+    protected void addSound(String key, int rawSoundId) {
+        sounds.put(key, soundPool.load(this, rawSoundId, 1));
     }
 
     protected void playSound(String key) {
         float volume = getVolumeSetting(preferences, PREF_VOL_EFFECTS);
 
         soundPool.play(sounds.get(key), volume, volume, 1, 0, 1);
+    }
+
+    protected void doClickResponse() {
+        playSound(SOUND_CLICK);
+        vibrate(CLICK);
     }
 
     protected void vibrate(VibratePattern pattern) {
@@ -131,6 +177,14 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
                     .addToBackStack(tag)
                     .commit();
         }
+    }
+
+    protected boolean popFragment() {
+        return fragmentManager.popBackStackImmediate();
+    }
+
+    private void displayToastMessage(String message) {
+        makeText(this, message, LENGTH_SHORT).show();
     }
 
     private void setEffectVolume(String tag, float volume) {
@@ -150,7 +204,13 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     private float getVolumeSetting(SharedPreferences preferences, String tag) {
-        return preferences.getInt(tag, DEFAULT_VOLUME) / 10f;
+        return preferences.getInt(tag, DEFAULT_VOLUME) / 10.0f;
+    }
+
+    private interface MediaPlayerAction {
+
+        void execute(MediaPlayer mediaPlayer);
+
     }
 
 }

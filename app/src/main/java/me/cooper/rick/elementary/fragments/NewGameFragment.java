@@ -17,6 +17,8 @@ import me.cooper.rick.elementary.models.Player;
 
 public class NewGameFragment extends DialogFragment {
 
+    public static final String TAG = "newGame";
+
     private OnPlayerCreatedListener mListener;
 
     private Button btnCreate;

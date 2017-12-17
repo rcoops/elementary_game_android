@@ -4,11 +4,9 @@ import android.os.Parcel;
 
 import com.google.firebase.database.Exclude;
 
-import static me.cooper.rick.elementary.constants.Constants.SCORE_BASE_INCREMENT;
-import static me.cooper.rick.elementary.constants.Constants.SCORE_INCREMENT_INCREMENT;
-
 public final class Player extends Score {
 
+    public static final String PLAYER_INTENT_TAG = "player";
 
     public static final Creator<Player> CREATOR = new ParcelablePlayerCreator();
 

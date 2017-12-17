@@ -8,12 +8,17 @@ import java.util.Objects;
 
 public class Score implements Parcelable, Comparable<Score> {
 
+    public static final int SCORE_BASE_INCREMENT = 100;
+    public static final int SCORE_INCREMENT_INCREMENT = 50;
+
     public static final Creator<Score> CREATOR = new ParcelableScoreCreator();
 
     protected String playerName;
     protected int score = 0;
 
-    public Score() {}
+    public Score() {
+        // Mandatory empty constructor for firebase parse
+    }
 
     public Score(String playerName) {
         this.playerName = playerName;

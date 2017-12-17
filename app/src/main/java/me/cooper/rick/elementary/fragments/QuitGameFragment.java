@@ -14,6 +14,8 @@ import me.cooper.rick.elementary.R;
 
 public class QuitGameFragment extends DialogFragment {
 
+    public static final String TAG = "quitGame";
+
     private OnFragmentInteractionListener mListener;
 
     public QuitGameFragment() {
@@ -58,6 +60,7 @@ public class QuitGameFragment extends DialogFragment {
         super.onDetach();
         mListener = null;
     }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(boolean isQuitConfirmed);

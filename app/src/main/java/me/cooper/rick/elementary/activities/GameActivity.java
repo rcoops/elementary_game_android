@@ -6,7 +6,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
@@ -33,22 +32,19 @@ import me.cooper.rick.elementary.services.FireBaseManager;
 import me.cooper.rick.elementary.services.QuizManager;
 import me.cooper.rick.elementary.services.movement.MovementManager;
 
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_INSTRUCTIONS;
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_QUIT_GAME;
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
-import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
-import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
-import static me.cooper.rick.elementary.constants.Constants.SOUND_CLICK;
-import static me.cooper.rick.elementary.constants.Constants.SOUND_GAME_OVER;
-import static me.cooper.rick.elementary.constants.Constants.SOUND_RIGHT;
-import static me.cooper.rick.elementary.constants.Constants.SOUND_WRONG;
 import static me.cooper.rick.elementary.constants.VibratePattern.CLICK;
 import static me.cooper.rick.elementary.constants.VibratePattern.CORRECT;
 import static me.cooper.rick.elementary.constants.VibratePattern.QUIT;
 import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
+import static me.cooper.rick.elementary.models.Player.PLAYER_INTENT_TAG;
+import static me.cooper.rick.elementary.services.QuizManager.NO_OF_ELEMENTS;
 
 public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         QuitGameFragment.OnFragmentInteractionListener {
+
+    private static final String SOUND_WRONG = "wrong";
+    private static final String SOUND_GAME_OVER = "game_over";
+    private static final String SOUND_RIGHT = "correct";
 
     private RelativeLayout content;
     private Point size;
@@ -77,8 +73,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         setContentView(R.layout.activity_game);
         content = findViewById(R.id.game_space);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         player = getIntent().getParcelableExtra(PLAYER_INTENT_TAG);
 
@@ -87,53 +82,25 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         setViewSize();
         addChemicalSymbolView();
         initViews();
-        initSensorManager();
+        initMovementSensors();
         resetTitle();
         initThread();
         displayToastMessage(R.string.txt_welcome_game, player.getPlayerName());
 
         initMedia();
 
-        startFragment(R.id.game_space, new InstructionsFragment(), FRAG_TAG_INSTRUCTIONS);
+        startFragment(R.id.game_space, new InstructionsFragment(), InstructionsFragment.TAG);
     }
 
     @Override
     protected void initMedia() {
         super.initMedia();
-        sounds.put(SOUND_WRONG, soundPool.load(this, R.raw.negative, 1));
-        sounds.put(SOUND_GAME_OVER, soundPool.load(this, R.raw.negative_2, 1));
-        sounds.put(SOUND_RIGHT, soundPool.load(this, R.raw.positive, 1));
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.game_music);
-        mediaPlayer.setLooping(true);
-        onSharedPreferenceChanged(preferences, PREF_VOL_MUSIC);
-        mediaPlayer.start();
-    }
+        addSound(SOUND_WRONG, R.raw.negative);
+        addSound(SOUND_GAME_OVER, R.raw.negative_2);
+        addSound(SOUND_RIGHT, R.raw.positive);
 
-    private void initSensorManager() {
-        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        if (sensorManager != null) {
-            movementManager = new MovementManager(sensorManager, chemicalSymbolView);
-            Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(new ShakeListener(), sensor, SensorManager.SENSOR_DELAY_GAME);
-        }
-    }
-
-    private void disableKeyboard() {
-        if (content != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputMethodManager != null) {
-                inputMethodManager.hideSoftInputFromWindow(content.getWindowToken(), 0);
-            }
-        }
-    }
-
-    private void setViewSize() {
-        if (size == null) {
-            size = new Point();
-            getWindowManager().getDefaultDisplay().getSize(size);
-            centre = new Point(size.x / 2, size.y / 2);
-        }
+        initMusic(R.raw.game_music);
     }
 
     @Override
@@ -152,7 +119,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the execute bar if it is present.
         getMenuInflater().inflate(R.menu.game, menu);
         toggleItem = menu.findItem(R.id.nav_toggle_control);
         setToggleMenuText(); // Must go after sensorManager
@@ -162,9 +129,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     @Override
     protected void onPause() {
         super.onPause();
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
-        }
+        pauseMusic();
         movementManager.stopMoving();
         vibrate(CLICK);
     }
@@ -173,14 +138,13 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     protected void onResume() {
         super.onResume();
         isRunning = true;
-        mediaPlayer.start();
+        startMusic();
         movementManager.startMoving();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        playSound(SOUND_CLICK);
-        vibrate(CLICK);
+        doClickResponse();
         switch (item.getItemId()) {
             case R.id.nav_toggle_control:
                 movementManager.activateNextMoveStrategy();
@@ -188,16 +152,13 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
                 onResume();
                 break;
             case R.id.nav_quit:
-                startFragment(R.id.game_space, new QuitGameFragment(), FRAG_TAG_QUIT_GAME);
+                startFragment(R.id.game_space, new QuitGameFragment(), QuitGameFragment.TAG);
                 break;
             case R.id.nav_instructions:
-                startFragment(R.id.game_space, new InstructionsFragment(), FRAG_TAG_INSTRUCTIONS);
-                break;
-            case R.id.nav_scores:
-                startFragment(R.id.game_space, new HighScoreFragment(), FRAG_TAG_SCORES);
+                startFragment(R.id.game_space, new InstructionsFragment(), InstructionsFragment.TAG);
                 break;
             case R.id.nav_game_settings:
-                startFragment(R.id.game_space, new SettingsFragment(), FRAG_TAG_SETTINGS);
+                startFragment(R.id.game_space, new SettingsFragment(), SettingsFragment.TAG);
                 break;
             default:
                 displayToastMessage(R.string.err_not_implemented);
@@ -235,8 +196,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     @Override
     public void onBackPressed() {
-        if (!getSupportFragmentManager().popBackStackImmediate()) {
-            startFragment(R.id.game_space, new QuitGameFragment(), FRAG_TAG_QUIT_GAME);
+        if (!popFragment()) {
+            startFragment(R.id.game_space, new QuitGameFragment(), QuitGameFragment.TAG);
         } else {
             isFragOpen = false;
             onResume();
@@ -267,9 +228,34 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         });
     }
 
+    private void initMovementSensors() {
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        if (sensorManager != null) {
+            movementManager = new MovementManager(sensorManager, chemicalSymbolView);
+            Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            sensorManager.registerListener(new ShakeListener(), sensor, SensorManager.SENSOR_DELAY_GAME);
+        }
+    }
+
+    private void disableKeyboard() {
+        if (content != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.hideSoftInputFromWindow(content.getWindowToken(), 0);
+            }
+        }
+    }
+
+    private void setViewSize() {
+        if (size == null) {
+            size = new Point();
+            getWindowManager().getDefaultDisplay().getSize(size);
+            centre = new Point(size.x / 2, size.y / 2);
+        }
+    }
+
     private void exit() {
-        mediaPlayer.release();
-        mediaPlayer = null;
+        stopMusic();
         movementManager.stopMoving();
         isRunning = false;
         fireBaseManager.saveScore(player);
@@ -360,7 +346,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         List<Pair<String, String>> answers = quizManager.getAnswers();
         Collections.shuffle(answers);
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < NO_OF_ELEMENTS; ++i) {
             answerViews.get(i).setAnswer(answers.get(i));
         }
     }

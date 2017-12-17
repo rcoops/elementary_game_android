@@ -47,11 +47,13 @@
     <string name="ins_hd_basic_gameplay">Basic Game Play</string>
     <string name="ins_basic_gameplay">
         1. When you start a new game, a random element will be displayed.
-        \n2. To get points simply drag or tilt the element into the property which belongs to it.
-        \n3. The more answers you get right in a row, the more points you can get!
+        \n2. There are %1$d properties to choose from - to get points simply drag or tilt the
+        element into the property which belongs to it.
+        \n3. The more answers you get right in a row, the more points you can get: +%2$d every
+        right answer!
         \n4. If you get 5 answers right in a row, you get an additional life!
         \n5. But watch out, if you get an answer wrong, you\'ll lose a life and your points
-        increment will reset to %1$d.
+        increment will reset to %3$d.
     </string>
     <string name="ins_hd_control">Controls</string>
     <string name="ins_control">

@@ -13,13 +13,14 @@ import java.util.List;
 import me.cooper.rick.elementary.models.Player;
 import me.cooper.rick.elementary.models.Score;
 
-import static me.cooper.rick.elementary.constants.Constants.DB_NAME;
-import static me.cooper.rick.elementary.constants.Constants.HIGH_SCORE_ENTRIES_LIMIT;
-import static me.cooper.rick.elementary.constants.Constants.SCORE_FIELD_NAME;
-
 public class FireBaseManager {
 
     private static FireBaseManager instance;
+
+    private static final int HIGH_SCORE_ENTRIES_LIMIT = 20;
+
+    private static final String SCORE_FIELD_NAME = "score";
+    private static final String DB_NAME = "scores";
 
     private DatabaseReference scoresDb;
 

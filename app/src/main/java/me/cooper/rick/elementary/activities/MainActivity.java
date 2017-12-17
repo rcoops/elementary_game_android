@@ -1,8 +1,6 @@
 package me.cooper.rick.elementary.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,22 +13,14 @@ import android.view.View;
 import org.jetbrains.annotations.NotNull;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.constants.VibratePattern;
 import me.cooper.rick.elementary.fragments.InstructionsFragment;
-import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.fragments.NewGameFragment;
+import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.models.Player;
 
 import static java.lang.System.exit;
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_INSTRUCTIONS;
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_NEW_GAME;
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SCORES;
-import static me.cooper.rick.elementary.constants.Constants.FRAG_TAG_SETTINGS;
-import static me.cooper.rick.elementary.constants.Constants.PLAYER_INTENT_TAG;
-import static me.cooper.rick.elementary.constants.Constants.PREF_VOL_MUSIC;
-import static me.cooper.rick.elementary.constants.Constants.SOUND_CLICK;
-import static me.cooper.rick.elementary.constants.Constants.SOUND_DRAWER;
+import static me.cooper.rick.elementary.models.Player.PLAYER_INTENT_TAG;
 
 public class MainActivity extends AbstractAppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -50,8 +40,22 @@ public class MainActivity extends AbstractAppCompatActivity implements
         initMedia();
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new SoundActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                playSound(SOUND_DRAWER);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                playSound(SOUND_DRAWER);
+            }
+
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -61,24 +65,22 @@ public class MainActivity extends AbstractAppCompatActivity implements
     @Override
     protected void initMedia() {
         super.initMedia();
-        sounds.put(SOUND_DRAWER, soundPool.load(this, R.raw.rollover3, 1));
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.main);
-        mediaPlayer.setLooping(true);
-        onSharedPreferenceChanged(preferences, PREF_VOL_MUSIC);
-        mediaPlayer.start();
+        addSound(SOUND_DRAWER, R.raw.rollover3);
+
+        initMusic(R.raw.main);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mediaPlayer.pause();
+        pauseMusic();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mediaPlayer.start();
+        startMusic();
     }
 
     @Override
@@ -86,27 +88,26 @@ public class MainActivity extends AbstractAppCompatActivity implements
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            mediaPlayer.start();
+            startMusic();
             super.onBackPressed();
         }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
-        playSound(SOUND_CLICK);
-        vibrate(VibratePattern.CLICK);
+        doClickResponse();
         switch (item.getItemId()) {
             case R.id.nav_new_game:
-                startFragment(R.id.dialog_layout, new NewGameFragment(), FRAG_TAG_NEW_GAME);
+                startFragment(R.id.dialog_layout, new NewGameFragment(), NewGameFragment.TAG);
                 break;
             case R.id.nav_scores:
-                startFragment(R.id.content_main, new HighScoreFragment(), FRAG_TAG_SCORES);
+                startFragment(R.id.content_main, new HighScoreFragment(), HighScoreFragment.TAG);
                 break;
             case R.id.nav_instructions:
-                startFragment(R.id.content_main, new InstructionsFragment(), FRAG_TAG_INSTRUCTIONS);
+                startFragment(R.id.content_main, new InstructionsFragment(), InstructionsFragment.TAG);
                 break;
             case R.id.nav_settings:
-                startFragment(R.id.content_main, new SettingsFragment(), FRAG_TAG_SETTINGS);
+                startFragment(R.id.content_main, new SettingsFragment(), SettingsFragment.TAG);
                 break;
             case R.id.nav_quit:
                 exitApplication();
@@ -120,44 +121,16 @@ public class MainActivity extends AbstractAppCompatActivity implements
 
     @Override
     public void onPlayerCreated(Player player) {
-        fragmentManager.popBackStack();
+        popFragment();
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(PLAYER_INTENT_TAG, player);
-        mediaPlayer.pause();
+        stopMusic();
         startActivity(gameIntent);
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
     }
 
     private void exitApplication() {
         finish();
         exit(0);
-    }
-
-    private class SoundActionBarDrawerToggle extends ActionBarDrawerToggle {
-
-        public SoundActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout,
-                                          Toolbar toolbar, int openDrawerContentDescRes,
-                                          int closeDrawerContentDescRes) {
-            super(activity, drawerLayout, toolbar, openDrawerContentDescRes,
-                    closeDrawerContentDescRes);
-        }
-
-        @Override
-        public void onDrawerClosed(View drawerView) {
-            super.onDrawerClosed(drawerView);
-            playSound(SOUND_DRAWER);
-        }
-
-        @Override
-        public void onDrawerOpened(View drawerView) {
-            super.onDrawerOpened(drawerView);
-            playSound(SOUND_DRAWER);
-        }
-
     }
 
 }
