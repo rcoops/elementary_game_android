@@ -34,12 +34,12 @@ public class MainActivity extends AbstractAppCompatActivity implements
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         initMedia();
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
@@ -69,18 +69,6 @@ public class MainActivity extends AbstractAppCompatActivity implements
         addSound(SOUND_DRAWER, R.raw.rollover3);
 
         initMusic(R.raw.main);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        pauseMusic();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        startMusic();
     }
 
     @Override
@@ -124,7 +112,6 @@ public class MainActivity extends AbstractAppCompatActivity implements
         popFragment();
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(PLAYER_INTENT_TAG, player);
-        stopMusic();
         startActivity(gameIntent);
     }
 

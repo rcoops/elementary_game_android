@@ -129,16 +129,13 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     @Override
     protected void onPause() {
         super.onPause();
-        pauseMusic();
         movementManager.stopMoving();
-        vibrate(CLICK);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         isRunning = true;
-        startMusic();
         movementManager.startMoving();
     }
 
@@ -255,7 +252,6 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     private void exit() {
-        stopMusic();
         movementManager.stopMoving();
         isRunning = false;
         fireBaseManager.saveScore(player);

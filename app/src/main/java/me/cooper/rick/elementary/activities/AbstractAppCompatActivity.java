@@ -100,6 +100,18 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         onBackPressed();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pauseMusic();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startMusic();
+    }
+
     protected void initMedia() {
         addSound(SOUND_CLICK, R.raw.click);
     }
@@ -131,15 +143,6 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
             @Override
             public void execute(MediaPlayer mediaPlayer) {
                 mediaPlayer.pause();
-            }
-        });
-    }
-
-    protected void stopMusic() {
-        controlMediaPlayer(new MediaPlayerAction() {
-            @Override
-            public void execute(MediaPlayer mediaPlayer) {
-                mediaPlayer.release();
             }
         });
     }
