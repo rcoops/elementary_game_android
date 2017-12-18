@@ -43,7 +43,7 @@ public class QuizManagerTest {
         // And it's current target element
         Element oldTarget = quizManager.getTargetElement();
 
-        // When reseting the answers held by the manager
+        // When resetting the answers held by the manager
         quizManager.resetAnswers();
 
         // Then the new element does not match the old
