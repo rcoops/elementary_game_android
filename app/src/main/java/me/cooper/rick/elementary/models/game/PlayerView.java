@@ -12,9 +12,9 @@ import android.support.v4.graphics.ColorUtils;
 import android.view.View;
 
 import me.cooper.rick.elementary.constants.element.Element;
-import me.cooper.rick.elementary.models.movementstrategies.MoveStrategy;
-import me.cooper.rick.elementary.models.movementstrategies.SensorMoveStrategy;
-import me.cooper.rick.elementary.models.movementstrategies.TouchMoveStrategy;
+import me.cooper.rick.elementary.models.movestrategies.MoveStrategy;
+import me.cooper.rick.elementary.models.movestrategies.SensorMoveStrategy;
+import me.cooper.rick.elementary.models.movestrategies.TouchMoveStrategy;
 import me.cooper.rick.elementary.models.util.CircularLinkedList;
 
 import static android.content.Context.SENSOR_SERVICE;

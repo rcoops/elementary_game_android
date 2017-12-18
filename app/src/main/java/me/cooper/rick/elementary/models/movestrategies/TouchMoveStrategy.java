@@ -1,4 +1,4 @@
-package me.cooper.rick.elementary.models.movementstrategies;
+package me.cooper.rick.elementary.models.movestrategies;
 
 import android.view.MotionEvent;
 import android.view.View;
