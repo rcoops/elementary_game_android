@@ -1,5 +1,7 @@
 package me.cooper.rick.elementary.constants.element;
 
+import android.util.Property;
+
 import static java.util.Arrays.copyOfRange;
 
 public enum Element {
@@ -141,11 +143,19 @@ public enum Element {
             case GROUP:
                 return group.label;
             default:
-                throw new UnsupportedOperationException("That property is not implemented");
+                throw new UnsupportedOperationException("That property is not implemented"); // Unreachable
         }
     }
 
-    public int getPropertyValueMatches(Element[] elements, Property[] properties) {
+    /**
+     * Counts the number of property values shared with a list of elements.
+     *
+     * @param elements      a list of elements to check against
+     * @param properties    a list of properties belonging to the above elements
+     * @return              number of property values for element that match those held by the
+     *                      elements in the above list
+     */
+    private int countPropertyValueMatches(Element[] elements, Property[] properties) {
         int matches = 0;
         for (int i = 0; i < elements.length; ++i) {
             if (hasPropertyValue(properties[i], elements[i].getPropertyValue(properties[i]))) {
@@ -155,6 +165,17 @@ public enum Element {
         return matches;
     }
 
+    public boolean matchesOneElementProperty(Element[] elements, Property[] properties) {
+        return countPropertyValueMatches(elements, properties) == 1;
+    }
+
+    /**
+     * Checks to see if an element has the value of a specific property.
+     *
+     * @param property  the actual property to check value for
+     * @param value     the value to check against
+     * @return          true if the value matches the property of that element
+     */
     public boolean hasPropertyValue(Property property, String value) {
         return getPropertyValue(property).equals(value);
     }
@@ -176,6 +197,11 @@ public enum Element {
             this.label = label;
         }
 
+        /**
+         * Retrieves all properties except symbol (as that is shown in the element.
+         *
+         * @return  an array of all property values minus symbol
+         */
         public static Property[] quizValues() {
             return copyOfRange(allProperties, 1, allProperties.length ); // Exclude symbol
         }

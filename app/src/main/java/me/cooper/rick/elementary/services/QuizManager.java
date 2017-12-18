@@ -44,15 +44,24 @@ public class QuizManager {
      * properties thereof.
      */
     public void resetAnswers() {
-        reset(ALL_ELEMENTS, CURRENT_ELEMENTS);
+        Element lastTarget = CURRENT_ELEMENTS[0];
+        // Ensure a new element is chosen each time
+        do {
+            reset(ALL_ELEMENTS, CURRENT_ELEMENTS);
+        } while (CURRENT_ELEMENTS[0].equals(lastTarget));
+
         // Re-shuffle properties if more than one answer matches target
         do {
             reset(ALL_PROPERTIES, CURRENT_PROPERTIES);
-        } while (CURRENT_ELEMENTS[0].getPropertyValueMatches(CURRENT_ELEMENTS, CURRENT_PROPERTIES) > 1);
+        } while (!CURRENT_ELEMENTS[0].matchesOneElementProperty(CURRENT_ELEMENTS, CURRENT_PROPERTIES));
     }
 
     public Element getTargetElement() {
         return CURRENT_ELEMENTS[0];
+    }
+
+    public Property getTargetProperty() {
+        return targetProperty;
     }
 
     /**
@@ -60,7 +69,7 @@ public class QuizManager {
      * name and value for each element.
      *
      * @return a list of property (names) paired with the value of that property for a
-     * randomly chosen element.
+     * randomly chosen element. The first property value will be the correct one.
      */
     public List<Pair<String, String>> getAnswers() {
         List<Pair<String, String>> answers = new ArrayList<>();
@@ -76,6 +85,7 @@ public class QuizManager {
         return CURRENT_ELEMENTS[0].hasPropertyValue(targetProperty, answer);
     }
 
+    // Generic so it can assign both properties and elements
     private <T> void reset(T[] all, T[] current) {
         List<T> available = new ArrayList<>(asList(all)); // Make list of all elements / properties
         for (int i = 0; i < NO_OF_ELEMENTS; ++i) {
