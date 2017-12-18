@@ -28,7 +28,7 @@ public class HighScoreFragment extends Fragment implements FireBaseManager.FireB
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_high_score_list, container, false);
-        fireBaseManager.addHighScoreListListener(this);
+        fireBaseManager.setHighScoreListListener(this);
         // Set the adapter
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.score_list);

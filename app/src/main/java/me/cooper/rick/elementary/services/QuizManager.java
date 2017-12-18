@@ -39,6 +39,10 @@ public class QuizManager {
         resetAnswers();
     }
 
+    /**
+     * Resets the current list of selected answers to a new list with randomly chosen elements and
+     * properties thereof.
+     */
     public void resetAnswers() {
         reset(ALL_ELEMENTS, CURRENT_ELEMENTS);
         // Re-shuffle properties if more than one answer matches target
@@ -47,18 +51,17 @@ public class QuizManager {
         } while (CURRENT_ELEMENTS[0].getPropertyValueMatches(CURRENT_ELEMENTS, CURRENT_PROPERTIES) > 1);
     }
 
-    private <T> void reset(T[] all, T[] current) {
-        List<T> available = new ArrayList<>(asList(all));
-        for (int i = 0; i < NO_OF_ELEMENTS; ++i) {
-            int index = RAND.nextInt(available.size());
-            current[i] = available.remove(index);
-        }
-    }
-
     public Element getTargetElement() {
         return CURRENT_ELEMENTS[0];
     }
 
+    /**
+     * Cycles through all currently chosen elements and properties and returns a list of their
+     * name and value for each element.
+     *
+     * @return a list of property (names) paired with the value of that property for a
+     * randomly chosen element.
+     */
     public List<Pair<String, String>> getAnswers() {
         List<Pair<String, String>> answers = new ArrayList<>();
         targetProperty = CURRENT_PROPERTIES[0];
@@ -71,6 +74,14 @@ public class QuizManager {
 
     public boolean isCorrectAnswer(String answer) {
         return CURRENT_ELEMENTS[0].hasPropertyValue(targetProperty, answer);
+    }
+
+    private <T> void reset(T[] all, T[] current) {
+        List<T> available = new ArrayList<>(asList(all)); // Make list of all elements / properties
+        for (int i = 0; i < NO_OF_ELEMENTS; ++i) {
+            int index = RAND.nextInt(available.size()); // Pick an index at random
+            current[i] = available.remove(index); // remove from the list of available and add to recorded
+        }
     }
 
 }

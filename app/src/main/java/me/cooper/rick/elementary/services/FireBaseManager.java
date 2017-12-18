@@ -25,6 +25,7 @@ public class FireBaseManager {
     private DatabaseReference scoresDb;
 
     private List<Score> highScores;
+
     private FireBaseListener scoreFireBaseListener;
 
     public static FireBaseManager getInstance() {
@@ -43,14 +44,18 @@ public class FireBaseManager {
                 .addChildEventListener(new HighScoreChildEventListener());
     }
 
-    public void addHighScoreListListener(FireBaseListener listener) {
+    public void setHighScoreListListener(FireBaseListener listener) {
         this.scoreFireBaseListener = listener;
     }
 
+    /**
+     * Persists a score to the database as long as that score is over 0
+     * @param player    the player whose score is being recorded
+     */
     public void saveScore(Player player) {
         if (player.hasScore()) {
-            String newScore = scoresDb.push().getKey();
-            scoresDb.child(newScore).setValue(player);
+            String newScore = scoresDb.push().getKey(); // Create new unique 'Score' key
+            scoresDb.child(newScore).setValue(player); // set key value as player
         }
     }
 
@@ -96,6 +101,9 @@ public class FireBaseManager {
 
     }
 
+    /**
+     * Notified when the top 20 elements change.
+     */
     public interface FireBaseListener {
         void onFireBaseChange();
     }

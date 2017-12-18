@@ -202,7 +202,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
     @Override
     public void onShake() {
-        String nextStrategyDescription = playerView.nextStrategy();
+        String nextStrategyDescription = playerView.cycleNextStrategy();
         setToggleMenuText(nextStrategyDescription);
     }
 

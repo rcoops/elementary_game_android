@@ -139,24 +139,13 @@ public class PlayerView extends View {
         activeMoveStrategy.unregisterListener();
     }
 
-    public String nextStrategy() {
-        activateNextMoveStrategy();
-
-        return getNextStrategyDescription();
-    }
-
-    private String getNextStrategyDescription() {
-        return getStrategyDescription(moveStrategies.getNext());
-    }
-
-    private String getStrategyDescription(MoveStrategy strategy) {
-        return strategy == null ? null : strategy.getDescription();
-    }
-
-    private void activateNextMoveStrategy() {
+    public String cycleNextStrategy() {
         stopMoving();
         activeMoveStrategy = moveStrategies.cycleCurrentToNext();
         startMoving();
+        MoveStrategy next = moveStrategies.getNext();
+
+        return next == null ? null : next.getDescription();
     }
 
 }
