@@ -30,7 +30,9 @@
                 android:textSize="@dimen/txt_title"
                 android:layout_gravity="end"
                 android:layout_marginStart="@dimen/margin_left_lives"
-                android:layout_marginEnd="@dimen/margin_right_lives"/>
+                android:layout_marginLeft="@dimen/margin_left_lives"
+                android:layout_marginEnd="@dimen/margin_right_lives"
+                android:layout_marginRight="@dimen/margin_right_lives"/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

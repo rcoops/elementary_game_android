@@ -26,8 +26,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginEnd="@dimen/elementary_header_padding"
+            android:layout_marginRight="@dimen/elementary_header_padding"
             android:background="#00000000"
             android:contentDescription="@string/btn_close"
             android:src="@drawable/ic_close" />

@@ -4,7 +4,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import me.cooper.rick.elementary.models.game.PlayerView;
-//import static android.view.View.OnTouchListener;
 
 public class TouchMoveStrategy implements MoveStrategy {
 
@@ -13,7 +12,7 @@ public class TouchMoveStrategy implements MoveStrategy {
     private View view;
     private final OnTouchListener ON_TOUCH_LISTENER = new OnTouchListener();
     private final OnTouchListener DUMMY_LISTENER = new OnTouchListener() {
-        @Override
+        @Override // Override our custom listener to do nothing
         public boolean onTouch(View v, MotionEvent event) {
             return false;
         }
@@ -45,22 +44,23 @@ public class TouchMoveStrategy implements MoveStrategy {
     }
 
     private class OnTouchListener implements View.OnTouchListener {
-        private float dx = 0, dy = 0;
+        private float xRelative = 0, yRelative = 0;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (v == view) {
                 PlayerView playerView = (PlayerView) view;
+                // Only do anything if view touched
                 if (playerView.isInsideBounds(event.getX(), event.getY())) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            dx = event.getX() - view.getX();
-                            dy = event.getY() - view.getY();
+                            // record current touch position in relation to view position
+                            xRelative = event.getX() - view.getX();
+                            yRelative = event.getY() - view.getY();
                             break;
                         case MotionEvent.ACTION_MOVE:
-                            move(event.getX() - dx, event.getY() - dy);
-                            break;
-                        case MotionEvent.ACTION_UP:
+                            // use recorded position to move view without moving to touch centre
+                            move(event.getX() - xRelative, event.getY() - yRelative);
                             break;
                     }
                 }
