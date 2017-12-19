@@ -7,17 +7,16 @@ import android.hardware.SensorManager;
 
 /**
  * Provides basic inheritable functionality to distinguish between a shake and a tilt.
+ * Original example taken from http://jasonmcreynolds.com/?p=388 and modified
  */
 public abstract class AcceleroListener implements SensorEventListener {
 
     protected static final int SENSOR_TYPE = Sensor.TYPE_ACCELEROMETER;
 
-    private static final float SHAKE_THRESHOLD = 2.2F;
+    private static final float SHAKE_THRESHOLD = 1.8f;
     private static final int SHAKE_SLOP_TIME_MS = 500;
-    private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;
 
     private long lastShake;
-    private int shakeCount;
 
     private double gForce = 0;
 
@@ -34,21 +33,11 @@ public abstract class AcceleroListener implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     protected boolean isShake() {
-//        if (shakeCount > 3) {
-//            shakeCount = 0;
-//            return false;
-//        }
         final long now = System.currentTimeMillis();
         boolean exceedsGForce = gForce > SHAKE_THRESHOLD;
         boolean isWithinShakeTime = lastShake + SHAKE_SLOP_TIME_MS > now;
 
-        // reset the shake count after 3 seconds of no shakes
-        if (lastShake + SHAKE_COUNT_RESET_TIME_MS < now) {
-            shakeCount = 0;
-        }
-
         lastShake = now;
-        shakeCount++;
         return isWithinShakeTime && exceedsGForce;
     }
 
