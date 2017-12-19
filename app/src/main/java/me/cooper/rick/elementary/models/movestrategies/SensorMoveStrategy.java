@@ -27,9 +27,7 @@ public class SensorMoveStrategy extends AcceleroListener implements MoveStrategy
     }
 
     @Override
-    public void move(float xSensorValue, float ySensorValue) {
-        float xSpeed = xSensorValue * X_SENSITIVITY;
-        float ySpeed = ySensorValue * Y_SENSITIVITY;
+    public void move(float xSpeed, float ySpeed) {
         view.setX(view.getX() + xSpeed);
         view.setY(view.getY() - ySpeed); // Reverse y-axis
     }
@@ -51,13 +49,11 @@ public class SensorMoveStrategy extends AcceleroListener implements MoveStrategy
 
     private final class MotionSensorListener extends AcceleroListener implements SensorEventListener {
 
-        static final int SENSOR_TYPE = Sensor.TYPE_ACCELEROMETER;
-
         @Override
         public void onSensorChanged(SensorEvent event) {
             super.onSensorChanged(event);
             if (event.sensor.getType() == SENSOR_TYPE && !isShake()) {
-                move(event.values[0], event.values[1]);
+                move(event.values[0] * X_SENSITIVITY, event.values[1] * Y_SENSITIVITY);
             }
             view.invalidate();
         }
