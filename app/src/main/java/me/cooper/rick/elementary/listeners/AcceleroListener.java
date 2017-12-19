@@ -10,7 +10,8 @@ import android.hardware.SensorManager;
  */
 public abstract class AcceleroListener implements SensorEventListener {
 
-    protected static final int SENSOR_TYPE = Sensor.TYPE_ACCELEROMETER;
+    static final int SENSOR_TYPE = Sensor.TYPE_ACCELEROMETER;
+
     private static final float SHAKE_THRESHOLD_GRAVITY = 2.2F;
     private static final int SHAKE_SLOP_TIME_MS = 500;
     private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;

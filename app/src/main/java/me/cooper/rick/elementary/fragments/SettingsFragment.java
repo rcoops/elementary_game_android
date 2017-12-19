@@ -13,9 +13,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     public static final String TAG = "settings";
 
-    private SoundPool soundPool;
-    private SeekBarPreference effects;
-
     public SettingsFragment() {
         // Required empty public constructor
     }

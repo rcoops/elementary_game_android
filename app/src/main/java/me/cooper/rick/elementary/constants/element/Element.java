@@ -1,7 +1,5 @@
 package me.cooper.rick.elementary.constants.element;
 
-import android.util.Property;
-
 import static java.util.Arrays.copyOfRange;
 
 public enum Element {
@@ -189,7 +187,8 @@ public enum Element {
         NATURAL_STATE("Natural\nState"),
         BONDING_TYPE("Bonding\nType"),
         GROUP("Element\nGroup");
-        private static Property[] allProperties = Property.values();
+
+        private static final Property[] allProperties = Property.values();
 
         public final String label;
 

@@ -14,7 +14,6 @@ import android.widget.EditText;
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.models.score.Player;
 
-
 public class NewGameFragment extends DialogFragment {
 
     public static final String TAG = "newGame";
@@ -30,7 +29,7 @@ public class NewGameFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_game, container, false);
-        final EditText edtEnterName = (EditText) view.findViewById(R.id.edt_enter_name);
+        final EditText edtEnterName = view.findViewById(R.id.edt_enter_name);
         edtEnterName.addTextChangedListener(new EditNameTextWatcher());
 
         btnCreate = view.findViewById(R.id.btn_create_player);

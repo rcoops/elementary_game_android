@@ -26,9 +26,8 @@ public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context)
-                .inflate(R.layout.fragment_high_score, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater.from(context)
+                .inflate(R.layout.fragment_high_score, parent, false));
     }
 
     @Override
@@ -55,9 +54,9 @@ public class HighScoreRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         ViewHolder(View view) {
             super(view);
             mView = view;
-            numberView = (TextView) view.findViewById(R.id.number);
-            playerNameView = (TextView) view.findViewById(R.id.player_name);
-            scoreView = (TextView) view.findViewById(R.id.high_score);
+            numberView = view.findViewById(R.id.number);
+            playerNameView = view.findViewById(R.id.player_name);
+            scoreView = view.findViewById(R.id.high_score);
         }
 
         @Override

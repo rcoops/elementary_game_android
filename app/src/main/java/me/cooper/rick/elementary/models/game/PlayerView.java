@@ -21,7 +21,7 @@ import static android.content.Context.SENSOR_SERVICE;
 
 public class PlayerView extends View {
 
-    public static final int RADIUS = 75;
+    private static final int RADIUS = 75;
 
     private Element element;
 
@@ -56,6 +56,10 @@ public class PlayerView extends View {
         }
         moveStrategies.add(new TouchMoveStrategy(this));
         activeMoveStrategy = moveStrategies.getCurrent();
+    }
+
+    public void move(float x, float y) {
+
     }
 
     @Override

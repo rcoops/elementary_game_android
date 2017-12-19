@@ -64,14 +64,18 @@ public class Score implements Parcelable, Comparable<Score> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         Score score1 = (Score) o;
-        return score == score1.score &&
-                Objects.equals(playerName, score1.playerName);
+
+        return  score == score1.score
+                && playerName.equals(score1.playerName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(playerName, score);
+        int result = playerName.hashCode();
+        result = 31 * result + score;
+        return result;
     }
 
     @Override

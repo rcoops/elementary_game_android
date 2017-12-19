@@ -47,12 +47,6 @@ public final class Player extends Score {
         return currentIncrementOverBase % NEW_LIFE_SCORE_THRESHOLD == 0;
     }
 
-    // Don't need lives or score outside game activity
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-    }
-
     @Override
     public String toString() {
         return "Player{" +

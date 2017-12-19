@@ -22,9 +22,9 @@ public class FireBaseManager {
     private static final String SCORE_FIELD_NAME = "score";
     private static final String DB_NAME = "scores";
 
-    private DatabaseReference scoresDb;
+    private DatabaseReference scoresDb = FirebaseDatabase.getInstance().getReference(DB_NAME);
 
-    private List<Score> highScores;
+    private final List<Score> highScores = new ArrayList<>();
 
     private FireBaseListener scoreFireBaseListener;
 
@@ -36,9 +36,6 @@ public class FireBaseManager {
     }
 
     private FireBaseManager() {
-        highScores = new ArrayList<>();
-        scoresDb = FirebaseDatabase.getInstance().getReference(DB_NAME);
-
         scoresDb.orderByChild(SCORE_FIELD_NAME)
                 .limitToLast(HIGH_SCORE_ENTRIES_LIMIT)
                 .addChildEventListener(new HighScoreChildEventListener());

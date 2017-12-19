@@ -22,9 +22,9 @@ import me.cooper.rick.elementary.fragments.InstructionsFragment;
 import me.cooper.rick.elementary.fragments.QuitGameFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
 import me.cooper.rick.elementary.listeners.ShakeListener;
-import me.cooper.rick.elementary.models.score.Player;
-import me.cooper.rick.elementary.models.game.PlayerView;
 import me.cooper.rick.elementary.models.game.AnswerView;
+import me.cooper.rick.elementary.models.game.PlayerView;
+import me.cooper.rick.elementary.models.score.Player;
 import me.cooper.rick.elementary.services.FireBaseManager;
 import me.cooper.rick.elementary.services.QuizManager;
 

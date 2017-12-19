@@ -11,7 +11,7 @@ import me.cooper.rick.elementary.R;
 public class AnswerView extends AppCompatTextView {
 
     private String answer;
-    protected Rect viewBounds = new Rect();
+    private final Rect viewBounds = new Rect();
 
     public AnswerView(Context context, AttributeSet attrs) {
         super(context, attrs);

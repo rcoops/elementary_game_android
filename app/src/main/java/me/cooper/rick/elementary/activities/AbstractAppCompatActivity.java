@@ -1,10 +1,13 @@
 package me.cooper.rick.elementary.activities;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
@@ -29,8 +32,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         InstructionsFragment.OnFragmentInteractionListener,
         HighScoreFragment.OnFragmentInteractionListener {
 
-    protected static final String PREF_VOL_MUSIC = "pref_volume_music";
-
+    private static final String PREF_VOL_MUSIC = "pref_volume_music";
     private static final String PREF_VOL_EFFECTS = "pref_volume_effects";
     private static final String PREF_TOG_VIBRATE = "pref_toggle_vibrate";
 
@@ -41,7 +43,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     private MediaPlayer mediaPlayer;
     private SoundPool soundPool;
 
-    private Map<String, Integer> sounds = new HashMap<>();
+    private final Map<String, Integer> sounds = new HashMap<>();
 
     protected boolean isFragOpen = false;
 
@@ -57,13 +59,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, false);
         preferences.registerOnSharedPreferenceChangeListener(this);
 
-        soundPool = new SoundPool.Builder()
-                .setAudioAttributes(new AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .build())
-                .setMaxStreams(1)
-                .build();
+        soundPool = isLollipopOrGreater() ? buildSoundPoolLollipop() : buildSoundPoolBase();
     }
 
     @Override
@@ -173,6 +169,26 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
 
     protected boolean popFragment() {
         return getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private SoundPool buildSoundPoolLollipop() {
+        return new SoundPool.Builder()
+                .setAudioAttributes(new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_GAME)
+                        .build())
+                .setMaxStreams(1)
+                .build();
+    }
+
+    @TargetApi(Build.VERSION_CODES.BASE)
+    private SoundPool buildSoundPoolBase() {
+        return new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+    }
+
+    protected boolean isLollipopOrGreater() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     private void controlMediaPlayer(MediaPlayerAction action) {
