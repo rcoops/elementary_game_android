@@ -1,14 +1,19 @@
 package me.cooper.rick.elementary.activities;
 
+import android.annotation.TargetApi;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -70,19 +75,22 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
 
         player = getIntent().getParcelableExtra(PLAYER_INTENT_TAG);
 
-        disableKeyboard();
-        setViewReferences();
-        setViewSize();
-        addChemicalSymbolView();
-        initMovementSensors();
-        resetTitle();
-        initViews();
-        initThread();
-        initMedia();
+        init();
 
         displayToastMessage(R.string.txt_welcome_game, player.getPlayerName());
+    }
 
-        startFragment(R.id.game_space, new InstructionsFragment(), InstructionsFragment.TAG);
+    private void init() {
+        disableKeyboard();
+        setViewReferences();
+        if (isVersionOrGreater(Build.VERSION_CODES.JELLY_BEAN)) {
+            initView16(findViewById(R.id.game_space));
+        } else {
+            initView15();
+        }
+        initMovementSensors();
+        resetTitle();
+        initMedia();
     }
 
     @Override
@@ -128,7 +136,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     protected void onResume() {
         super.onResume();
         isRunning = true;
-        playerView.startMoving();
+        if (playerView != null) {
+            playerView.startMoving();
+        }
     }
 
     @Override
@@ -244,12 +254,48 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         }
     }
 
-    private void setViewSize() {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void initView16(final View view) {
+        // https://stackoverflow.com/questions/3779173/determining-the-size-of-an-android-view-at-runtime
+        ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    size = new Point();
+                    size.set(view.getWidth(), view.getHeight());
+                    centre = new Point(size.x / 2, size.y / 2);
+                    addChemicalSymbolView();
+                    initViews();
+                    initThread();
+
+                    startFragment(R.id.game_space, new InstructionsFragment(), InstructionsFragment.TAG);
+                }
+            });
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+    private void initView15() {
         if (size == null) {
             size = new Point();
             getWindowManager().getDefaultDisplay().getSize(size);
-            centre = new Point(size.x / 2, size.y / 2);
+            // https://stackoverflow.com/questions/7896615/android-how-to-get-value-of-an-attribute-in-code
+            TypedValue tv = new TypedValue();
+            int actionBarHeight = 0;
+            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+                        getResources().getDisplayMetrics());
+            }
+            centre = new Point(size.x / 2, size.y / 2 + actionBarHeight);
         }
+
+        addChemicalSymbolView();
+        initViews();
+        initThread();
+
+        startFragment(R.id.game_space, new InstructionsFragment(), InstructionsFragment.TAG);
     }
 
     private void exit() {

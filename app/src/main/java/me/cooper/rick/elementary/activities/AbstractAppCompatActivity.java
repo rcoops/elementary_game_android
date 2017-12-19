@@ -59,7 +59,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, false);
         preferences.registerOnSharedPreferenceChangeListener(this);
 
-        soundPool = isLollipopOrGreater() ? buildSoundPoolLollipop() : buildSoundPoolBase();
+        soundPool = isVersionOrGreater(Build.VERSION_CODES.LOLLIPOP) ? buildSoundPoolLollipop() : buildSoundPoolBase();
     }
 
     @Override
@@ -187,8 +187,8 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         return new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
     }
 
-    protected boolean isLollipopOrGreater() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    protected boolean isVersionOrGreater(int versionCode) {
+        return Build.VERSION.SDK_INT >= versionCode;
     }
 
     private void controlMediaPlayer(MediaPlayerAction action) {

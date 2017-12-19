@@ -58,10 +58,6 @@ public class PlayerView extends View {
         activeMoveStrategy = moveStrategies.getCurrent();
     }
 
-    public void move(float x, float y) {
-
-    }
-
     @Override
     public float getX() {
         return position.x;
