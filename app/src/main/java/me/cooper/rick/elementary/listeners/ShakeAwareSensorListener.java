@@ -9,7 +9,7 @@ import android.hardware.SensorManager;
  * Provides basic inheritable functionality to distinguish between a shake and a tilt.
  * Original example taken from http://jasonmcreynolds.com/?p=388 and modified
  */
-public abstract class AcceleroListener implements SensorEventListener {
+public abstract class ShakeAwareSensorListener implements SensorEventListener {
 
     protected static final int SENSOR_TYPE = Sensor.TYPE_ACCELEROMETER;
 

@@ -3,7 +3,7 @@ package me.cooper.rick.elementary.listeners;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 
-public final class ShakeListener extends AcceleroListener {
+public final class ShakeListener extends ShakeAwareSensorListener {
 
     private OnShakeListener onShakeListener;
 

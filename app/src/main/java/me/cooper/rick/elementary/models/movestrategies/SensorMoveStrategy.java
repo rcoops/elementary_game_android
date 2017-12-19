@@ -6,19 +6,19 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.View;
 
-import me.cooper.rick.elementary.listeners.AcceleroListener;
+import me.cooper.rick.elementary.listeners.ShakeAwareSensorListener;
 
-public class SensorMoveStrategy extends AcceleroListener implements MoveStrategy {
+public class SensorMoveStrategy extends ShakeAwareSensorListener implements MoveStrategy {
 
     private static final float X_SENSITIVITY = 2.0f;
-    private static final float Y_SENSITIVITY = 2.5f;
+    private static final float Y_SENSITIVITY = X_SENSITIVITY * 1.25f;
 
     private static final String DESCRIPTION = "Tilt";
 
     private View view;
     private SensorManager sensorManager;
     private Sensor sensor;
-    private SensorEventListener motionSensorListener = new MotionSensorListener();
+    private SensorEventListener motionSensorListener = new TiltListener();
 
     public SensorMoveStrategy(View view, SensorManager sensorManager) {
         this.view = view;
@@ -30,6 +30,7 @@ public class SensorMoveStrategy extends AcceleroListener implements MoveStrategy
     public void move(float xSpeed, float ySpeed) {
         view.setX(view.getX() + xSpeed);
         view.setY(view.getY() - ySpeed); // Reverse y-axis
+        view.invalidate();
     }
 
     @Override
@@ -47,7 +48,7 @@ public class SensorMoveStrategy extends AcceleroListener implements MoveStrategy
         sensorManager.unregisterListener(motionSensorListener);
     }
 
-    private final class MotionSensorListener extends AcceleroListener implements SensorEventListener {
+    private final class TiltListener extends ShakeAwareSensorListener {
 
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -55,7 +56,6 @@ public class SensorMoveStrategy extends AcceleroListener implements MoveStrategy
             if (event.sensor.getType() == SENSOR_TYPE && !isShake()) {
                 move(event.values[0] * X_SENSITIVITY, event.values[1] * Y_SENSITIVITY);
             }
-            view.invalidate();
         }
 
         @Override
