@@ -21,6 +21,7 @@ import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.fragments.InstructionsFragment;
 import me.cooper.rick.elementary.fragments.QuitGameFragment;
 import me.cooper.rick.elementary.fragments.SettingsFragment;
+import me.cooper.rick.elementary.fragments.score.HighScoreFragment;
 import me.cooper.rick.elementary.listeners.ShakeListener;
 import me.cooper.rick.elementary.models.game.AnswerView;
 import me.cooper.rick.elementary.models.game.PlayerView;
@@ -137,6 +138,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
             case R.id.nav_toggle_control:
                 onShake();
                 onResume();
+                break;
+            case R.id.nav_scores:
+                startFragment(R.id.game_space, new HighScoreFragment(), HighScoreFragment.TAG);
                 break;
             case R.id.nav_quit:
                 startFragment(R.id.game_space, new QuitGameFragment(), QuitGameFragment.TAG);

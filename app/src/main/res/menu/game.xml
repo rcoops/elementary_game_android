@@ -9,11 +9,15 @@
         android:orderInCategory="200"
         android:title="@string/ins_hd_main" />
     <item
-        android:id="@+id/nav_game_settings"
+        android:id="@+id/nav_scores"
         android:orderInCategory="300"
+        android:title="@string/nav_high_scores" />
+    <item
+        android:id="@+id/nav_game_settings"
+        android:orderInCategory="400"
         android:title="@string/action_settings" />
     <item
         android:id="@+id/nav_quit"
-        android:orderInCategory="400"
+        android:orderInCategory="500"
         android:title="@string/nav_quit" />
 </menu>
