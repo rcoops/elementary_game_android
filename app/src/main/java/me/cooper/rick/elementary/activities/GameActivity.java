@@ -25,7 +25,7 @@ import me.cooper.rick.elementary.listeners.ShakeListener;
 import me.cooper.rick.elementary.models.game.AnswerView;
 import me.cooper.rick.elementary.models.game.PlayerView;
 import me.cooper.rick.elementary.models.score.Player;
-import me.cooper.rick.elementary.services.FireBaseManager;
+import me.cooper.rick.elementary.services.FirebaseManager;
 import me.cooper.rick.elementary.services.QuizManager;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
@@ -55,7 +55,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     private Player player;
 
     private QuizManager quizManager = QuizManager.getInstance();
-    private FireBaseManager fireBaseManager = FireBaseManager.getInstance();
+    private FirebaseManager firebaseManager = FirebaseManager.getInstance();
 
     private Thread thread;
     private boolean isRunning = true;
@@ -251,7 +251,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     private void exit() {
         playerView.stopMoving();
         isRunning = false;
-        fireBaseManager.saveScore(player);
+        firebaseManager.saveScore(player);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

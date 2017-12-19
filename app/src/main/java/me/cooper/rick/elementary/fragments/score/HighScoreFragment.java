@@ -10,15 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import me.cooper.rick.elementary.R;
-import me.cooper.rick.elementary.services.FireBaseManager;
+import me.cooper.rick.elementary.services.FirebaseManager;
 
-public class HighScoreFragment extends Fragment implements FireBaseManager.FireBaseListener {
+public class HighScoreFragment extends Fragment implements FirebaseManager.FirebaseListener {
 
     public static final String TAG = "highScores";
 
     private OnFragmentInteractionListener mListener;
 
-    private static FireBaseManager fireBaseManager = FireBaseManager.getInstance();
+    private static FirebaseManager firebaseManager = FirebaseManager.getInstance();
 
     private HighScoreRecyclerViewAdapter adapter;
 
@@ -28,12 +28,12 @@ public class HighScoreFragment extends Fragment implements FireBaseManager.FireB
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_high_score_list, container, false);
-        fireBaseManager.setHighScoreListListener(this);
+        firebaseManager.setHighScoreListListener(this);
         // Set the adapter
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.score_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new HighScoreRecyclerViewAdapter(fireBaseManager.getHighScores(), getActivity());
+        adapter = new HighScoreRecyclerViewAdapter(firebaseManager.getHighScores(), getActivity());
         recyclerView.setAdapter(adapter);
         view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +56,7 @@ public class HighScoreFragment extends Fragment implements FireBaseManager.FireB
     }
 
     @Override
-    public void onFireBaseChange() {
+    public void onFirebaseChange() {
         adapter.notifyDataSetChanged();
     }
 

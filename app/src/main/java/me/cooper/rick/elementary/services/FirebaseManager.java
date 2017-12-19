@@ -13,11 +13,11 @@ import java.util.List;
 import me.cooper.rick.elementary.models.score.Player;
 import me.cooper.rick.elementary.models.score.Score;
 
-public class FireBaseManager {
+public class FirebaseManager {
 
-    private static FireBaseManager instance;
+    private static FirebaseManager instance;
 
-    private static final int HIGH_SCORE_ENTRIES_LIMIT = 20;
+    private static final int HIGH_SCORE_ENTRIES_LIMIT = 50;
 
     private static final String SCORE_FIELD_NAME = "score";
     private static final String DB_NAME = "scores";
@@ -26,23 +26,24 @@ public class FireBaseManager {
 
     private final List<Score> highScores = new ArrayList<>();
 
-    private FireBaseListener scoreFireBaseListener;
+    private FirebaseListener scoreFirebaseListener;
 
-    public static FireBaseManager getInstance() {
+    public static FirebaseManager getInstance() {
         if(instance == null) {
-            instance = new FireBaseManager();
+            instance = new FirebaseManager();
         }
         return instance;
     }
 
-    private FireBaseManager() {
+    private FirebaseManager() {
+        // Retrieve top 20 scores by score value
         scoresDb.orderByChild(SCORE_FIELD_NAME)
                 .limitToLast(HIGH_SCORE_ENTRIES_LIMIT)
                 .addChildEventListener(new HighScoreChildEventListener());
     }
 
-    public void setHighScoreListListener(FireBaseListener listener) {
-        this.scoreFireBaseListener = listener;
+    public void setHighScoreListListener(FirebaseListener listener) {
+        this.scoreFirebaseListener = listener;
     }
 
     /**
@@ -61,8 +62,8 @@ public class FireBaseManager {
     }
 
     private void notifyListener() {
-        if (scoreFireBaseListener != null) {
-            scoreFireBaseListener.onFireBaseChange();
+        if (scoreFirebaseListener != null) {
+            scoreFirebaseListener.onFirebaseChange();
         }
     }
 
@@ -101,8 +102,8 @@ public class FireBaseManager {
     /**
      * Notified when the top 20 elements change.
      */
-    public interface FireBaseListener {
-        void onFireBaseChange();
+    public interface FirebaseListener {
+        void onFirebaseChange();
     }
 
 }
