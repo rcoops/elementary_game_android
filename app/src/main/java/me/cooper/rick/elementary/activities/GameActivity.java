@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -266,6 +265,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
                     size = new Point();
                     size.set(view.getWidth(), view.getHeight());
                     centre = new Point(size.x / 2, size.y / 2);
+                    // All following have to be done here as they rely on centre being set
                     addChemicalSymbolView();
                     initViews();
                     initThread();
@@ -281,14 +281,8 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         if (size == null) {
             size = new Point();
             getWindowManager().getDefaultDisplay().getSize(size);
-            // https://stackoverflow.com/questions/7896615/android-how-to-get-value-of-an-attribute-in-code
-            TypedValue tv = new TypedValue();
-            int actionBarHeight = 0;
-            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
-                        getResources().getDisplayMetrics());
-            }
-            centre = new Point(size.x / 2, size.y / 2 + actionBarHeight);
+
+            centre = new Point((int) (size.x / 2.0f), (int) (size.y / 2.0f) + getStatusBarHeight());
         }
 
         addChemicalSymbolView();
@@ -296,6 +290,16 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         initThread();
 
         startFragment(R.id.game_space, new InstructionsFragment(), InstructionsFragment.TAG);
+    }
+
+    // https://stackoverflow.com/questions/3407256/height-of-status-bar-in-android
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     private void exit() {
