@@ -7,7 +7,7 @@ import org.junit.runners.JUnit4;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
-public class CircularLinkedListTest {
+public class CircularLinkedListUnitTest {
 
     @Test
     public void circularLinkedListKeepsCorrectRecordOfCurrent() throws Exception {

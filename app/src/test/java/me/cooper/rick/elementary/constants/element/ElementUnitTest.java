@@ -81,7 +81,7 @@ public class ElementUnitTest {
         elements = new Element[] {element};
         properties = new Element.Property[] { Element.Property.BONDING_TYPE };
         matches = element.matchesOneElementProperty(elements, properties);
-        // The number of matches is not one
+        // The number of matches is now one
         assertTrue(matches);
     }
 

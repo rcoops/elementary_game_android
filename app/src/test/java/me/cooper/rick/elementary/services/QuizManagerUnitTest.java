@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
-public class QuizManagerTest {
+public class QuizManagerUnitTest {
 
     @Test
     public void isSingleton() throws Exception {
