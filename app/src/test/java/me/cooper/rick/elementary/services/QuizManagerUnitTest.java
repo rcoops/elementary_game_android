@@ -2,6 +2,7 @@ package me.cooper.rick.elementary.services;
 
 import android.support.v4.util.Pair;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -9,7 +10,9 @@ import org.junit.runners.JUnit4;
 import java.util.List;
 
 import me.cooper.rick.elementary.constants.element.Element;
+import me.cooper.rick.elementary.rules.RepeatRule;
 
+import static me.cooper.rick.elementary.rules.RepeatRule.Repeat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -17,6 +20,9 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class QuizManagerUnitTest {
+
+    @Rule
+    public RepeatRule repeatRule = new RepeatRule();
 
     @Test
     public void isSingleton() throws Exception {
@@ -37,20 +43,7 @@ public class QuizManagerUnitTest {
     }
 
     @Test
-    public void resetAnswersGivesANewTargetElement() throws Exception {
-        // Given a quiz manager
-        final QuizManager quizManager = QuizManager.getInstance();
-        // And it's current target element
-        Element oldTarget = quizManager.getTargetElement();
-
-        // When resetting the answers held by the manager
-        quizManager.resetAnswers();
-
-        // Then the new element does not match the old
-        assertNotEquals(quizManager.getTargetElement(), oldTarget);
-    }
-
-    @Test
+    @Repeat(times = 1000)
     public void resetAnswersAlwaysHasNewElement() throws Exception {
         // Given a quiz manager
         final QuizManager quizManager = QuizManager.getInstance();
@@ -65,6 +58,7 @@ public class QuizManagerUnitTest {
     }
 
     @Test
+    @Repeat(times = 1000)
     public void isCorrectAnswer() throws Exception {
         // Given a quiz manager
         final QuizManager quizManager = QuizManager.getInstance();
@@ -80,6 +74,7 @@ public class QuizManagerUnitTest {
     }
 
     @Test
+    @Repeat(times = 1000)
     public void resetAnswersAlwaysHasOnlyOneMatchingProperty() throws Exception {
         // Given a quiz manager
         final QuizManager quizManager = QuizManager.getInstance();

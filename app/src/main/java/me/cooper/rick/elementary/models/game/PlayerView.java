@@ -2,7 +2,6 @@ package me.cooper.rick.elementary.models.game;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -18,6 +17,12 @@ import me.cooper.rick.elementary.models.movestrategies.TouchMoveStrategy;
 import me.cooper.rick.elementary.models.util.CircularLinkedList;
 
 import static android.content.Context.SENSOR_SERVICE;
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
+import static android.graphics.Color.blue;
+import static android.graphics.Color.green;
+import static android.graphics.Color.parseColor;
+import static android.graphics.Color.red;
 
 public class PlayerView extends View {
 
@@ -27,7 +32,7 @@ public class PlayerView extends View {
 
     private Paint circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private int backgroundColor = Color.WHITE;
+    private int backgroundColor = WHITE;
     private Point startingPosition;
     private Point position = new Point();
     private Rect maxBounds;
@@ -82,7 +87,7 @@ public class PlayerView extends View {
     public void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         viewBounds.set(position.x - RADIUS, position.y - RADIUS, position.x + RADIUS, position.y + RADIUS);
-        circlePaint.setColor(Color.BLACK);
+        circlePaint.setColor(BLACK);
         canvas.drawCircle(position.x, position.y, RADIUS, circlePaint);
         circlePaint.setColor(backgroundColor);
         canvas.drawCircle(position.x, position.y, RADIUS - 5, circlePaint);
@@ -111,13 +116,13 @@ public class PlayerView extends View {
         return position;
     }
 
+    //https://developer.android.com/reference/android/support/v4/graphics/ColorUtils.html
     private int getForeGroundColor(int backgroundColor) {
-        int red   = Color.red(backgroundColor);
-        int green = Color.green(backgroundColor);
-        int blue  = Color.blue(backgroundColor);
+        ColorUtils.RGBToHSL(red(backgroundColor), green(backgroundColor), blue(backgroundColor),
+                HUE_SATURATION_LIGHTNESS
+        );
 
-        ColorUtils.RGBToHSL(red, green, blue, HUE_SATURATION_LIGHTNESS);
-        return HUE_SATURATION_LIGHTNESS[2] > 0.5 ? Color.BLACK : Color.WHITE;
+        return HUE_SATURATION_LIGHTNESS[2] > 0.5 ? BLACK : WHITE;
     }
 
     public void resetPosition() {
@@ -126,7 +131,7 @@ public class PlayerView extends View {
 
     public void reset(Element element) {
         this.element = element;
-        backgroundColor = Color.parseColor("#" + element.hexColourCode);
+        backgroundColor = parseColor("#" + element.hexColourCode);
         textPaint.setColor(getForeGroundColor(backgroundColor));
         resetPosition();
     }

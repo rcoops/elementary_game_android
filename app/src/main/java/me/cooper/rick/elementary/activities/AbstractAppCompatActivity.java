@@ -47,7 +47,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
 
     protected boolean isFragOpen = false;
 
-    private boolean vibrate;
+    private boolean shouldVibrate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, false);
+        shouldVibrate = preferences.getBoolean(PREF_TOG_VIBRATE, false);
         preferences.registerOnSharedPreferenceChangeListener(this);
 
         soundPool = isVersionOrGreater(Build.VERSION_CODES.LOLLIPOP) ? buildSoundPoolLollipop() : buildSoundPoolBase();
@@ -73,7 +73,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
                 playSound(SOUND_CLICK);
                 break;
             case PREF_TOG_VIBRATE:
-                vibrate = preferences.getBoolean(PREF_TOG_VIBRATE, false);
+                shouldVibrate = preferences.getBoolean(PREF_TOG_VIBRATE, false);
                 vibrate(CLICK);
                 break;
         }
@@ -102,14 +102,6 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         addSound(SOUND_CLICK, R.raw.click);
 
         initMusic(musicRawId);
-    }
-
-    protected void initMusic(int musicId) {
-        mediaPlayer = MediaPlayer.create(this, musicId);
-        mediaPlayer.setLooping(true);
-        onSharedPreferenceChanged(PreferenceManager.getDefaultSharedPreferences(this),
-                PREF_VOL_MUSIC);
-        startMusic();
     }
 
     protected void startMusic() {
@@ -151,7 +143,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     protected void vibrate(VibratePattern pattern) {
-        if (vibrate) {
+        if (shouldVibrate) {
             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (vibrator != null) {
                 vibrator.vibrate(pattern.pattern, -1);
@@ -171,6 +163,14 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
 
     protected boolean popFragment() {
         return getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    private void initMusic(int musicId) {
+        mediaPlayer = MediaPlayer.create(this, musicId);
+        mediaPlayer.setLooping(true);
+        onSharedPreferenceChanged(PreferenceManager.getDefaultSharedPreferences(this),
+                PREF_VOL_MUSIC);
+        startMusic();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
