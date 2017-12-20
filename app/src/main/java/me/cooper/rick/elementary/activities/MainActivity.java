@@ -39,7 +39,7 @@ public class MainActivity extends AbstractAppCompatActivity implements
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        initMedia();
+        initSoundMedia(R.raw.main);
 
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,12 +65,10 @@ public class MainActivity extends AbstractAppCompatActivity implements
     }
 
     @Override
-    protected void initMedia() {
-        super.initMedia();
+    protected void initSoundMedia(int rawMusicId) {
+        super.initSoundMedia(rawMusicId);
 
         addSound(SOUND_DRAWER, R.raw.rollover3);
-
-        initMusic(R.raw.main);
     }
 
     @Override

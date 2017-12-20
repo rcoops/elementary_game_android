@@ -98,8 +98,10 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         startMusic();
     }
 
-    protected void initMedia() {
+    protected void initSoundMedia(int musicRawId) {
         addSound(SOUND_CLICK, R.raw.click);
+
+        initMusic(musicRawId);
     }
 
     protected void initMusic(int musicId) {

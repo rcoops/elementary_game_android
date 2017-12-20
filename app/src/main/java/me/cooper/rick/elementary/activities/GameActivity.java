@@ -89,18 +89,16 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         }
         initMovementSensors();
         resetTitle();
-        initMedia();
+        initSoundMedia(R.raw.game_music);
     }
 
     @Override
-    protected void initMedia() {
-        super.initMedia();
+    protected void initSoundMedia(int musicRawId) {
+        super.initSoundMedia(musicRawId);
 
         addSound(SOUND_WRONG, R.raw.negative);
         addSound(SOUND_GAME_OVER, R.raw.negative_2);
         addSound(SOUND_RIGHT, R.raw.positive);
-
-        initMusic(R.raw.game_music);
     }
 
     @Override
