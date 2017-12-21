@@ -7,7 +7,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,7 +39,7 @@ import static me.cooper.rick.elementary.constants.VibratePattern.WRONG;
 import static me.cooper.rick.elementary.models.score.Player.PLAYER_INTENT_TAG;
 import static me.cooper.rick.elementary.services.QuizManager.NO_OF_ELEMENTS;
 
-public class GameActivity extends AbstractAppCompatActivity implements Runnable,
+public class GameActivity extends AbstractGameAppActivity implements Runnable,
         QuitGameFragment.OnFragmentInteractionListener,
         ShakeListener.OnShakeListener {
 

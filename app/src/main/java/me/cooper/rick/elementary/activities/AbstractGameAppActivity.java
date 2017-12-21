@@ -27,7 +27,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 import static me.cooper.rick.elementary.constants.VibratePattern.CLICK;
 
-public abstract class AbstractAppCompatActivity extends AppCompatActivity implements
+public abstract class AbstractGameAppActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener,
         InstructionsFragment.OnFragmentInteractionListener,
         HighScoreFragment.OnFragmentInteractionListener {

@@ -22,7 +22,7 @@ import me.cooper.rick.elementary.models.score.Player;
 import static java.lang.System.exit;
 import static me.cooper.rick.elementary.models.score.Player.PLAYER_INTENT_TAG;
 
-public class MainActivity extends AbstractAppCompatActivity implements
+public class MainActivity extends AbstractGameAppActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         NewGameFragment.OnPlayerCreatedListener {
 
