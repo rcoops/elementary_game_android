@@ -105,21 +105,11 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     protected void startMusic() {
-        controlMediaPlayer(new MediaPlayerAction() {
-            @Override
-            public void execute(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
+        controlMediaPlayer(MediaPlayer::start);
     }
 
     protected void pauseMusic() {
-        controlMediaPlayer(new MediaPlayerAction() {
-            @Override
-            public void execute(MediaPlayer mediaPlayer) {
-                mediaPlayer.pause();
-            }
-        });
+        controlMediaPlayer(MediaPlayer::pause);
     }
 
     protected void displayToastMessage(int stringId, Object... args) {
@@ -204,12 +194,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     private void setMusicVolume(final float volume) {
-        controlMediaPlayer(new MediaPlayerAction() {
-            @Override
-            public void execute(MediaPlayer mediaPlayer) {
-                mediaPlayer.setVolume(volume, volume);
-            }
-        });
+        controlMediaPlayer(mediaPlayer -> mediaPlayer.setVolume(volume, volume));
     }
 
     private void setEffectVolume(String tag, float volume) {

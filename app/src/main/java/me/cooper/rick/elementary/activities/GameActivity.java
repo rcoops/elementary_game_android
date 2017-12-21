@@ -70,7 +70,7 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_game);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar));
 
         player = getIntent().getParcelableExtra(PLAYER_INTENT_TAG);
 
@@ -223,13 +223,10 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
     }
 
     private void resetUI(final boolean correctAnswer) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                playSound(correctAnswer ? SOUND_RIGHT : SOUND_WRONG);
-                displayToastMessage(correctAnswer ? R.string.txt_correct_answer : R.string.txt_wrong_answer);
-                resetViews();
-            }
+        runOnUiThread(() -> {
+            playSound(correctAnswer ? SOUND_RIGHT : SOUND_WRONG);
+            displayToastMessage(correctAnswer ? R.string.txt_correct_answer : R.string.txt_wrong_answer);
+            resetViews();
         });
     }
 
@@ -304,12 +301,9 @@ public class GameActivity extends AbstractAppCompatActivity implements Runnable,
         playerView.stopMoving();
         isRunning = false;
         firebaseManager.saveScore(player);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                vibrate(QUIT);
-                displayToastMessage(R.string.txt_game_over);
-            }
+        runOnUiThread(() -> {
+            vibrate(QUIT);
+            displayToastMessage(R.string.txt_game_over);
         });
         playSound(SOUND_GAME_OVER);
         finish();

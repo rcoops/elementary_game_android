@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.jetbrains.annotations.NotNull;
+
 import me.cooper.rick.elementary.R;
 import me.cooper.rick.elementary.models.score.Player;
 
@@ -25,7 +27,7 @@ public class NewGameFragment extends DialogFragment {
     public NewGameFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_game, container, false);
@@ -34,12 +36,9 @@ public class NewGameFragment extends DialogFragment {
 
         btnCreate = view.findViewById(R.id.btn_create_player);
         btnCreate.setEnabled(false);
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onPlayerCreated(new Player(edtEnterName.getText().toString()));
-            }
-        });
+        btnCreate.setOnClickListener(v ->
+                mListener.onPlayerCreated(new Player(edtEnterName.getText().toString()))
+        );
 
         return view;
     }

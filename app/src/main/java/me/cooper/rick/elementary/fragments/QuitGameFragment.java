@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.jetbrains.annotations.NotNull;
+
 import me.cooper.rick.elementary.R;
 
 public class QuitGameFragment extends DialogFragment {
@@ -21,23 +23,13 @@ public class QuitGameFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quit_game, container, false);
         Button quitButton = view.findViewById(R.id.btn_quit_confirm);
-        quitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onFragmentInteraction(true);
-            }
-        });
+        quitButton.setOnClickListener(v -> mListener.onFragmentInteraction(true));
         Button cancelButton = view.findViewById(R.id.btn_quit_cancel);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onFragmentInteraction(false);
-            }
-        });
+        cancelButton.setOnClickListener(v -> mListener.onFragmentInteraction(false));
         // Inflate the layout for this fragment
         return view;
     }
@@ -63,4 +55,5 @@ public class QuitGameFragment extends DialogFragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(boolean isQuitConfirmed);
     }
+
 }

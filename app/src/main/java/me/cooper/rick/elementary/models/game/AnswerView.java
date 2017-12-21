@@ -18,9 +18,9 @@ public class AnswerView extends AppCompatTextView {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        viewBounds.set(this.getLeft(), this.getTop(), this.getRight(), this.getBottom());
+    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
+        super.onSizeChanged(width, height, oldWidth, oldHeight);
+        viewBounds.set(getLeft(), getTop(), getRight(), getBottom());
     }
 
     public void setAnswer(Pair<String, String> answer) {

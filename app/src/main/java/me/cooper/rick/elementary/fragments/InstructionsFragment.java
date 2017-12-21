@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+
 import me.cooper.rick.elementary.R;
 
 import static me.cooper.rick.elementary.models.score.Score.SCORE_BASE_INCREMENT;
@@ -25,18 +27,13 @@ public class InstructionsFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_instructions, container, false);
         TextView basicInstructions = view.findViewById(R.id.ins_basic_gameplay);
         basicInstructions.setText(getString(R.string.ins_basic_gameplay, NO_OF_ELEMENTS,
                 SCORE_INCREMENT_INCREMENT, SCORE_BASE_INCREMENT));
-        view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onFragmentInteraction();
-            }
-        });
+        view.findViewById(R.id.btn_close).setOnClickListener(v -> mListener.onFragmentInteraction());
 
         return view;
     }

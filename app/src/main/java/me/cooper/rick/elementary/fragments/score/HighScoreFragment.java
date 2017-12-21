@@ -35,12 +35,7 @@ public class HighScoreFragment extends Fragment implements FirebaseManager.Fireb
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new HighScoreRecyclerViewAdapter(firebaseManager.getHighScores(), getActivity());
         recyclerView.setAdapter(adapter);
-        view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onFragmentInteraction();
-            }
-        });
+        view.findViewById(R.id.btn_close).setOnClickListener(v -> mListener.onFragmentInteraction());
         return view;
     }
 
